@@ -1,0 +1,16 @@
+Texture2D diffuseTexture;
+SamplerState diffuseTextureSampler;
+
+struct PS_IN {
+    float4 pos : SV_Position;
+    float4 col : COLOR0;
+    float2 tex : TEXCOORD0;
+    float4 prm : COLOR1;
+};
+
+float4 ps_main(PS_IN input) : SV_Target {
+    if (input.prm.x == 0)
+        return input.col;
+    else 
+        return input.col * diffuseTexture.Sample(diffuseTextureSampler, input.tex);
+}

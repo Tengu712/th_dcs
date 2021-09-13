@@ -1,0 +1,3 @@
+#include "../include/resource.hpp"
+
+TEX_TITLE IMAGE "./title.png"
