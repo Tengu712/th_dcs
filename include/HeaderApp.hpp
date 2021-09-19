@@ -25,6 +25,8 @@ class ModelCube : public Model {
 
 #define MAX_TEXTURE 100
 
+bool SetKeyConfig(InputManager* pManager);
+
 enum SCE {
     SCE_TITLE,
     SCE_EXIT,

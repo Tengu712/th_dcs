@@ -35,7 +35,7 @@ bool D3DManager::init(HINSTANCE hInst, int cmdShow, LPCWSTR nameWnd, LPCWSTR nam
             if (!hWnd)
                 throw "Error: Failed to create window handle.";
 
-            ShowWindow(hWnd, cmdShow);
+            ShowWindow(hWnd, kCmdShow);
             UpdateWindow(hWnd);
             ShowCursor(windowed);
         }

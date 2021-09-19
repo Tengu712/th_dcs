@@ -4,6 +4,9 @@
 #include <time.h>
 #pragma comment(lib, "Winmm.lib")
 
+#include <iostream>
+#include <fstream>
+
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
 
     // Define constants
@@ -78,8 +81,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
             }
             // Key map
             else if (cnt == 2) {
-                tmp &= imanager.addKeycode(12, VK_RIGHT, GAMEPAD_KEYTYPE::Buttons, XINPUT_GAMEPAD_DPAD_RIGHT);
-            }
+                tmp &= SetKeyConfig(&imanager);
+           }
             // Finish
             else if (cnt == 100) {
                 flg = true;
