@@ -1,3 +1,4 @@
 #include "../include/resource.hpp"
 
+TEX_LOAD IMAGE "./bg_load.png"
 TEX_TITLE IMAGE "./title.png"

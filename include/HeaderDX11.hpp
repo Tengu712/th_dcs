@@ -20,6 +20,7 @@ using Microsoft::WRL::ComPtr;
 
 void DebugBox(int i, const char* title);
 void DebugBox(const char* str, const char* title);
+unsigned int Lpcstr2uint(LPCSTR c);
 
 struct Vertex {
     float pcnu[12];
@@ -97,15 +98,13 @@ public:
 
     // Camera
     void createCamera(float width, float height, Camera* camera);
-    void applyCamera(Camera* camera);
-    void changeToUI(float width, float height);
+    void applyCamera(Camera* camera, bool isParse);
 
     // Texture
     bool createTexture(unsigned int id, Texture* pTexture);
     void applyTexture(Texture* pTexture);
 
     // Font
-    unsigned int str2uint(LPCSTR c);
     bool createFont(unsigned int code, Texture* pFont);
 
     // Model
