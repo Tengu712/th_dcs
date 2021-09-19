@@ -4,7 +4,7 @@
 #include <fstream>
 #include <string>
 
-bool SetKeyConfig(InputManager* pManager) {
+bool GameInf::setKeyConfig() {
 
     bool res = true;
     const unsigned int kNumKey = 7U;
@@ -100,13 +100,13 @@ bool SetKeyConfig(InputManager* pManager) {
         codes[i] = tc;
     }
 
-    res &= pManager->addKeycode(1, VK_UP, keytypes[0], codes[0]);
-    res &= pManager->addKeycode(2, VK_DOWN, keytypes[1], codes[1]);
-    res &= pManager->addKeycode(3, VK_LEFT, keytypes[2], codes[2]);
-    res &= pManager->addKeycode(4, VK_RIGHT, keytypes[3], codes[3]);
-    res &= pManager->addKeycode(5, 0x5A, keytypes[4], codes[4]);
-    res &= pManager->addKeycode(6, VK_LSHIFT, keytypes[5], codes[5]);
-    res &= pManager->addKeycode(7, VK_ESCAPE, keytypes[6], codes[6]);
+    res &= imanager.addKeycode(1, VK_UP, keytypes[0], codes[0]);
+    res &= imanager.addKeycode(2, VK_DOWN, keytypes[1], codes[1]);
+    res &= imanager.addKeycode(3, VK_LEFT, keytypes[2], codes[2]);
+    res &= imanager.addKeycode(4, VK_RIGHT, keytypes[3], codes[3]);
+    res &= imanager.addKeycode(5, 0x5A, keytypes[4], codes[4]);
+    res &= imanager.addKeycode(6, VK_LSHIFT, keytypes[5], codes[5]);
+    res &= imanager.addKeycode(7, VK_ESCAPE, keytypes[6], codes[6]);
 
     return res;
 }

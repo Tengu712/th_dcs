@@ -81,35 +81,35 @@ struct ModelInf {
 };
 
 class D3DManager {
-private:
-    HWND hWnd;
-    D3DInf inf;
+    private:
+        HWND hWnd;
+        D3DInf inf;
 
-public:
-    D3DManager();
+    public:
+        D3DManager();
 
-    // General
-    bool init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName, unsigned int width,
-        unsigned int height, bool windowed);
-    void drawBegin();
-    void drawEnd();
-    HWND getWindowHandle();
-    D3DInf* getD3DInformation();
+        // General
+        bool init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName, unsigned int width,
+                unsigned int height, bool windowed);
+        void drawBegin();
+        void drawEnd();
+        HWND getWindowHandle();
+        D3DInf* getD3DInformation();
 
-    // Camera
-    void createCamera(float width, float height, Camera* camera);
-    void applyCamera(Camera* camera, bool isParse);
+        // Camera
+        void createCamera(float width, float height, Camera* camera);
+        void applyCamera(Camera* camera, bool isParse);
 
-    // Texture
-    bool createTexture(unsigned int id, Texture* pTexture);
-    void applyTexture(Texture* pTexture);
+        // Texture
+        bool createTexture(unsigned int id, Texture* pTexture);
+        void applyTexture(Texture* pTexture);
 
-    // Font
-    bool createFont(unsigned int code, Texture* pFont);
+        // Font
+        bool createFont(unsigned int code, Texture* pFont);
 
-    // Model
-    bool createModelBuffers(unsigned int numVtx, Vertex* data, unsigned int* dataIdx, ModelInf* minf);
-    void drawModel(ModelInf* minf);
+        // Model
+        bool createModelBuffers(unsigned int numVtx, Vertex* data, unsigned int* dataIdx, ModelInf* minf);
+        void drawModel(ModelInf* minf);
 };
 
 
@@ -128,30 +128,30 @@ struct KeyInf {
 };
 
 class InputManager {
-private:
-    int numRegistered;
-    char statePrev[64];
-    KeyInf inf[64];
-public:
-    InputManager();
-    bool addKeycode(char codeKey, char codeKeyboard, GAMEPAD_KEYTYPE typeGamepadKey, short codeGamepad);
-    void inspect();
-    char getKey(char codeKey);
+    private:
+        int numRegistered;
+        char statePrev[64];
+        KeyInf inf[64];
+    public:
+        InputManager();
+        bool addKeycode(char codeKey, char codeKeyboard, GAMEPAD_KEYTYPE typeGamepadKey, short codeGamepad);
+        void inspect();
+        char getKey(char codeKey);
 };
 
 class VoiceCallback : public IXAudio2VoiceCallback
 {
-public:
-    HANDLE event;
-    VoiceCallback() : event(CreateEvent(NULL, FALSE, FALSE, NULL)) {}
-    ~VoiceCallback() { CloseHandle(event); }
-    void STDMETHODCALLTYPE OnStreamEnd() {}
-    void STDMETHODCALLTYPE OnVoiceProcessingPassEnd() {}
-    void STDMETHODCALLTYPE OnVoiceProcessingPassStart(UINT32 SamplesRequired) {}
-    void STDMETHODCALLTYPE OnBufferEnd(void* pBufferContext) { SetEvent(event); }
-    void STDMETHODCALLTYPE OnBufferStart(void* pBufferContext) {}
-    void STDMETHODCALLTYPE OnLoopEnd(void* pBufferContext) {}
-    void STDMETHODCALLTYPE OnVoiceError(void* pBufferContext, HRESULT Error) {}
+    public:
+        HANDLE event;
+        VoiceCallback() : event(CreateEvent(NULL, FALSE, FALSE, NULL)) {}
+        ~VoiceCallback() { CloseHandle(event); }
+        void STDMETHODCALLTYPE OnStreamEnd() {}
+        void STDMETHODCALLTYPE OnVoiceProcessingPassEnd() {}
+        void STDMETHODCALLTYPE OnVoiceProcessingPassStart(UINT32 SamplesRequired) {}
+        void STDMETHODCALLTYPE OnBufferEnd(void* pBufferContext) { SetEvent(event); }
+        void STDMETHODCALLTYPE OnBufferStart(void* pBufferContext) {}
+        void STDMETHODCALLTYPE OnLoopEnd(void* pBufferContext) {}
+        void STDMETHODCALLTYPE OnVoiceError(void* pBufferContext, HRESULT Error) {}
 };
 
 struct AudioParam {
@@ -162,25 +162,25 @@ struct AudioParam {
 };
 
 class Audio {
-public:
-    IXAudio2SourceVoice* pSVoice;
-    XAUDIO2_BUFFER buffer;
-    Audio();
-    ~Audio();
-    void play();
-    void stop();
-    void restart();
+    public:
+        IXAudio2SourceVoice* pSVoice;
+        XAUDIO2_BUFFER buffer;
+        Audio();
+        ~Audio();
+        void play();
+        void stop();
+        void restart();
 };
 
 class AudioManager {
-private:
-    ComPtr<IXAudio2> pXAudio;
-    IXAudio2MasteringVoice* pMVoice;
-public:
-    AudioManager();
-    ~AudioManager();
-    bool init();
-    bool createAudio(unsigned int id, Audio* pAudio);
+    private:
+        ComPtr<IXAudio2> pXAudio;
+        IXAudio2MasteringVoice* pMVoice;
+    public:
+        AudioManager();
+        ~AudioManager();
+        bool init();
+        bool createAudio(unsigned int id, Audio* pAudio);
 };
 
 #endif

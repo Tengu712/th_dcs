@@ -17,5 +17,6 @@ Model::Model() {
     colA = 1.0f;
     pVBuffer = nullptr;
     pIBuffer = nullptr;
+    texid = 0U;
 }
 
