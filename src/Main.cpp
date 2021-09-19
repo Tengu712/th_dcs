@@ -71,6 +71,10 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
                 tmp &= ginf.addFont(&dmanager, Lpcstr2uint("7"));
                 tmp &= ginf.addFont(&dmanager, Lpcstr2uint("8"));
                 tmp &= ginf.addFont(&dmanager, Lpcstr2uint("9"));
+                tmp &= ginf.addFont(&dmanager, Lpcstr2uint("."));
+                tmp &= ginf.addFont(&dmanager, Lpcstr2uint("f"));
+                tmp &= ginf.addFont(&dmanager, Lpcstr2uint("p"));
+                tmp &= ginf.addFont(&dmanager, Lpcstr2uint("s"));
             }
             // Key map
             else if (cnt == 2) {
@@ -103,12 +107,15 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
     long startTime = timeGetTime();
     long lastTime = timeGetTime();
 
-    ModelSquare modelsFps[3];
-    for (int i = 0; i < 3; ++i) {
+    ModelSquare modelsFps[7];
+    for (int i = 0; i < 7; ++i) {
         modelsFps[i] = ModelSquare();
         modelsFps[i].init(&dmanager);
         modelsFps[i].posZ = -1000.0f;
-        modelsFps[i].posX = 100.0f * (float)i;
+        modelsFps[i].posX = 15.0f * (float)i + 532.0f;
+        modelsFps[i].posY = -457.0f;
+        modelsFps[i].sclX = 0.15f;
+        modelsFps[i].sclY = 0.2f;
     }
 
     // Main
@@ -133,10 +140,21 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
         dmanager.drawBegin();
         dmanager.applyCamera(&cameraUI, false);
 
-        for (int i = 0; i < 3; ++i) {
-            dmanager.applyTexture(ginf.getFont(48U));
-            dmanager.drawModel(&modelsFps[i]);
-        }
+        const unsigned int tmpfps = (unsigned int)(fps * 10.0f);
+        dmanager.applyTexture(ginf.getFont(((tmpfps / 100) % 10) + 48U));
+        dmanager.drawModel(&modelsFps[0]);
+        dmanager.applyTexture(ginf.getFont(((tmpfps / 10) % 10) + 48U));
+        dmanager.drawModel(&modelsFps[1]);
+        dmanager.applyTexture(ginf.getFont((tmpfps % 10) + 48U));
+        dmanager.drawModel(&modelsFps[3]);
+        dmanager.applyTexture(ginf.getFont(Lpcstr2uint(".")));
+        dmanager.drawModel(&modelsFps[2]);
+        dmanager.applyTexture(ginf.getFont(Lpcstr2uint("f")));
+        dmanager.drawModel(&modelsFps[4]);
+        dmanager.applyTexture(ginf.getFont(Lpcstr2uint("p")));
+        dmanager.drawModel(&modelsFps[5]);
+        dmanager.applyTexture(ginf.getFont(Lpcstr2uint("s")));
+        dmanager.drawModel(&modelsFps[6]);
 
         dmanager.drawEnd();
     }
