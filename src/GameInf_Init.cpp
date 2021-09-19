@@ -33,7 +33,7 @@ GameInf::~GameInf() {
 }
 
 bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName,
-        unsigned int width, unsigned int height, bool windowed) 
+        unsigned int width, unsigned int height, bool windowed, HMODULE hModule) 
 {
     try {
         // DirectX11
@@ -73,7 +73,7 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         }
 
         // Load screen
-        if (!addTexture(TEX_LOAD))
+        if (!addTexture(hModule, TEX_LOAD))
             throw "Failed to load image for load screen.";
         ModelSquare bgLoad = ModelSquare();
         if (!bgLoad.init(&dmanager))

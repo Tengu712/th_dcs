@@ -5,13 +5,13 @@
 #pragma comment(lib, "Windowscodecs.lib")
 #pragma comment(lib, "Ole32.lib")
 
-bool D3DManager::createTexture(unsigned int id, Texture* pTexture) {
+bool D3DManager::createTexture(HMODULE hModule, unsigned int id, Texture* pTexture) {
     try {
-        HRSRC hImageRes = FindResource(nullptr, MAKEINTRESOURCE(id), "IMAGE");
+        HRSRC hImageRes = FindResource(hModule, MAKEINTRESOURCE(id), "IMAGE");
         if (!hImageRes)
             throw "Failed to find resource.";
 
-        HGLOBAL hImageData = LoadResource(nullptr, hImageRes);
+        HGLOBAL hImageData = LoadResource(hModule, hImageRes);
         if (!hImageData)
             throw "Failed to load resource.";
 
@@ -19,7 +19,7 @@ bool D3DManager::createTexture(unsigned int id, Texture* pTexture) {
         if (!pLock)
             throw "Failed to lock resource.";
 
-        DWORD sizeRes = SizeofResource(nullptr, hImageRes);
+        DWORD sizeRes = SizeofResource(hModule, hImageRes);
         if (sizeRes == 0)
             throw "Failed to get size of resource.";
 

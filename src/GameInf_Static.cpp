@@ -1,10 +1,10 @@
 #include "../include/HeaderApp.hpp"
 
-bool GameInf::addTexture(unsigned int id) {
+bool GameInf::addTexture(HMODULE hModule, unsigned int id) {
     for (int i = 0; i < MAX_TEX; ++i) {
         if (texs[i].id != 0)
             continue;
-        if (!dmanager.createTexture(id, &texs[i]))
+        if (!dmanager.createTexture(hModule, id, &texs[i]))
             return false;
         texs[i].id = id;
         break;

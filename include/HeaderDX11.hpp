@@ -101,7 +101,7 @@ class D3DManager {
         void applyCamera(Camera* camera, bool isParse);
 
         // Texture
-        bool createTexture(unsigned int id, Texture* pTexture);
+        bool createTexture(HMODULE hModule, unsigned int id, Texture* pTexture);
         void applyTexture(Texture* pTexture);
 
         // Font

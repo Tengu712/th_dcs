@@ -1,9 +1,6 @@
 /build/*.exe
 /build/*.wav
-/include/*.un~
-/include/*.hpp~
-/src/*.un~
-/src/*.cpp~
+/build/*.dll
 /res/*.res
 /res/*.png
 /res/*.wav

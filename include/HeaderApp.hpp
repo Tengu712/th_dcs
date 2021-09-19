@@ -70,10 +70,10 @@ class GameInf {
         // Method
         GameInf();
         ~GameInf();
-        bool init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName, unsigned int width,
-                unsigned int height, bool windowed);
+        bool init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName, 
+                unsigned int width, unsigned int height, bool windowed, HMODULE hModule);
         // System
-        bool addTexture(unsigned int id);
+        bool addTexture(HMODULE hModule, unsigned int id);
         bool addFont(unsigned int code);
         bool setKeyConfig();
         Texture* getTexture(unsigned int id);

@@ -30,6 +30,6 @@ if "!pathFiles!"=="" (
     exit /B
 )
 
-!kCL! /EHsc /Fe:main.exe !kOptInclude! !pathFiles! !kOptLibrary! ../res/resource.res
+!kCL! /EHsc /Fe:main.exe !kOptInclude! !pathFiles! !kOptLibrary!
 del *.obj
 pause

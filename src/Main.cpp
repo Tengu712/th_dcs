@@ -4,48 +4,59 @@
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
 
     GameInf ginf = GameInf();
-    if (!ginf.init(
+
+    {
+        bool flg = true;
+
+        HMODULE hModule = LoadLibrary("./resource.dll");
+        if (!hModule) {
+            MessageBoxA(nullptr, "resource.dll not found.", "Error", MB_OK);
+            return 1;
+        }
+
+        flg = flg && ginf.init(
                 hInst,
                 cmdShow,
                 L"～ Darkside Connection of Skypunch",
                 L"TH_DCS",
                 1280U, 960U,
-                MessageBoxW(nullptr, L"フルスクリーンで起動しますか", L"確認", MB_YESNO) == IDNO))
-        return 1;
+                MessageBoxW(nullptr, L"フルスクリーンで起動しますか", L"確認", MB_YESNO) == IDNO,
+                hModule);
 
-    MSG msg;
-    ZeroMemory(&msg, sizeof(MSG));
-
-    // Load
-    {
-        bool tmp = true;
         // Load texture
+
         // Load font
-        tmp &= ginf.addFont(Lpcstr2uint("0"));
-        tmp &= ginf.addFont(Lpcstr2uint("1"));
-        tmp &= ginf.addFont(Lpcstr2uint("2"));
-        tmp &= ginf.addFont(Lpcstr2uint("3"));
-        tmp &= ginf.addFont(Lpcstr2uint("4"));
-        tmp &= ginf.addFont(Lpcstr2uint("5"));
-        tmp &= ginf.addFont(Lpcstr2uint("6"));
-        tmp &= ginf.addFont(Lpcstr2uint("7"));
-        tmp &= ginf.addFont(Lpcstr2uint("8"));
-        tmp &= ginf.addFont(Lpcstr2uint("9"));
-        tmp &= ginf.addFont(Lpcstr2uint("."));
-        tmp &= ginf.addFont(Lpcstr2uint("f"));
-        tmp &= ginf.addFont(Lpcstr2uint("p"));
-        tmp &= ginf.addFont(Lpcstr2uint("s"));
+        flg = flg && ginf.addFont(Lpcstr2uint("0"));
+        flg = flg && ginf.addFont(Lpcstr2uint("1"));
+        flg = flg && ginf.addFont(Lpcstr2uint("2"));
+        flg = flg && ginf.addFont(Lpcstr2uint("3"));
+        flg = flg && ginf.addFont(Lpcstr2uint("4"));
+        flg = flg && ginf.addFont(Lpcstr2uint("5"));
+        flg = flg && ginf.addFont(Lpcstr2uint("6"));
+        flg = flg && ginf.addFont(Lpcstr2uint("7"));
+        flg = flg && ginf.addFont(Lpcstr2uint("8"));
+        flg = flg && ginf.addFont(Lpcstr2uint("9"));
+        flg = flg && ginf.addFont(Lpcstr2uint("."));
+        flg = flg && ginf.addFont(Lpcstr2uint("f"));
+        flg = flg && ginf.addFont(Lpcstr2uint("p"));
+        flg = flg && ginf.addFont(Lpcstr2uint("s"));
+
         // Key map
-        tmp &= ginf.setKeyConfig();
-        if (!tmp) {
+        flg = flg && ginf.setKeyConfig();
+
+        // Finish
+        FreeLibrary(hModule);
+        if (!flg) {
             MessageBoxA(nullptr, "Failed to load.", "Error", MB_OK);
             UnregisterClassW(L"TH_DCS", hInst);
             return 1;
         }
     }
 
-    // Main
     AScene* sce = new SceneTitle();
+
+    MSG msg;
+    ZeroMemory(&msg, sizeof(MSG));
     while (true) {
         if (PeekMessageW(&msg, nullptr, 0U, 0U, PM_REMOVE)) {
             if (msg.message == WM_QUIT)
