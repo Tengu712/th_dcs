@@ -39,18 +39,18 @@ bool D3DManager::createFont(unsigned int code, Texture* pFont) {
     DeleteObject(hFont);
     ReleaseDC(nullptr, hdc);
 
-    // set width and height
-    pFont->width = (unsigned int)metGlyph.gmCellIncX;
-    pFont->height = (unsigned int)metText.tmHeight;
-    const int ofsX = metGlyph.gmptGlyphOrigin.x;
-    const int ofsY = metText.tmAscent - metGlyph.gmptGlyphOrigin.y;
-    const int widthBmp = metGlyph.gmBlackBoxX + (4 - (metGlyph.gmBlackBoxX % 4)) % 4;
-    const int heightBmp = metGlyph.gmBlackBoxY;
+    // set kWidth and kHeight
+    const unsigned int kWidth = (unsigned int)metGlyph.gmCellIncX;
+    const unsigned int kHeight = (unsigned int)metText.tmHeight;
+    const int kOfsX = metGlyph.gmptGlyphOrigin.x;
+    const int kOfsY = metText.tmAscent - metGlyph.gmptGlyphOrigin.y;
+    const int kWidthBmp = metGlyph.gmBlackBoxX + (4 - (metGlyph.gmBlackBoxX % 4)) % 4;
+    const int kHeightBmp = metGlyph.gmBlackBoxY;
 
     // create texture
     D3D11_TEXTURE2D_DESC descTex = {
-        pFont->width, // Width
-        pFont->height, // Height
+        kWidth, // Width
+        kHeight, // Height
         1, // MipLevels
         1, // ArraySize
         DXGI_FORMAT_R8G8B8A8_UNORM, // Format
@@ -71,14 +71,14 @@ bool D3DManager::createFont(unsigned int code, Texture* pFont) {
     D3D11_MAPPED_SUBRESOURCE sres;
     inf.pImContext->Map(bufLayer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &sres);
     unsigned char* pBits = (unsigned char*)sres.pData;
-    for (int y = 0; y < pFont->height; ++y) {
-        for (int x = 0; x < pFont->width; ++x) {
-            if (x < ofsX || y < ofsY || x >= ofsX + widthBmp || y >= ofsY + heightBmp) {
+    for (int y = 0; y < kHeight; ++y) {
+        for (int x = 0; x < kWidth; ++x) {
+            if (x < kOfsX || y < kOfsY || x >= kOfsX + kWidthBmp || y >= kOfsY + kHeightBmp) {
                 DWORD col = 0x00000000;
                 memcpy(pBits + sres.RowPitch * y + 4 * x, &col, sizeof(DWORD));
             }
             else {
-                DWORD alp = (255 * pMono[x - ofsX + widthBmp * (y - ofsY)]) / 16;
+                DWORD alp = (255 * pMono[x - kOfsX + kWidthBmp * (y - kOfsY)]) / 16;
                 DWORD col = 0x00ffffff | (alp << 24);
                 memcpy(pBits + sres.RowPitch * y + 4 * x, &col, sizeof(DWORD));
             }

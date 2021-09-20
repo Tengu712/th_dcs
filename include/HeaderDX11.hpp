@@ -46,7 +46,7 @@ struct Camera {
 };
 
 struct Texture {
-    unsigned int width, height;
+    unsigned int id;
     ComPtr<ID3D11ShaderResourceView> pSRView;
 };
 

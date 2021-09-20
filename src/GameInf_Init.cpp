@@ -43,13 +43,13 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
             throw "Failed to initialize AudioManager.";
 
         // Resource
-        texs = new GameTexture[MAX_TEX];
-        fonts = new GameTexture[MAX_FNT];
+        texs = new Texture[MAX_TEX];
+        fonts = new Texture[MAX_FNT];
         for (int i = 0; i < MAX_TEX; ++i) {
-            texs[i] = GameTexture();
+            texs[i] = Texture();
         }
         for (int i = 0; i < MAX_FNT; ++i) {
-            fonts[i] = GameTexture();
+            fonts[i] = Texture();
         }
 
         // Camera
@@ -60,10 +60,10 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         queUI.init(MAX_UI);
 
         // Fps
-        modelsFps = new ModelSquare[7];
+        modelsFps = new Model[7];
         for (int i = 0; i < 7; ++i) {
-            modelsFps[i] = ModelSquare();
-            if (!modelsFps[i].init(&dmanager))
+            modelsFps[i] = Model();
+            if (!createModelSquare(&modelsFps[i]))
                 throw "Failed to create model for FPS viewer.";
             modelsFps[i].posZ = -1000.0f;
             modelsFps[i].posX = 15.0f * (float)i + 532.0f;
@@ -75,8 +75,8 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         // Load screen
         if (!addTexture(hModule, TEX_LOAD))
             throw "Failed to load image for load screen.";
-        ModelSquare bgLoad = ModelSquare();
-        if (!bgLoad.init(&dmanager))
+        Model bgLoad = Model();
+        if (!createModelSquare(&bgLoad))
             throw "Failed to create model for load screen.";
         bgLoad.posZ = -900.0f;
         bgLoad.sclX = 12.8f;

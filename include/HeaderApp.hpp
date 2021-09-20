@@ -1,24 +1,9 @@
 #include "HeaderDX11.hpp"
 
-struct GameTexture : public Texture {
-    unsigned int id;
-};
-
 class Model : public ModelInf {
     public:
         unsigned int texid;
         Model();
-        virtual bool init(D3DManager* pManager) = 0;
-};
-
-class ModelSquare : public Model {
-    public:
-        bool init(D3DManager* pManager);
-};
-
-class ModelCube : public Model {
-    public:
-        bool init(D3DManager* pManager);
 };
 
 class ModelQueue {
@@ -54,8 +39,8 @@ class GameInf {
         // System
         SCE_ID sceCur;
         SCE_ID sceNex;
-        GameTexture* texs;
-        GameTexture* fonts;
+        Texture* texs;
+        Texture* fonts;
         // Queue
         ModelQueue queUI;
         // Camera
@@ -65,7 +50,7 @@ class GameInf {
         float fps;
         long startTime;
         long lastTime;
-        ModelSquare* modelsFps;
+        Model* modelsFps;
 
         // Method
         GameInf();
@@ -78,6 +63,10 @@ class GameInf {
         bool setKeyConfig();
         Texture* getTexture(unsigned int id);
         Texture* getFont(unsigned int code);
+
+        // Model
+        bool createModelSquare(Model* pModel);
+
         // General
         void update();
         void draw();
@@ -91,7 +80,7 @@ class AScene {
 
 class SceneTitle : public AScene {
     private:
-        ModelSquare bg;
+        Model bg;
     public:
         SceneTitle();
         bool init(GameInf* pGinf);

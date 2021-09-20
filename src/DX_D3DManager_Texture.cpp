@@ -7,6 +7,9 @@
 
 bool D3DManager::createTexture(HMODULE hModule, unsigned int id, Texture* pTexture) {
     try {
+        ZeroMemory(pTexture, sizeof(Texture));
+        pTexture->id = id;
+
         HRSRC hImageRes = FindResource(hModule, MAKEINTRESOURCE(id), "IMAGE");
         if (!hImageRes)
             throw "Failed to find resource.";
@@ -52,10 +55,11 @@ bool D3DManager::createTexture(HMODULE hModule, unsigned int id, Texture* pTextu
                 nullptr, 1.0f, WICBitmapPaletteTypeMedianCut)))
             throw "Failed to initialize format.";
 
-        if (FAILED(pFormatConverter->GetSize(&pTexture->width, &pTexture->height)))
+        unsigned int width, height;
+        if (FAILED(pFormatConverter->GetSize(&width, &height)))
             throw "Failed to get texture size.";
 
-        D3D11_TEXTURE2D_DESC descTex = {pTexture->width, pTexture->height, 1U, 1U, DXGI_FORMAT_R8G8B8A8_UNORM, {1U, 0U},
+        D3D11_TEXTURE2D_DESC descTex = {width, height, 1U, 1U, DXGI_FORMAT_R8G8B8A8_UNORM, {1U, 0U},
             D3D11_USAGE_DYNAMIC, D3D11_BIND_SHADER_RESOURCE, D3D11_CPU_ACCESS_WRITE, 0U};
         ComPtr<ID3D11Texture2D> pTex = nullptr;
         if (FAILED(inf.pDevice->CreateTexture2D(&descTex, nullptr, pTex.GetAddressOf())))
@@ -66,7 +70,7 @@ bool D3DManager::createTexture(HMODULE hModule, unsigned int id, Texture* pTextu
         if (FAILED(inf.pImContext->Map(pTex.Get(), 0U, D3D11_MAP_WRITE_DISCARD, 0U, &resMapped)))
             throw "Failed to map.";
         if (FAILED(pFormatConverter->CopyPixels(
-                nullptr, pTexture->width * 4U, pTexture->width * pTexture->height * 4U, (BYTE*)resMapped.pData)))
+                nullptr, width * 4U, width * height * 4U, (BYTE*)resMapped.pData)))
             throw "Failed to copy pixels.";
         inf.pImContext->Unmap(pTex.Get(), 0U);
 

@@ -1,9 +1,9 @@
 #include "../include/HeaderApp.hpp"
 
-bool ModelSquare::init(D3DManager* pManager) {
+bool GameInf::createModelSquare(Model* pModel) {
     const unsigned int kNumVtx = 4U;
     const unsigned int kNumIdx = 6U;
-    numIdx = kNumIdx;
+    pModel->numIdx = kNumIdx;
 
     struct Vertex dataPCNU[kNumVtx] = {
         {-50.0f, -50.0f, +0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f},
@@ -13,6 +13,6 @@ bool ModelSquare::init(D3DManager* pManager) {
     };
     unsigned int dataIdx[kNumIdx] = {0, 1, 2, 0, 2, 3};
 
-    return pManager->createModelBuffers(kNumVtx, dataPCNU, dataIdx, this);
+    return dmanager.createModelBuffers(kNumVtx, dataPCNU, dataIdx, pModel);
 }
 
