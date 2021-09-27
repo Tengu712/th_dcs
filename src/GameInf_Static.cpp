@@ -39,3 +39,21 @@ Texture* GameInf::getFont(unsigned int code) {
     }
     return nullptr;
 }
+
+void GameInf::pushUI(Fact* pFact) {
+    for (int i = 0; i < MAX_QUE_UI; ++i) {
+        if (queUI[i] != nullptr)
+            continue;
+        queUI[i] = pFact;
+        break;
+    }
+}
+
+void GameInf::pushFont(Fact* pFact) {
+    for (int i = 0; i < MAX_QUE_FNT; ++i) {
+        if (queFont[i] != nullptr)
+            continue;
+        queFont[i] = pFact;
+        break;
+    }
+}

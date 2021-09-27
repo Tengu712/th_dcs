@@ -2,10 +2,9 @@
 
 SceneTitle::SceneTitle() : bg(Fact()) {}
 
-bool SceneTitle::init(GameInf* pGinf) {
-    bool res = true;
-    return res;
+void SceneTitle::init(GameInf* pGinf) {
 }
 
 void SceneTitle::update(GameInf* pGinf) {
+    pGinf->sceNex = SCE_ID::Tutorial;
 }

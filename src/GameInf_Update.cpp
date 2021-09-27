@@ -1,9 +1,24 @@
 #include "../include/HeaderApp.hpp"
 
+#include <time.h>
+#pragma comment(lib, "Winmm.lib")
+
 void GameInf::update() {
-    queUI.clear();
-    queFont.clear();
-    fpsCalculator.update();
+    for (int i = 0; i < MAX_QUE_UI; ++i) {
+        queUI[i] = nullptr;
+    }
+    for (int i = 0; i < MAX_QUE_FNT; ++i) {
+        queFont[i] = nullptr;
+    }
+
+    startTime = timeGetTime();
+    if (startTime - lastTime >= 1000L){
+        fps = (float)(cntFps * 1000) / (float)(startTime - lastTime);
+        lastTime = startTime;
+        cntFps = 0;
+    }
+    cntFps++;
+
     imanager.inspect();
 }
 
@@ -28,50 +43,48 @@ void GameInf::draw() {
 
     // UI
     dmanager.applyCamera(&cameraUI, false);
-    for(int i = 0; i < 10000; ++i) {
-        Fact* pTmp = queUI.pop();
-        if (pTmp == nullptr)
-            break;
-        applyFact(pTmp);
-        dmanager.applyTexture(getTexture(pTmp->texid));
+    for(int i = 0; i < MAX_QUE_UI; ++i) {
+        if (queUI[i] == nullptr)
+            continue;
+        applyFact(queUI[i]);
+        dmanager.applyTexture(getTexture(queUI[i]->texid));
+        dmanager.drawModel(&ideaSquare);
+    }
+
+    // Font
+    for(int i = 0; i < MAX_QUE_FNT; ++i) {
+        if (queFont[i] == nullptr)
+            continue;
+        applyFact(queFont[i]);
+        dmanager.applyTexture(getFont(queFont[i]->texid));
         dmanager.drawModel(&ideaSquare);
     }
 
     // Fps
-    const unsigned int tmpfps = (unsigned int)(fpsCalculator.fps * 10.0f);
-    Fact fact[7];
+    const unsigned int tmpfps = (unsigned int)(fps * 10.0f);
     for (int i = 0; i < 7; ++i) {
-        unsigned int texid = 0U;
+        Fact fact = Fact();
         if (i == 0) 
-            texid = ((tmpfps / 100) % 10) + 48U;
+            fact.texid = ((tmpfps / 100) % 10) + 48U;
         else if (i == 1)
-            texid = ((tmpfps / 10) % 10) + 48U;
+            fact.texid = ((tmpfps / 10) % 10) + 48U;
         else if (i == 3)
-            texid = (tmpfps % 10) + 48U;
+            fact.texid = (tmpfps % 10) + 48U;
         else if (i == 2)
-            texid = Lpcstr2uint(".");
+            fact.texid = Lpcstr2uint(".");
         else if (i == 4)
-            texid = Lpcstr2uint("f");
+            fact.texid = Lpcstr2uint("f");
         else if (i == 5)
-            texid = Lpcstr2uint("p");
+            fact.texid = Lpcstr2uint("p");
         else 
-            texid = Lpcstr2uint("s");
-        fact[i].texid = texid;
-        fact[i].posX = 15.0f * (float)i + 532.0f;
-        fact[i].posY = -457.0f;
-        fact[i].posZ = -1000.0f;
-        fact[i].sclX = 0.15f;
-        fact[i].sclY = 0.2f;
-        queFont.push(&fact[i]);
-    }
-
-    // Font
-    for(int i = 0; i < 10000; ++i) {
-        Fact* pTmp = queFont.pop();
-        if (pTmp == nullptr)
-            break;
-        applyFact(pTmp);
-        dmanager.applyTexture(getFont(pTmp->texid));
+            fact.texid = Lpcstr2uint("s");
+        fact.posX = 15.0f * (float)i + 532.0f;
+        fact.posY = -457.0f;
+        fact.posZ = -1000.0f;
+        fact.sclX = 0.15f;
+        fact.sclY = 0.2f;
+        applyFact(&fact);
+        dmanager.applyTexture(getFont(fact.texid));
         dmanager.drawModel(&ideaSquare);
     }
 

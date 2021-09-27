@@ -1,5 +1,4 @@
 #include "../include/HeaderApp.hpp"
-#include "../include/resource.hpp"
 
 GameInf::GameInf() :
     // Manager
@@ -12,13 +11,16 @@ GameInf::GameInf() :
     texs(nullptr),
     fonts(nullptr),
     ideaSquare(ModelInf()),
-    // Fps
-    fpsCalculator(FpsCalculator()),
-    // Camera
-    cameraUI(Camera()),
     // Queue
-    queUI(FactQueue()),
-    queFont(FactQueue())
+    queUI(nullptr),
+    queFont(nullptr),
+    // Fps
+    cntFps(0),
+    fps(0.0f),
+    startTime(timeGetTime()),
+    lastTime(timeGetTime()),
+    // Camera
+    cameraUI(Camera())
 {}
 
 GameInf::~GameInf() {
@@ -26,6 +28,10 @@ GameInf::~GameInf() {
         delete texs;
     if (fonts != nullptr)
         delete fonts;
+    if (queUI != nullptr)
+        delete queUI;
+    if (queFont != nullptr)
+        delete queFont;
 }
 
 bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName,
@@ -48,6 +54,16 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
             fonts[i] = Texture();
         }
 
+        // Queue
+        queUI = new Fact*[MAX_QUE_UI];
+        queFont = new Fact*[MAX_QUE_FNT];
+        for (int i = 0; i < MAX_QUE_UI; ++i) {
+            queUI[i] = nullptr;
+        }
+        for (int i = 0; i < MAX_QUE_FNT; ++i) {
+            queFont[i] = nullptr;
+        }
+
         // Idea
         const unsigned int kNumVtx = 4U;
         const unsigned int kNumIdx = 6U;
@@ -66,12 +82,8 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         dmanager.createCamera(width, height, &cameraUI);
         cameraUI.posZ = -1200.0f;
 
-        // Queue
-        queUI.init(MAX_QUE_UI);
-        queFont.init(MAX_QUE_FNT);
-
         // Load screen
-        if (!addTexture(hModule, TEX_LOAD))
+        if (!addTexture(hModule, TEX_BG_LOAD))
             throw "Failed to load image for load screen.";
         Fact bgLoad = Fact();
         bgLoad.posZ = -900.0f;
@@ -80,7 +92,7 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         applyFact(&bgLoad);
         dmanager.drawBegin();
         dmanager.applyCamera(&cameraUI, false);
-        dmanager.applyTexture(getTexture(TEX_LOAD));
+        dmanager.applyTexture(getTexture(TEX_BG_LOAD));
         dmanager.drawModel(&ideaSquare);
         dmanager.drawEnd();
 

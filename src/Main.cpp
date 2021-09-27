@@ -1,5 +1,4 @@
 ﻿#include "../include/HeaderApp.hpp"
-#include "../include/resource.hpp"
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
 
@@ -24,6 +23,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
                 hModule);
 
         // Load texture
+        flg = flg && ginf.addTexture(hModule, TEX_UI_FRAME);
 
         // Load font
         flg = flg && ginf.addFont(Lpcstr2uint("0"));
@@ -71,6 +71,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
             delete sce;
             if (ginf.sceNex == SCE_ID::Title) 
                 sce = new SceneTitle();
+            else if (ginf.sceNex == SCE_ID::Tutorial) 
+                sce = new SceneTutorial();
             else 
                 break;
             sce->init(&ginf);

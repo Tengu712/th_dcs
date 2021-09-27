@@ -1,4 +1,5 @@
 #include "HeaderDX11.hpp"
+#include "resource.hpp"
 
 struct Fact {
     unsigned int texid;
@@ -24,19 +25,6 @@ struct Fact {
     {}
 };
 
-class FactQueue {
-    private:
-        unsigned int nummax;
-        Fact** facts;
-    public:
-        FactQueue();
-        ~FactQueue();
-        void init(unsigned int argmax);
-        void clear();
-        void push(Fact* pFact);
-        Fact* pop();
-};
-
 
 class Entity {
     public:
@@ -46,17 +34,6 @@ class Entity {
         Entity();
         void move();
         void checkHit(Entity* pEntity);
-};
-
-class FpsCalculator {
-    private:
-        int cntFps;
-        long startTime;
-        long lastTime;
-    public:
-        float fps;
-        FpsCalculator();
-        void update();
 };
 
 
@@ -69,6 +46,7 @@ class FpsCalculator {
 
 enum struct SCE_ID : char {
     Title,
+    Tutorial,
     Exit,
 };
 
@@ -86,12 +64,16 @@ class GameInf {
         Texture* fonts;
         ModelInf ideaSquare;
         // Queue
-        FactQueue queUI;
-        FactQueue queFont;
+        Fact** queUI;
+        Fact** queFont;
         // Camera
         Camera cameraUI;
         // Fps
-        FpsCalculator fpsCalculator;
+        int cntFps;
+        float fps;
+        long startTime;
+        long lastTime;
+
         // Method
         GameInf();
         ~GameInf();
@@ -103,7 +85,9 @@ class GameInf {
         bool setKeyConfig();
         Texture* getTexture(unsigned int id);
         Texture* getFont(unsigned int code);
-
+        // Queue
+        void pushUI(Fact* pFact);
+        void pushFont(Fact* pFact);
         // General
         void update();
         void draw();
@@ -111,7 +95,7 @@ class GameInf {
 
 class AScene {
     public:
-        virtual bool init(GameInf* pGinf) = 0;
+        virtual void init(GameInf* pGinf) = 0;
         virtual void update(GameInf* pGinf) = 0;
 };
 
@@ -120,7 +104,26 @@ class SceneTitle : public AScene {
         Fact bg;
     public:
         SceneTitle();
-        bool init(GameInf* pGinf);
+        void init(GameInf* pGinf);
+        void update(GameInf* pGinf);
+};
+
+class ASceneGame : public AScene {
+    private:
+        Fact frame;
+    public:
+        ASceneGame();
+        void gameInit(GameInf* pGinf);
+        void gameUpdate(GameInf* pGinf);
+        virtual void init(GameInf* pGinf) = 0;
+        virtual void update(GameInf* pGinf) = 0;
+};
+
+class SceneTutorial : public ASceneGame {
+    private:
+    public:
+        SceneTutorial();
+        void init(GameInf* pGinf);
         void update(GameInf* pGinf);
 };
 

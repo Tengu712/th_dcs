@@ -24,7 +24,6 @@ void Entity::move() {
 
 void Entity::checkHit(Entity* pEntity) {
     const int dis = (x - pEntity->x) * (x - pEntity->x) + (y - pEntity->y) * (y - pEntity->y);
-    flgHit = 0;
     if (rGrz + pEntity->rGrz > dis)
         flgHit = 1;
     if (r + pEntity->r > dis)
