@@ -11,17 +11,14 @@ GameInf::GameInf() :
     sceNex(SCE_ID::Title),
     texs(nullptr),
     fonts(nullptr),
+    ideaSquare(ModelInf()),
     // Fps
-    cntFps(0),
-    fps(0.0f),
-    startTime(timeGetTime()),
-    lastTime(timeGetTime()),
-    modelsFps(nullptr),
+    fpsCalculator(FpsCalculator()),
     // Camera
     cameraUI(Camera()),
     // Queue
-    queUI(ModelQueue()),
-    queFont(ModelQueue())
+    queUI(FactQueue()),
+    queFont(FactQueue())
 {}
 
 GameInf::~GameInf() {
@@ -29,8 +26,6 @@ GameInf::~GameInf() {
         delete texs;
     if (fonts != nullptr)
         delete fonts;
-    if (modelsFps != nullptr)
-        delete modelsFps;
 }
 
 bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName,
@@ -53,6 +48,20 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
             fonts[i] = Texture();
         }
 
+        // Idea
+        const unsigned int kNumVtx = 4U;
+        const unsigned int kNumIdx = 6U;
+        ideaSquare.numIdx = kNumIdx;
+        struct Vertex dataPCNU[kNumVtx] = {
+            {-50.0f, -50.0f, +0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f},
+            {-50.0f, +50.0f, +0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f},
+            {+50.0f, +50.0f, +0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f},
+            {+50.0f, -50.0f, +0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f},
+        };
+        unsigned int dataIdx[kNumIdx] = {0, 1, 2, 0, 2, 3};
+        if (!dmanager.createModelBuffers(kNumVtx, dataPCNU, dataIdx, &ideaSquare))
+            throw "Failed to create idea of square.";
+
         // Camera
         dmanager.createCamera(width, height, &cameraUI);
         cameraUI.posZ = -1200.0f;
@@ -61,38 +70,20 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         queUI.init(MAX_QUE_UI);
         queFont.init(MAX_QUE_FNT);
 
-        // Fps
-        modelsFps = new Model[7];
-        for (int i = 0; i < 7; ++i) {
-            modelsFps[i] = Model();
-            if (!createModelSquare(&modelsFps[i]))
-                throw "Failed to create model for FPS viewer.";
-            modelsFps[i].posZ = -1000.0f;
-            modelsFps[i].posX = 15.0f * (float)i + 532.0f;
-            modelsFps[i].posY = -457.0f;
-            modelsFps[i].sclX = 0.15f;
-            modelsFps[i].sclY = 0.2f;
-        }
-        modelsFps[2].texid = Lpcstr2uint(".");
-        modelsFps[4].texid = Lpcstr2uint("f");
-        modelsFps[5].texid = Lpcstr2uint("p");
-        modelsFps[6].texid = Lpcstr2uint("s");
-
-
         // Load screen
         if (!addTexture(hModule, TEX_LOAD))
             throw "Failed to load image for load screen.";
-        Model bgLoad = Model();
-        if (!createModelSquare(&bgLoad))
-            throw "Failed to create model for load screen.";
+        Fact bgLoad = Fact();
         bgLoad.posZ = -900.0f;
         bgLoad.sclX = 12.8f;
         bgLoad.sclY = 9.6f;
+        applyFact(&bgLoad);
         dmanager.drawBegin();
         dmanager.applyCamera(&cameraUI, false);
         dmanager.applyTexture(getTexture(TEX_LOAD));
-        dmanager.drawModel(&bgLoad);
+        dmanager.drawModel(&ideaSquare);
         dmanager.drawEnd();
+
     } catch (const char* error) {
         MessageBoxA(nullptr, error, "Error", MB_OK);
         return false;

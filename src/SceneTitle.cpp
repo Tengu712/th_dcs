@@ -1,6 +1,6 @@
 #include "../include/HeaderApp.hpp"
 
-SceneTitle::SceneTitle() : bg(Model()) {}
+SceneTitle::SceneTitle() : bg(Fact()) {}
 
 bool SceneTitle::init(GameInf* pGinf) {
     bool res = true;
