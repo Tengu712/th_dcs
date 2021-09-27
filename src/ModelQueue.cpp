@@ -9,7 +9,13 @@ ModelQueue::~ModelQueue() {
 
 void ModelQueue::init(unsigned int argmax) {
     nummax = argmax;
-    models = new Model*[nummax];
+    models = new Model*[argmax];
+}
+
+void ModelQueue::clear() {
+    for (int i = 0; i < nummax; ++i) {
+        models[i] = nullptr;
+    }
 }
 
 void ModelQueue::push(Model* pModel) {

@@ -14,8 +14,24 @@ class ModelQueue {
         ModelQueue();
         ~ModelQueue();
         void init(unsigned int argmax);
+        void clear();
         void push(Model* pModel);
         Model* pop();
+};
+
+
+class Entity {
+    public:
+        int x;
+        int y;
+        int r;
+        int rGrz;
+        int deg;
+        int spd;
+        int flgHit;
+        Entity();
+        void move();
+        void checkHit(Entity* pEntity);
 };
 
 
@@ -23,7 +39,8 @@ class ModelQueue {
 
 #define MAX_TEX 100
 #define MAX_FNT 100
-#define MAX_UI 50
+#define MAX_QUE_UI 50
+#define MAX_QUE_FNT 50
 
 enum struct SCE_ID : char {
     Title,
@@ -43,6 +60,7 @@ class GameInf {
         Texture* fonts;
         // Queue
         ModelQueue queUI;
+        ModelQueue queFont;
         // Camera
         Camera cameraUI;
         // Fps

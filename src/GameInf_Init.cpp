@@ -20,7 +20,8 @@ GameInf::GameInf() :
     // Camera
     cameraUI(Camera()),
     // Queue
-    queUI(ModelQueue())
+    queUI(ModelQueue()),
+    queFont(ModelQueue())
 {}
 
 GameInf::~GameInf() {
@@ -57,7 +58,8 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         cameraUI.posZ = -1200.0f;
 
         // Queue
-        queUI.init(MAX_UI);
+        queUI.init(MAX_QUE_UI);
+        queFont.init(MAX_QUE_FNT);
 
         // Fps
         modelsFps = new Model[7];
@@ -71,6 +73,11 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
             modelsFps[i].sclX = 0.15f;
             modelsFps[i].sclY = 0.2f;
         }
+        modelsFps[2].texid = Lpcstr2uint(".");
+        modelsFps[4].texid = Lpcstr2uint("f");
+        modelsFps[5].texid = Lpcstr2uint("p");
+        modelsFps[6].texid = Lpcstr2uint("s");
+
 
         // Load screen
         if (!addTexture(hModule, TEX_LOAD))
