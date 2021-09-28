@@ -41,6 +41,7 @@ class Entity {
 
 class Player : public Entity {
     public:
+        unsigned int cnt;
         int spdNorm;
         int spdSlow;
         Fact fact;

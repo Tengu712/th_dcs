@@ -112,6 +112,9 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         bool flg = true;
         flg = flg && addTexture(hModule, TEX_UI_FRAME);
         flg = flg && addTexture(hModule, TEX_CH_MARISA_B0);
+        flg = flg && addTexture(hModule, TEX_CH_MARISA_B1);
+        flg = flg && addTexture(hModule, TEX_CH_MARISA_B2);
+        flg = flg && addTexture(hModule, TEX_CH_MARISA_B3);
         flg = flg && addFont(Lpcstr2uint("0"));
         flg = flg && addFont(Lpcstr2uint("1"));
         flg = flg && addFont(Lpcstr2uint("2"));

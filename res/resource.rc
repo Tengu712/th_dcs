@@ -5,3 +5,6 @@ TEX_BG_LOAD IMAGE "./bg_load.png"
 TEX_UI_FRAME IMAGE "./ui_frame.png"
 
 TEX_CH_MARISA_B0 IMAGE "./ch_marisa_b0.png"
+TEX_CH_MARISA_B1 IMAGE "./ch_marisa_b1.png"
+TEX_CH_MARISA_B2 IMAGE "./ch_marisa_b2.png"
+TEX_CH_MARISA_B3 IMAGE "./ch_marisa_b3.png"

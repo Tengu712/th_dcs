@@ -105,7 +105,7 @@ bool GameInf::setKeyConfig() {
     res = res && imanager.addKeycode(3, VK_LEFT, keytypes[2], codes[2]);
     res = res && imanager.addKeycode(4, VK_RIGHT, keytypes[3], codes[3]);
     res = res && imanager.addKeycode(5, 0x5A, keytypes[4], codes[4]);
-    res = res && imanager.addKeycode(6, VK_LSHIFT, keytypes[5], codes[5]);
+    res = res && imanager.addKeycode(6, VK_SHIFT, keytypes[5], codes[5]);
     res = res && imanager.addKeycode(7, VK_ESCAPE, keytypes[6], codes[6]);
 
     return res;

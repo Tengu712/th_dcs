@@ -1,6 +1,11 @@
 #include "../include/HeaderApp.hpp"
 
-Player::Player() : fact(Fact()) {
+Player::Player() : 
+    cnt(0U),
+    spdNorm(0),
+    spdSlow(0),
+    fact(Fact()) 
+{
     fact.posZ = 2.0f;
     fact.sclX = 8600.0f;
     fact.sclY = 8600.0f;
@@ -28,8 +33,11 @@ void Player::update(GameInf* pGinf) {
         deg = 315;
     else
         spd = 0;
-    fact.texid = TEX_CH_MARISA_B0;
     move();
+    x = max(-3800000, min(3800000, x));
+    y = max(-4600000, min(4600000, y));
     fact.posX = (float)x;
     fact.posY = (float)y;
+    fact.texid = TEX_CH_MARISA_B0 + ((cnt / 8) % 4);
+    cnt++;
 }
