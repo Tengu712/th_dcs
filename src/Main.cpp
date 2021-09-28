@@ -3,60 +3,20 @@
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
 
     GameInf ginf = GameInf();
-
-    {
-        bool flg = true;
-
-        HMODULE hModule = LoadLibrary("./resource.dll");
-        if (!hModule) {
-            MessageBoxA(nullptr, "resource.dll not found.", "Error", MB_OK);
-            return 1;
-        }
-
-        flg = flg && ginf.init(
+    if(!ginf.init(
                 hInst,
                 cmdShow,
                 L"幻想異郷　～ Darkside Connection of Skypunch",
                 L"TH_DCS",
                 1280U, 960U,
-                MessageBoxW(nullptr, L"フルスクリーンで起動しますか", L"確認", MB_YESNO) == IDNO,
-                hModule);
-
-        // Load texture
-        flg = flg && ginf.addTexture(hModule, TEX_UI_FRAME);
-
-        // Load font
-        flg = flg && ginf.addFont(Lpcstr2uint("0"));
-        flg = flg && ginf.addFont(Lpcstr2uint("1"));
-        flg = flg && ginf.addFont(Lpcstr2uint("2"));
-        flg = flg && ginf.addFont(Lpcstr2uint("3"));
-        flg = flg && ginf.addFont(Lpcstr2uint("4"));
-        flg = flg && ginf.addFont(Lpcstr2uint("5"));
-        flg = flg && ginf.addFont(Lpcstr2uint("6"));
-        flg = flg && ginf.addFont(Lpcstr2uint("7"));
-        flg = flg && ginf.addFont(Lpcstr2uint("8"));
-        flg = flg && ginf.addFont(Lpcstr2uint("9"));
-        flg = flg && ginf.addFont(Lpcstr2uint("."));
-        flg = flg && ginf.addFont(Lpcstr2uint("f"));
-        flg = flg && ginf.addFont(Lpcstr2uint("p"));
-        flg = flg && ginf.addFont(Lpcstr2uint("s"));
-
-        // Key map
-        flg = flg && ginf.setKeyConfig();
-
-        // Load save data
-        flg = flg && ginf.loadData();
-
-        // Finish
-        FreeLibrary(hModule);
-        if (!flg) {
-            MessageBoxA(nullptr, "Failed to load.", "Error", MB_OK);
-            UnregisterClassW(L"TH_DCS", hInst);
-            return 1;
-        }
+                MessageBoxW(nullptr, L"フルスクリーンで起動しますか", L"確認", MB_YESNO) == IDNO)) {
+        MessageBoxA(nullptr, "Failed to start game.", "Error", MB_OK);
+        UnregisterClassW(L"TH_DCS", hInst);
+        return 1;
     }
 
     AScene* sce = new SceneTitle();
+    sce->init(&ginf);
 
     MSG msg;
     ZeroMemory(&msg, sizeof(MSG));

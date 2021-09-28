@@ -1,5 +1,7 @@
 #include "../include/HeaderApp.hpp"
 
+#include <stdio.h>
+
 GameInf::GameInf() :
     // Manager
     dmanager(D3DManager()),
@@ -38,8 +40,15 @@ GameInf::~GameInf() {
 }
 
 bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName,
-        unsigned int width, unsigned int height, bool windowed, HMODULE hModule) 
+        unsigned int width, unsigned int height, bool windowed) 
 {
+    // Load dll
+    HMODULE hModule = LoadLibrary("./resource.dll");
+    if (!hModule) {
+        MessageBoxA(nullptr, "resource.dll not found.", "Error", MB_OK);
+        return false;
+    }
+
     try {
         // DirectX11
         if (!dmanager.init(hInst, cmdShow, wndName, wndClassName, width, height, windowed))
@@ -99,8 +108,47 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         dmanager.drawModel(&ideaSquare);
         dmanager.drawEnd();
 
+        // Load beginning
+        bool flg = true;
+        flg = flg && addTexture(hModule, TEX_UI_FRAME);
+        flg = flg && addTexture(hModule, TEX_CH_MARISA_B0);
+        flg = flg && addFont(Lpcstr2uint("0"));
+        flg = flg && addFont(Lpcstr2uint("1"));
+        flg = flg && addFont(Lpcstr2uint("2"));
+        flg = flg && addFont(Lpcstr2uint("3"));
+        flg = flg && addFont(Lpcstr2uint("4"));
+        flg = flg && addFont(Lpcstr2uint("5"));
+        flg = flg && addFont(Lpcstr2uint("6"));
+        flg = flg && addFont(Lpcstr2uint("7"));
+        flg = flg && addFont(Lpcstr2uint("8"));
+        flg = flg && addFont(Lpcstr2uint("9"));
+        flg = flg && addFont(Lpcstr2uint("."));
+        flg = flg && addFont(Lpcstr2uint("f"));
+        flg = flg && addFont(Lpcstr2uint("p"));
+        flg = flg && addFont(Lpcstr2uint("s"));
+        flg = flg && setKeyConfig();
+
+        // Load ending
+        if (!flg)
+            throw "Failed to Load.";
+
+        // Load data
+        FILE* pFile = fopen("./savedata.dat", "r");
+        if (!pFile) 
+            throw "Failed to open savedata.dat.";
+
+        // Set player
+        player.r = 10;
+        player.spdNorm = 800;
+        player.spdSlow = 400;
+        player.rGrz = 100;
+
+        fclose(pFile);
+        FreeLibrary(hModule);
+
     } catch (const char* error) {
         MessageBoxA(nullptr, error, "Error", MB_OK);
+        FreeLibrary(hModule);
         return false;
     }
 

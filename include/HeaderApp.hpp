@@ -41,6 +41,8 @@ class Entity {
 
 class Player : public Entity {
     public:
+        int spdNorm;
+        int spdSlow;
         Fact fact;
         Player();
         void update(GameInf* pGinf);
@@ -108,13 +110,12 @@ class GameInf {
         GameInf();
         ~GameInf();
         bool init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName, 
-                unsigned int width, unsigned int height, bool windowed, HMODULE hModule);
+                unsigned int width, unsigned int height, bool windowed);
         // System
         bool addTexture(HMODULE hModule, unsigned int id);
         bool addFont(unsigned int code);
         bool setKeyConfig();
         bool getKey(KEY_CODE code, KEY_STA status);
-        bool loadData();
         bool saveData();
         Texture* getTexture(unsigned int id);
         Texture* getFont(unsigned int code);

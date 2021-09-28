@@ -87,7 +87,7 @@ void GameInf::draw() {
             fact.texid = Lpcstr2uint("s");
         fact.posX = 15.0f * (float)i + 532.0f;
         fact.posY = -457.0f;
-        fact.posZ = -1000.0f;
+        fact.posZ = 1.1f;
         fact.sclX = 0.15f;
         fact.sclY = 0.2f;
         applyFact(&fact);
