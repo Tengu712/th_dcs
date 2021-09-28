@@ -110,3 +110,16 @@ bool GameInf::setKeyConfig() {
 
     return res;
 }
+
+bool GameInf::getKey(KEY_CODE code, KEY_STA status) {
+    if (status == KEY_STA::Neutral)
+        return imanager.getKey(static_cast<char>(code) + 1) == 0;
+    else if (status == KEY_STA::Down)
+        return (imanager.getKey(static_cast<char>(code) + 1) & 0b010) != 0;
+    else if (status == KEY_STA::Pressed)
+        return (imanager.getKey(static_cast<char>(code) + 1) & 0b001) != 0;
+    else if (status == KEY_STA::Up)
+        return (imanager.getKey(static_cast<char>(code) + 1) & 0b100) != 0;
+    else
+        return false;
+}

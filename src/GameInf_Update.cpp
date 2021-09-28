@@ -41,6 +41,13 @@ void GameInf::applyFact(Fact* pFact) {
 void GameInf::draw() {
     dmanager.drawBegin();
 
+    dmanager.applyCamera(&cameraGame, false);
+
+    // Player
+    applyFact(&player.fact);
+    dmanager.applyTexture(getTexture(player.fact.texid));
+    dmanager.drawModel(&ideaSquare);
+
     // UI
     dmanager.applyCamera(&cameraUI, false);
     for(int i = 0; i < MAX_QUE_UI; ++i) {

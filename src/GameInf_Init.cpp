@@ -20,7 +20,10 @@ GameInf::GameInf() :
     startTime(timeGetTime()),
     lastTime(timeGetTime()),
     // Camera
-    cameraUI(Camera())
+    cameraGame(Camera()),
+    cameraUI(Camera()),
+    // Game
+    player(Player())
 {}
 
 GameInf::~GameInf() {
@@ -79,14 +82,14 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
             throw "Failed to create idea of square.";
 
         // Camera
+        dmanager.createCamera(width * 10000.0f, height * 10000.0f, &cameraGame);
         dmanager.createCamera(width, height, &cameraUI);
-        cameraUI.posZ = -1200.0f;
 
         // Load screen
         if (!addTexture(hModule, TEX_BG_LOAD))
             throw "Failed to load image for load screen.";
         Fact bgLoad = Fact();
-        bgLoad.posZ = -900.0f;
+        bgLoad.posZ = 1.5f;
         bgLoad.sclX = 12.8f;
         bgLoad.sclY = 9.6f;
         applyFact(&bgLoad);

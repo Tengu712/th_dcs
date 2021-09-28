@@ -1,6 +1,8 @@
 #include "HeaderDX11.hpp"
 #include "resource.hpp"
 
+class GameInf;
+
 struct Fact {
     unsigned int texid;
     float posX, posY, posZ;
@@ -37,6 +39,14 @@ class Entity {
 };
 
 
+class Player : public Entity {
+    public:
+        Fact fact;
+        Player();
+        void update(GameInf* pGinf);
+};
+
+
 // --------------------------------------------------------------------------------------------------------------------
 
 #define MAX_TEX 100
@@ -48,6 +58,23 @@ enum struct SCE_ID : char {
     Title,
     Tutorial,
     Exit,
+};
+
+enum struct KEY_CODE : char {
+    Up,
+    Down,
+    Left,
+    Right,
+    Z,
+    Shift,
+    Esc,
+};
+
+enum struct KEY_STA : char {
+    Neutral,
+    Down,
+    Pressed,
+    Up,
 };
 
 class GameInf {
@@ -67,12 +94,15 @@ class GameInf {
         Fact** queUI;
         Fact** queFont;
         // Camera
+        Camera cameraGame;
         Camera cameraUI;
         // Fps
         int cntFps;
         float fps;
         long startTime;
         long lastTime;
+        // Game
+        Player player;
 
         // Method
         GameInf();
@@ -83,6 +113,9 @@ class GameInf {
         bool addTexture(HMODULE hModule, unsigned int id);
         bool addFont(unsigned int code);
         bool setKeyConfig();
+        bool getKey(KEY_CODE code, KEY_STA status);
+        bool loadData();
+        bool saveData();
         Texture* getTexture(unsigned int id);
         Texture* getFont(unsigned int code);
         // Queue

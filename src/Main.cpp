@@ -16,7 +16,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
         flg = flg && ginf.init(
                 hInst,
                 cmdShow,
-                L"～ Darkside Connection of Skypunch",
+                L"幻想異郷　～ Darkside Connection of Skypunch",
                 L"TH_DCS",
                 1280U, 960U,
                 MessageBoxW(nullptr, L"フルスクリーンで起動しますか", L"確認", MB_YESNO) == IDNO,
@@ -44,6 +44,9 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
         // Key map
         flg = flg && ginf.setKeyConfig();
 
+        // Load save data
+        flg = flg && ginf.loadData();
+
         // Finish
         FreeLibrary(hModule);
         if (!flg) {
@@ -68,6 +71,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
 
         ginf.update();
         if (ginf.sceCur != ginf.sceNex) {
+            ginf.saveData();
             delete sce;
             if (ginf.sceNex == SCE_ID::Title) 
                 sce = new SceneTitle();

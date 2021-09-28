@@ -18,8 +18,8 @@ Entity::Entity() :
 
 void Entity::move() {
     const double rad = (double)deg / 360.0 * 2.0 * M_PI;
-    x += (int)cos(rad);
-    y += (int)sin(rad);
+    x += (int)(cos(rad) * 10000.0f) * spd / 100;
+    y += (int)(sin(rad) * 10000.0f) * spd / 100;
 }
 
 void Entity::checkHit(Entity* pEntity) {
