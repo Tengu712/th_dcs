@@ -1,10 +1,18 @@
 #include "../include/resource.hpp"
 
 TEX_BG_LOAD IMAGE "./bg_load.png"
+TEX_BG_TUTORIAL IMAGE "./bg_tutorial.png"
 
 TEX_UI_FRAME IMAGE "./ui_frame.png"
 
+TEX_BU_SELF0 IMAGE "./bu_self0.png"
+
+TEX_CH_ATARI IMAGE "./ch_atari.png"
 TEX_CH_MARISA_B0 IMAGE "./ch_marisa_b0.png"
 TEX_CH_MARISA_B1 IMAGE "./ch_marisa_b1.png"
 TEX_CH_MARISA_B2 IMAGE "./ch_marisa_b2.png"
 TEX_CH_MARISA_B3 IMAGE "./ch_marisa_b3.png"
+TEX_CH_MARISA_R0 IMAGE "./ch_marisa_r0.png"
+TEX_CH_MARISA_R1 IMAGE "./ch_marisa_r1.png"
+TEX_CH_MARISA_L0 IMAGE "./ch_marisa_l0.png"
+TEX_CH_MARISA_L1 IMAGE "./ch_marisa_l1.png"

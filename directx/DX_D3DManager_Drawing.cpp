@@ -1,5 +1,9 @@
 #include "../include/HeaderDX11.hpp"
 
+void D3DManager::clearDepthStencil() {
+    inf.pImContext->ClearDepthStencilView(inf.pDSView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0U);
+}
+
 void D3DManager::drawBegin() {
     inf.pImContext->OMSetRenderTargets(1U, inf.pRTView.GetAddressOf(), inf.pDSView.Get());
     inf.pImContext->RSSetViewports(1U, &inf.viewport);

@@ -1,6 +1,8 @@
 #include "HeaderDX11.hpp"
 #include "resource.hpp"
 
+#pragma comment(lib, "mydx.lib")
+
 class GameInf;
 
 struct Fact {
@@ -42,10 +44,23 @@ class Entity {
 class Player : public Entity {
     public:
         unsigned int cnt;
+        unsigned int cntSlow;
         int spdNorm;
         int spdSlow;
+        int interval;
         Fact fact;
         Player();
+        void update(GameInf* pGinf);
+};
+
+class Bullet : public Entity {
+    public:
+        unsigned int cnt;
+        int ptn;
+        bool moving;
+        Fact fact;
+        Bullet();
+        void init(int knd);
         void update(GameInf* pGinf);
 };
 
@@ -54,8 +69,13 @@ class Player : public Entity {
 
 #define MAX_TEX 100
 #define MAX_FNT 100
+#define MAX_QUE_BG 20
 #define MAX_QUE_UI 50
 #define MAX_QUE_FNT 50
+#define MAX_KND_BUL 5
+#define MAX_NUM_BUL 150
+#define MAX_KND_BUL_SELF 2
+#define MAX_NUM_BUL_SELF 20
 
 enum struct SCE_ID : char {
     Title,
@@ -94,9 +114,11 @@ class GameInf {
         Texture* fonts;
         ModelInf ideaSquare;
         // Queue
+        Fact** queBG;
         Fact** queUI;
         Fact** queFont;
         // Camera
+        Camera cameraBG;
         Camera cameraGame;
         Camera cameraUI;
         // Fps
@@ -106,6 +128,10 @@ class GameInf {
         long lastTime;
         // Game
         Player player;
+        int* mapBullets;
+        int* mapBulletsSelf;
+        Bullet** bullets;
+        Bullet** bulletsSelf;
 
         // Method
         GameInf();
@@ -121,8 +147,12 @@ class GameInf {
         Texture* getTexture(unsigned int id);
         Texture* getFont(unsigned int code);
         // Queue
+        void pushBG(Fact* pFact);
         void pushUI(Fact* pFact);
         void pushFont(Fact* pFact);
+        // Game
+        void pushBullet(Bullet* bullet);
+        void pushBulletSelf(Bullet* bullet);
         // General
         void update();
         void draw();
@@ -156,6 +186,7 @@ class ASceneGame : public AScene {
 
 class SceneTutorial : public ASceneGame {
     private:
+        Fact bg;
     public:
         SceneTutorial();
         void init(GameInf* pGinf);

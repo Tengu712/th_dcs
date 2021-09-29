@@ -4,13 +4,6 @@
 #pragma comment(lib, "Winmm.lib")
 
 void GameInf::update() {
-    for (int i = 0; i < MAX_QUE_UI; ++i) {
-        queUI[i] = nullptr;
-    }
-    for (int i = 0; i < MAX_QUE_FNT; ++i) {
-        queFont[i] = nullptr;
-    }
-
     startTime = timeGetTime();
     if (startTime - lastTime >= 1000L){
         fps = (float)(cntFps * 1000) / (float)(startTime - lastTime);
@@ -18,6 +11,13 @@ void GameInf::update() {
         cntFps = 0;
     }
     cntFps++;
+
+    for (int i = 0; i < MAX_QUE_UI; ++i) {
+        queUI[i] = nullptr;
+    }
+    for (int i = 0; i < MAX_QUE_FNT; ++i) {
+        queFont[i] = nullptr;
+    }
 
     imanager.inspect();
 }
@@ -41,12 +41,69 @@ void GameInf::applyFact(Fact* pFact) {
 void GameInf::draw() {
     dmanager.drawBegin();
 
+    dmanager.applyCamera(&cameraBG, true);
+    for (int i = 0; i < MAX_QUE_BG; ++i) {
+        if (queBG[i] == nullptr)
+            continue;
+        applyFact(queBG[i]);
+        dmanager.applyTexture(getTexture(queBG[i]->texid));
+        dmanager.drawModel(&ideaSquare);
+    }
+
     dmanager.applyCamera(&cameraGame, false);
 
     // Player
     applyFact(&player.fact);
     dmanager.applyTexture(getTexture(player.fact.texid));
     dmanager.drawModel(&ideaSquare);
+
+    // Bullet
+    for (int i = 0; i < MAX_KND_BUL_SELF; ++i) {
+        if (mapBulletsSelf[i] == 0)
+            continue;
+        dmanager.applyTexture(getTexture(mapBulletsSelf[i]));
+        for (int j = 0; j < MAX_NUM_BUL_SELF; ++j) {
+            if (!bulletsSelf[i][j].moving)
+                continue;
+            applyFact(&bulletsSelf[i][j].fact);
+            dmanager.clearDepthStencil();
+            dmanager.drawModel(&ideaSquare);
+        }
+    }
+    for (int i = 0; i < MAX_KND_BUL; ++i) {
+        if (mapBullets[i] == 0)
+            continue;
+        dmanager.applyTexture(getTexture(mapBullets[i]));
+        for (int j = 0; j < MAX_NUM_BUL; ++j) {
+            if (!bullets[i][j].moving)
+                continue;
+            applyFact(&bullets[i][j].fact);
+            dmanager.clearDepthStencil();
+            dmanager.drawModel(&ideaSquare);
+        }
+    }
+
+    // Slow
+    if (player.cntSlow > 0U) {
+        Fact fact = Fact();
+        fact.posX = player.fact.posX;
+        fact.posY = player.fact.posY;
+        fact.posZ = 1.3f;
+        if (player.cntSlow < 10U) {
+            fact.sclX = 1600.0f + 500.0f * (1.0f - (float)player.cntSlow / 10U);
+            fact.sclY = 1600.0f + 500.0f * (1.0f - (float)player.cntSlow / 10U);
+            applyFact(&fact);
+            dmanager.applyTexture(getTexture(TEX_CH_ATARI));
+            dmanager.drawModel(&ideaSquare);
+        } else {
+            fact.sclX = 1600.0f;
+            fact.sclY = 1600.0f;
+            fact.degZ = (float)player.cntSlow * 4.0f;
+            applyFact(&fact);
+            dmanager.applyTexture(getTexture(TEX_CH_ATARI));
+            dmanager.drawModel(&ideaSquare);
+        }
+    }
 
     // UI
     dmanager.applyCamera(&cameraUI, false);

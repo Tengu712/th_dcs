@@ -14,6 +14,7 @@ GameInf::GameInf() :
     fonts(nullptr),
     ideaSquare(ModelInf()),
     // Queue
+    queBG(nullptr),
     queUI(nullptr),
     queFont(nullptr),
     // Fps
@@ -22,10 +23,15 @@ GameInf::GameInf() :
     startTime(timeGetTime()),
     lastTime(timeGetTime()),
     // Camera
+    cameraBG(Camera()),
     cameraGame(Camera()),
     cameraUI(Camera()),
     // Game
-    player(Player())
+    player(Player()),
+    mapBullets(nullptr),
+    mapBulletsSelf(nullptr),
+    bullets(nullptr),
+    bulletsSelf(nullptr)
 {}
 
 GameInf::~GameInf() {
@@ -33,10 +39,30 @@ GameInf::~GameInf() {
         delete texs;
     if (fonts != nullptr)
         delete fonts;
+    if (queBG != nullptr)
+        delete queBG;
     if (queUI != nullptr)
         delete queUI;
     if (queFont != nullptr)
         delete queFont;
+    if (mapBullets != nullptr)
+        delete mapBullets;
+    if (mapBulletsSelf != nullptr)
+        delete mapBulletsSelf;
+    if (bullets != nullptr) {
+        for (int i = 0; i < MAX_KND_BUL; ++i) {
+            if (bullets[i] != nullptr)
+                delete bullets[i];
+        }
+        delete bullets;
+    }
+    if (bulletsSelf != nullptr) {
+        for (int i = 0; i < MAX_KND_BUL_SELF; ++i) {
+            if (bulletsSelf[i] != nullptr)
+                delete bulletsSelf[i];
+        }
+        delete bullets;
+    }
 }
 
 bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName,
@@ -67,13 +93,37 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         }
 
         // Queue
+        queBG = new Fact*[MAX_QUE_BG];
         queUI = new Fact*[MAX_QUE_UI];
         queFont = new Fact*[MAX_QUE_FNT];
+        for (int i = 0; i < MAX_QUE_BG; ++i) {
+            queBG[i] = nullptr;
+        }
         for (int i = 0; i < MAX_QUE_UI; ++i) {
             queUI[i] = nullptr;
         }
         for (int i = 0; i < MAX_QUE_FNT; ++i) {
             queFont[i] = nullptr;
+        }
+
+        // Bullets map
+        mapBullets = new int[MAX_KND_BUL];
+        mapBulletsSelf = new int[MAX_KND_BUL_SELF];
+        for (int i = 0; i < MAX_KND_BUL; ++i) {
+            mapBullets[i] = 0;
+        }
+        for (int i = 0; i < MAX_KND_BUL_SELF; ++i) {
+            mapBulletsSelf[i] = 0;
+        }
+
+        // Bullets
+        bullets = new Bullet*[MAX_KND_BUL];
+        bulletsSelf = new Bullet*[MAX_KND_BUL_SELF];
+        for (int i = 0; i < MAX_KND_BUL; ++i) {
+            bullets[i] = new Bullet[MAX_NUM_BUL];
+        }
+        for (int i = 0; i < MAX_KND_BUL_SELF; ++i) {
+            bulletsSelf[i] = new Bullet[MAX_NUM_BUL_SELF];
         }
 
         // Idea
@@ -91,6 +141,7 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
             throw "Failed to create idea of square.";
 
         // Camera
+        dmanager.createCamera(width, height, &cameraBG);
         dmanager.createCamera(width * 10000.0f, height * 10000.0f, &cameraGame);
         dmanager.createCamera(width, height, &cameraUI);
 
@@ -110,11 +161,18 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
 
         // Load beginning
         bool flg = true;
+        flg = flg && addTexture(hModule, TEX_BG_TUTORIAL);
         flg = flg && addTexture(hModule, TEX_UI_FRAME);
+        flg = flg && addTexture(hModule, TEX_BU_SELF0);
+        flg = flg && addTexture(hModule, TEX_CH_ATARI);
         flg = flg && addTexture(hModule, TEX_CH_MARISA_B0);
         flg = flg && addTexture(hModule, TEX_CH_MARISA_B1);
         flg = flg && addTexture(hModule, TEX_CH_MARISA_B2);
         flg = flg && addTexture(hModule, TEX_CH_MARISA_B3);
+        flg = flg && addTexture(hModule, TEX_CH_MARISA_R0);
+        flg = flg && addTexture(hModule, TEX_CH_MARISA_R1);
+        flg = flg && addTexture(hModule, TEX_CH_MARISA_L0);
+        flg = flg && addTexture(hModule, TEX_CH_MARISA_L1);
         flg = flg && addFont(Lpcstr2uint("0"));
         flg = flg && addFont(Lpcstr2uint("1"));
         flg = flg && addFont(Lpcstr2uint("2"));
@@ -144,6 +202,7 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         player.r = 10;
         player.spdNorm = 800;
         player.spdSlow = 400;
+        player.interval = 8;
         player.rGrz = 100;
 
         fclose(pFile);
