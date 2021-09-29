@@ -66,3 +66,19 @@ void GameInf::pushFont(Fact* pFact) {
         break;
     }
 }
+
+void GameInf::applyFact(Fact* pFact) {
+    idea.posX = pFact->posX;
+    idea.posY = pFact->posY;
+    idea.posZ = pFact->posZ;
+    idea.degX = pFact->degX;
+    idea.degY = pFact->degY;
+    idea.degZ = pFact->degZ;
+    idea.sclX = pFact->sclX;
+    idea.sclY = pFact->sclY;
+    idea.sclZ = pFact->sclZ;
+    idea.colR = pFact->colR;
+    idea.colG = pFact->colG;
+    idea.colB = pFact->colB;
+    idea.colA = pFact->colA;
+}

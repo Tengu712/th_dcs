@@ -29,7 +29,6 @@ struct Fact {
     {}
 };
 
-
 struct Entity {
     int x, y, r, rGrz;
     int deg, spd;
@@ -103,23 +102,29 @@ enum struct KEY_STA : char {
 
 class GameInf {
     private:
+        // Manager
         D3DManager dmanager;
         InputManager imanager;
         AudioManager amanager;
+        // System
+        ModelInf idea;
+        FrameBuffer fbBG;
+        FrameBuffer fbGame;
+        // Storage
+        Texture* texs;
+        Texture* fonts;
+        Fact** queBG;
+        Fact** queUI;
+        Fact** queFont;
+        int* mapBulsE;
+        int* mapBulsP;
+        Bullet** bulsE;
+        Bullet** bulsP;
     public:
         // System
         SCE_ID sceCur;
         SCE_ID sceNex;
-        Texture* texs;
-        Texture* fonts;
-        ModelInf idea;
         SaveData data;
-        FrameBuffer fbBG;
-        FrameBuffer fbGame;
-        // Queue
-        Fact** queBG;
-        Fact** queUI;
-        Fact** queFont;
         // Camera
         Camera cameraBG;
         Camera cameraGame;
@@ -131,10 +136,6 @@ class GameInf {
         long lastTime;
         // Game
         Player player;
-        int* mapBulsE;
-        int* mapBulsP;
-        Bullet** bulsE;
-        Bullet** bulsP;
 
         // Method
         GameInf();
@@ -143,20 +144,20 @@ class GameInf {
                 unsigned int width, unsigned int height, bool windowed);
         void update();
         void draw();
-        // System
-        bool addTexture(HMODULE hModule, unsigned int id);
-        bool addFont(unsigned int code);
+        // Static
+        bool saveData();
         bool setKeyConfig();
         bool getKey(KEY_CODE code, KEY_STA status);
-        bool saveData();
-        void applyFact(Fact* pFact);
+        bool addTexture(HMODULE hModule, unsigned int id);
+        bool addFont(unsigned int code);
         Texture* getTexture(unsigned int id);
         Texture* getFont(unsigned int code);
+        void applyFact(Fact* pFact);
         // Queue
         void pushBG(Fact* pFact);
         void pushUI(Fact* pFact);
         void pushFont(Fact* pFact);
-        // Game
+        // Object
         void createBullet(Bullet* pBul, int knd);
         void pushBulletE(Bullet* pBul);
         void pushBulletP(Bullet* pBul);
