@@ -110,6 +110,8 @@ class D3DManager {
         // Model
         bool createModelBuffers(unsigned int numVtx, Vertex* data, unsigned int* dataIdx, ModelInf* minf);
         void drawModel(ModelInf* minf);
+
+        // Buffer
         void clearDepthStencil();
 };
 

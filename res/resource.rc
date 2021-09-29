@@ -8,6 +8,7 @@ TEX_UI_FRAME IMAGE "./ui_frame.png"
 TEX_BU_SELF0 IMAGE "./bu_self0.png"
 
 TEX_CH_ATARI IMAGE "./ch_atari.png"
+TEX_CH_SLOWCIRCLE IMAGE "./ch_slowcircle.png"
 TEX_CH_MARISA_B0 IMAGE "./ch_marisa_b0.png"
 TEX_CH_MARISA_B1 IMAGE "./ch_marisa_b1.png"
 TEX_CH_MARISA_B2 IMAGE "./ch_marisa_b2.png"

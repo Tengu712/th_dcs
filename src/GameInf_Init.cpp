@@ -165,6 +165,7 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         flg = flg && addTexture(hModule, TEX_UI_FRAME);
         flg = flg && addTexture(hModule, TEX_BU_SELF0);
         flg = flg && addTexture(hModule, TEX_CH_ATARI);
+        flg = flg && addTexture(hModule, TEX_CH_SLOWCIRCLE);
         flg = flg && addTexture(hModule, TEX_CH_MARISA_B0);
         flg = flg && addTexture(hModule, TEX_CH_MARISA_B1);
         flg = flg && addTexture(hModule, TEX_CH_MARISA_B2);

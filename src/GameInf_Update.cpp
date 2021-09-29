@@ -88,21 +88,34 @@ void GameInf::draw() {
         Fact fact = Fact();
         fact.posX = player.fact.posX;
         fact.posY = player.fact.posY;
+        // Atari
         fact.posZ = 1.3f;
         if (player.cntSlow < 10U) {
             fact.sclX = 1600.0f + 500.0f * (1.0f - (float)player.cntSlow / 10U);
             fact.sclY = 1600.0f + 500.0f * (1.0f - (float)player.cntSlow / 10U);
-            applyFact(&fact);
-            dmanager.applyTexture(getTexture(TEX_CH_ATARI));
-            dmanager.drawModel(&ideaSquare);
         } else {
             fact.sclX = 1600.0f;
             fact.sclY = 1600.0f;
             fact.degZ = (float)player.cntSlow * 4.0f;
-            applyFact(&fact);
-            dmanager.applyTexture(getTexture(TEX_CH_ATARI));
-            dmanager.drawModel(&ideaSquare);
         }
+        applyFact(&fact);
+        dmanager.applyTexture(getTexture(TEX_CH_ATARI));
+        dmanager.drawModel(&ideaSquare);
+        // Circle
+         if (player.cntSlow < 10U) {
+            fact.sclX = 10000.0f + 5000.0f * (1.0f - (float)player.cntSlow / 10U);
+            fact.sclY = 10000.0f + 5000.0f * (1.0f - (float)player.cntSlow / 10U);
+        } else {
+            fact.sclX = 10000.0f;
+            fact.sclY = 10000.0f;
+        }
+        applyFact(&fact);
+        dmanager.applyTexture(getTexture(TEX_CH_SLOWCIRCLE));
+        dmanager.drawModel(&ideaSquare);
+        fact.degZ *= -1.0f;
+        applyFact(&fact);
+        dmanager.clearDepthStencil();
+        dmanager.drawModel(&ideaSquare);
     }
 
     // UI
