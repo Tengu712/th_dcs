@@ -30,58 +30,53 @@ struct Fact {
 };
 
 
-class Entity {
-    public:
-        int x, y, r, rGrz;
-        int deg, spd;
-        int flgHit;
-        Entity();
-        void move();
-        void checkHit(Entity* pEntity);
+struct Entity {
+    int x, y, r, rGrz;
+    int deg, spd;
 };
 
-
-class Player : public Entity {
-    public:
-        unsigned int cnt;
-        unsigned int cntSlow;
-        int spdNorm;
-        int spdSlow;
-        int interval;
-        int atk;
-        int numOpt;
-        int widthShot;
-        int kndShot;
-        int kndSkill;
-        Fact fact;
-        Player();
-        void update(GameInf* pGinf);
+struct Player : public Entity {
+    unsigned int cnt;
+    unsigned int cntSlow;
+    Fact fact;
 };
 
-class Bullet : public Entity {
-    public:
-        unsigned int cnt;
-        int atk;
-        int ptn;
-        bool moving;
-        Fact fact;
-        Bullet();
-        void init(int knd);
-        void update(GameInf* pGinf);
+struct Bullet : public Entity {
+    unsigned int cnt;
+    int atk;
+    int ptn;
+    int flgHit;
+    bool moving;
+    Fact fact;
+};
+
+struct SaveData {
+    int scoreTotal;
+    int spdNorm;
+    int spdSlow;
+    int r;
+    int rGrz;
+    int atk;
+    int interval;
+    int numOpt;
+    int widthShot;
+    int kndShot;
+    int kndSkill;
 };
 
 
 // --------------------------------------------------------------------------------------------------------------------
+
 
 #define MAX_TEX 100
 #define MAX_FNT 100
 #define MAX_QUE_BG 20
 #define MAX_QUE_UI 50
 #define MAX_QUE_FNT 50
-#define MAX_KND_BUL 5
-#define MAX_NUM_BUL 150
-#define MAX_KND_BUL_SELF 2
-#define MAX_NUM_BUL_SELF 20
+#define MAX_KND_BUL_E 5
+#define MAX_NUM_BUL_E 150
+#define MAX_KND_BUL_P 2
+#define MAX_NUM_BUL_P 20
 
 enum struct SCE_ID : char {
     Title,
@@ -117,7 +112,8 @@ class GameInf {
         SCE_ID sceNex;
         Texture* texs;
         Texture* fonts;
-        ModelInf ideaSquare;
+        ModelInf idea;
+        SaveData data;
         FrameBuffer fbBG;
         FrameBuffer fbGame;
         // Queue
@@ -135,16 +131,18 @@ class GameInf {
         long lastTime;
         // Game
         Player player;
-        int* mapBullets;
-        int* mapBulletsSelf;
-        Bullet** bullets;
-        Bullet** bulletsSelf;
+        int* mapBulsE;
+        int* mapBulsP;
+        Bullet** bulsE;
+        Bullet** bulsP;
 
         // Method
         GameInf();
         ~GameInf();
         bool init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName, 
                 unsigned int width, unsigned int height, bool windowed);
+        void update();
+        void draw();
         // System
         bool addTexture(HMODULE hModule, unsigned int id);
         bool addFont(unsigned int code);
@@ -159,11 +157,13 @@ class GameInf {
         void pushUI(Fact* pFact);
         void pushFont(Fact* pFact);
         // Game
-        void pushBullet(Bullet* bullet);
-        void pushBulletSelf(Bullet* bullet);
-        // General
-        void update();
-        void draw();
+        void createBullet(Bullet* pBul, int knd);
+        void pushBulletE(Bullet* pBul);
+        void pushBulletP(Bullet* pBul);
+        void updateEntity(Entity* pEntity);
+        void updateBullet(Bullet* pBul);
+        void updateBullets();
+        void updatePlayer();
 };
 
 class AScene {

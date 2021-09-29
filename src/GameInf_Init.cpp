@@ -12,7 +12,8 @@ GameInf::GameInf() :
     sceNex(SCE_ID::Title),
     texs(nullptr),
     fonts(nullptr),
-    ideaSquare(ModelInf()),
+    idea(ModelInf()),
+    data(SaveData()),
     fbBG(FrameBuffer()),
     fbGame(FrameBuffer()),
     // Queue
@@ -30,10 +31,10 @@ GameInf::GameInf() :
     cameraUI(Camera()),
     // Game
     player(Player()),
-    mapBullets(nullptr),
-    mapBulletsSelf(nullptr),
-    bullets(nullptr),
-    bulletsSelf(nullptr)
+    mapBulsE(nullptr),
+    mapBulsP(nullptr),
+    bulsE(nullptr),
+    bulsP(nullptr)
 {}
 
 GameInf::~GameInf() {
@@ -47,23 +48,23 @@ GameInf::~GameInf() {
         delete queUI;
     if (queFont != nullptr)
         delete queFont;
-    if (mapBullets != nullptr)
-        delete mapBullets;
-    if (mapBulletsSelf != nullptr)
-        delete mapBulletsSelf;
-    if (bullets != nullptr) {
-        for (int i = 0; i < MAX_KND_BUL; ++i) {
-            if (bullets[i] != nullptr)
-                delete bullets[i];
+    if (mapBulsE != nullptr)
+        delete mapBulsE;
+    if (mapBulsP != nullptr)
+        delete mapBulsP;
+    if (bulsE != nullptr) {
+        for (int i = 0; i < MAX_KND_BUL_E; ++i) {
+            if (bulsE[i] != nullptr)
+                delete bulsE[i];
         }
-        delete bullets;
+        delete bulsE;
     }
-    if (bulletsSelf != nullptr) {
-        for (int i = 0; i < MAX_KND_BUL_SELF; ++i) {
-            if (bulletsSelf[i] != nullptr)
-                delete bulletsSelf[i];
+    if (bulsP != nullptr) {
+        for (int i = 0; i < MAX_KND_BUL_P; ++i) {
+            if (bulsP[i] != nullptr)
+                delete bulsP[i];
         }
-        delete bullets;
+        delete bulsE;
     }
 }
 
@@ -71,7 +72,7 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         unsigned int width, unsigned int height, bool windowed) 
 {
     // Load dll
-    HMODULE hModule = LoadLibrary("./resource.dll");
+    HMODULE hModule = LoadLibraryA("./resource.dll");
     if (!hModule) {
         MessageBoxA(nullptr, "resource.dll not found.", "Error", MB_OK);
         return false;
@@ -109,29 +110,29 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         }
 
         // Bullets map
-        mapBullets = new int[MAX_KND_BUL];
-        mapBulletsSelf = new int[MAX_KND_BUL_SELF];
-        for (int i = 0; i < MAX_KND_BUL; ++i) {
-            mapBullets[i] = 0;
+        mapBulsE = new int[MAX_KND_BUL_E];
+        mapBulsP = new int[MAX_KND_BUL_P];
+        for (int i = 0; i < MAX_KND_BUL_E; ++i) {
+            mapBulsE[i] = 0;
         }
-        for (int i = 0; i < MAX_KND_BUL_SELF; ++i) {
-            mapBulletsSelf[i] = 0;
+        for (int i = 0; i < MAX_KND_BUL_P; ++i) {
+            mapBulsP[i] = 0;
         }
 
         // Bullets
-        bullets = new Bullet*[MAX_KND_BUL];
-        bulletsSelf = new Bullet*[MAX_KND_BUL_SELF];
-        for (int i = 0; i < MAX_KND_BUL; ++i) {
-            bullets[i] = new Bullet[MAX_NUM_BUL];
+        bulsE = new Bullet*[MAX_KND_BUL_E];
+        bulsP = new Bullet*[MAX_KND_BUL_P];
+        for (int i = 0; i < MAX_KND_BUL_E; ++i) {
+            bulsE[i] = new Bullet[MAX_NUM_BUL_E];
         }
-        for (int i = 0; i < MAX_KND_BUL_SELF; ++i) {
-            bulletsSelf[i] = new Bullet[MAX_NUM_BUL_SELF];
+        for (int i = 0; i < MAX_KND_BUL_P; ++i) {
+            bulsP[i] = new Bullet[MAX_NUM_BUL_P];
         }
 
         // Idea
         const unsigned int kNumVtx = 4U;
         const unsigned int kNumIdx = 6U;
-        ideaSquare.numIdx = kNumIdx;
+        idea.numIdx = kNumIdx;
         struct Vertex dataPCNU[kNumVtx] = {
             {-50.0f, -50.0f, +0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f},
             {-50.0f, +50.0f, +0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f},
@@ -139,7 +140,7 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
             {+50.0f, -50.0f, +0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f},
         };
         unsigned int dataIdx[kNumIdx] = {0, 1, 2, 0, 2, 3};
-        if (!dmanager.createModelBuffers(kNumVtx, dataPCNU, dataIdx, &ideaSquare))
+        if (!dmanager.createModelBuffers(kNumVtx, dataPCNU, dataIdx, &idea))
             throw "Failed to create idea of square.";
 
         // Camera
@@ -164,7 +165,7 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         dmanager.drawBegin(false);
         dmanager.applyCamera(&cameraUI, false);
         dmanager.applyTexture(getTexture(TEX_BG_LOAD));
-        dmanager.drawModel(&ideaSquare);
+        dmanager.drawModel(&idea);
         dmanager.drawEnd();
 
         // Load beginning
@@ -207,12 +208,22 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         if (!pFile) 
             throw "Failed to open savedata.dat.";
 
-        // Set player
-        player.r = 10;
-        player.spdNorm = 800;
-        player.spdSlow = 400;
-        player.interval = 8;
-        player.rGrz = 100;
+        // Load data
+        data.scoreTotal = 0;
+        data.spdNorm = 800;
+        data.spdSlow = 400;
+        data.r = 10;
+        data.rGrz = 100;
+        data.atk = 100;
+        data.interval = 8;
+        data.numOpt = 0;
+        data.widthShot = 0;
+        data.kndShot = 0;
+        data.kndSkill = 0;
+
+        // Other
+        player.fact.sclX = 8600.0f;
+        player.fact.sclY = 8600.0f;
 
         fclose(pFile);
         FreeLibrary(hModule);
