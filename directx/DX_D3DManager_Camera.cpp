@@ -17,4 +17,3 @@ void D3DManager::applyCamera(Camera* camera, bool isParse) {
         DirectX::XMStoreFloat4x4(&inf.cbuffer.matProj, DirectX::XMMatrixTranspose(
                     DirectX::XMMatrixOrthographicLH(camera->width, camera->height, camera->nearZ, camera->farZ)));
 }
-

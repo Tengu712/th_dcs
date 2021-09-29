@@ -6,9 +6,13 @@ Player::Player() :
     spdNorm(0),
     spdSlow(0),
     interval(0),
+    atk(0),
+    numOpt(0),
+    widthShot(0),
+    kndShot(0),
+    kndSkill(0),
     fact(Fact()) 
 {
-    fact.posZ = 2.0f;
     fact.sclX = 8600.0f;
     fact.sclY = 8600.0f;
 }
@@ -18,9 +22,11 @@ void Player::update(GameInf* pGinf) {
     // Shot
     if (pGinf->getKey(KEY_CODE::Z, KEY_STA::Pressed) && cnt % interval == 0) {
         Bullet bul = Bullet();
+        // Main shot
         bul.init(TEX_BU_SELF0);
         bul.deg = 90;
         bul.spd = 4000;
+        bul.atk = atk;
         bul.y = y + 100000;
         bul.x = x - 150000;
         pGinf->pushBulletSelf(&bul);

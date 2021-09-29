@@ -13,6 +13,8 @@ GameInf::GameInf() :
     texs(nullptr),
     fonts(nullptr),
     ideaSquare(ModelInf()),
+    fbBG(FrameBuffer()),
+    fbGame(FrameBuffer()),
     // Queue
     queBG(nullptr),
     queUI(nullptr),
@@ -144,6 +146,12 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         dmanager.createCamera(width, height, &cameraBG);
         dmanager.createCamera(width * 10000.0f, height * 10000.0f, &cameraGame);
         dmanager.createCamera(width, height, &cameraUI);
+        cameraGame.posZ = -100.0f;
+        cameraUI.posZ = -100.0f;
+        
+        // Frame buffers
+        dmanager.createFrameBuffer(width, height, &fbBG);
+        dmanager.createFrameBuffer(width, height, &fbGame);
 
         // Load screen
         if (!addTexture(hModule, TEX_BG_LOAD))
@@ -153,7 +161,7 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         bgLoad.sclX = 12.8f;
         bgLoad.sclY = 9.6f;
         applyFact(&bgLoad);
-        dmanager.drawBegin();
+        dmanager.drawBegin(false);
         dmanager.applyCamera(&cameraUI, false);
         dmanager.applyTexture(getTexture(TEX_BG_LOAD));
         dmanager.drawModel(&ideaSquare);

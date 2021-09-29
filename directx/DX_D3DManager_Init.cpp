@@ -167,15 +167,14 @@ bool D3DManager::init(HINSTANCE hInst, int cmdShow, LPCWSTR nameWnd, LPCWSTR nam
             descBlend.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
             descBlend.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
             descBlend.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-            descBlend.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+            descBlend.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
             descBlend.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
             descBlend.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-            ComPtr<ID3D11BlendState> pBlendState = nullptr;
-            if (FAILED(inf.pDevice->CreateBlendState(&descBlend, pBlendState.GetAddressOf())))
+            if (FAILED(inf.pDevice->CreateBlendState(&descBlend, inf.pBState.GetAddressOf())))
                 throw "Failed to create blend state.";
             float blendFactor[4] = {D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO};
-            inf.pImContext->OMSetBlendState(pBlendState.Get(), blendFactor, 0xffffffff);
+            inf.pImContext->OMSetBlendState(inf.pBState.Get(), blendFactor, 0xffffffff);
         }
 
     } catch (const char* error) {

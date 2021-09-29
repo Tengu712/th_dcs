@@ -57,6 +57,7 @@ struct D3DInf {
     ComPtr<IDXGISwapChain> pSwapChain;
     ComPtr<ID3D11RenderTargetView> pRTView;
     ComPtr<ID3D11DepthStencilView> pDSView;
+    ComPtr<ID3D11BlendState> pBState;
     D3D11_VIEWPORT viewport;
 
     // Shader
@@ -68,6 +69,11 @@ struct D3DInf {
     ComPtr<ID3D11Buffer> pCBuffer;
     ComPtr<ID3D11Buffer> pCBufPx;
     ConstantBuffer cbuffer;
+};
+
+struct FrameBuffer {
+    ComPtr<ID3D11RenderTargetView> pRTView;
+    Texture texture;
 };
 
 struct ModelInf {
@@ -91,7 +97,7 @@ class D3DManager {
         // General
         bool init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName, unsigned int width,
                 unsigned int height, bool windowed);
-        void drawBegin();
+        void drawBegin(bool depth);
         void drawEnd();
         HWND getWindowHandle();
         D3DInf* getD3DInformation();
@@ -112,7 +118,8 @@ class D3DManager {
         void drawModel(ModelInf* minf);
 
         // Buffer
-        void clearDepthStencil();
+        bool createFrameBuffer(unsigned int width, unsigned int height, FrameBuffer* pFBuffer);
+        void drawBeginWithFrameBuffer(FrameBuffer* pFBuffer, bool depth);
 };
 
 

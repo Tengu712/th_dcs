@@ -48,6 +48,11 @@ class Player : public Entity {
         int spdNorm;
         int spdSlow;
         int interval;
+        int atk;
+        int numOpt;
+        int widthShot;
+        int kndShot;
+        int kndSkill;
         Fact fact;
         Player();
         void update(GameInf* pGinf);
@@ -56,6 +61,7 @@ class Player : public Entity {
 class Bullet : public Entity {
     public:
         unsigned int cnt;
+        int atk;
         int ptn;
         bool moving;
         Fact fact;
@@ -105,7 +111,6 @@ class GameInf {
         D3DManager dmanager;
         InputManager imanager;
         AudioManager amanager;
-        void applyFact(Fact* pFact);
     public:
         // System
         SCE_ID sceCur;
@@ -113,6 +118,8 @@ class GameInf {
         Texture* texs;
         Texture* fonts;
         ModelInf ideaSquare;
+        FrameBuffer fbBG;
+        FrameBuffer fbGame;
         // Queue
         Fact** queBG;
         Fact** queUI;
@@ -144,6 +151,7 @@ class GameInf {
         bool setKeyConfig();
         bool getKey(KEY_CODE code, KEY_STA status);
         bool saveData();
+        void applyFact(Fact* pFact);
         Texture* getTexture(unsigned int id);
         Texture* getFont(unsigned int code);
         // Queue

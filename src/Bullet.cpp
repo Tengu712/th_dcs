@@ -1,6 +1,6 @@
 #include "../include/HeaderApp.hpp"
 
-Bullet::Bullet() : cnt(0U), ptn(0), moving(false), fact(Fact()) {}
+Bullet::Bullet() : cnt(0U), atk(0), ptn(0), moving(false), fact(Fact()) {}
 
 void Bullet::init(int knd) {
     moving = true;

@@ -39,9 +39,12 @@ void GameInf::applyFact(Fact* pFact) {
 }
 
 void GameInf::draw() {
-    dmanager.drawBegin();
 
+    // ===== Back ground ===== //
+
+    dmanager.drawBeginWithFrameBuffer(&fbBG, true);
     dmanager.applyCamera(&cameraBG, true);
+
     for (int i = 0; i < MAX_QUE_BG; ++i) {
         if (queBG[i] == nullptr)
             continue;
@@ -49,6 +52,18 @@ void GameInf::draw() {
         dmanager.applyTexture(getTexture(queBG[i]->texid));
         dmanager.drawModel(&ideaSquare);
     }
+
+    // ===== Game Object ===== //
+
+    dmanager.drawBeginWithFrameBuffer(&fbGame, false);
+
+    dmanager.applyCamera(&cameraUI, false);
+    Fact factForFB = Fact();
+    factForFB.sclX = 12.8f;
+    factForFB.sclY = 9.6f;
+    applyFact(&factForFB);
+    dmanager.applyTexture(&fbBG.texture);
+    dmanager.drawModel(&ideaSquare);
 
     dmanager.applyCamera(&cameraGame, false);
 
@@ -66,7 +81,6 @@ void GameInf::draw() {
             if (!bulletsSelf[i][j].moving)
                 continue;
             applyFact(&bulletsSelf[i][j].fact);
-            dmanager.clearDepthStencil();
             dmanager.drawModel(&ideaSquare);
         }
     }
@@ -78,7 +92,6 @@ void GameInf::draw() {
             if (!bullets[i][j].moving)
                 continue;
             applyFact(&bullets[i][j].fact);
-            dmanager.clearDepthStencil();
             dmanager.drawModel(&ideaSquare);
         }
     }
@@ -114,12 +127,19 @@ void GameInf::draw() {
         dmanager.drawModel(&ideaSquare);
         fact.degZ *= -1.0f;
         applyFact(&fact);
-        dmanager.clearDepthStencil();
         dmanager.drawModel(&ideaSquare);
     }
 
-    // UI
+    // ===== UI ===== //
+
+    dmanager.drawBegin(false);
+
     dmanager.applyCamera(&cameraUI, false);
+    applyFact(&factForFB);
+    dmanager.applyTexture(&fbGame.texture);
+    dmanager.drawModel(&ideaSquare);
+
+    // UI
     for(int i = 0; i < MAX_QUE_UI; ++i) {
         if (queUI[i] == nullptr)
             continue;
@@ -157,7 +177,6 @@ void GameInf::draw() {
             fact.texid = Lpcstr2uint("s");
         fact.posX = 15.0f * (float)i + 532.0f;
         fact.posY = -457.0f;
-        fact.posZ = 1.1f;
         fact.sclX = 0.15f;
         fact.sclY = 0.2f;
         applyFact(&fact);
