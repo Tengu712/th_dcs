@@ -20,5 +20,7 @@
 #define TEX_CH_MARISA_R1 1005
 #define TEX_CH_MARISA_L0 1006
 #define TEX_CH_MARISA_L1 1007
+#define TEX_CH_FAIRY_R0 1008
+#define TEX_CH_FAIRY_R1 1009
 
 #endif

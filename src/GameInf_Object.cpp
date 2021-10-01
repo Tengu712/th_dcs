@@ -20,41 +20,19 @@ void GameInf::createBullet(Bullet* bul, int knd) {
 }
 
 void GameInf::pushBulletE(Bullet* bul) {
-    for (int i = 0; i < MAX_KND_BUL_E; ++i) {
-        if (bul->fact.texid != mapBulsE[i])
+    for (int i = 0; i < MAX_BUL_E; ++i) {
+        if (bulsE[i].moving)
             continue;
-        for (int k = 0; k < MAX_NUM_BUL_E; ++k) {
-            if (!bulsE[i][k].moving) {
-                bulsE[i][k] = *bul;
-                return;
-            }
-        }
-    }
-    for (int i = 0; i < MAX_KND_BUL_E; ++i) {
-        if (mapBulsE[i] != 0)
-            continue;
-        bulsE[i][0] = *bul;
-        mapBulsE[i] = bul->fact.texid;
+        bulsE[i] = *bul;
         return;
     }
 }
 
 void GameInf::pushBulletP(Bullet* bul) {
-    for (int i = 0; i < MAX_KND_BUL_P; ++i) {
-        if (bul->fact.texid != mapBulsP[i])
+    for (int i = 0; i < MAX_BUL_E; ++i) {
+        if (bulsP[i].moving)
             continue;
-        for (int k = 0; k < MAX_NUM_BUL_P; ++k) {
-            if (!bulsP[i][k].moving) {
-                bulsP[i][k] = *bul;
-                return;
-            }
-        }
-    }
-    for (int i = 0; i < MAX_KND_BUL_P; ++i) {
-        if (mapBulsP[i] != 0)
-            continue;
-        bulsP[i][0] = *bul;
-        mapBulsP[i] = bul->fact.texid;
+        bulsP[i] = *bul;
         return;
     }
 }
@@ -75,42 +53,22 @@ void GameInf::updateBullet(Bullet* pBul){
 }
 
 void GameInf::updateBullets() {
-    for (int i = 0; i < MAX_KND_BUL_P; ++i) {
-        if (mapBulsP[i] == 0)
+    for (int i = 0; i < MAX_BUL_P; ++i) {
+        if (!bulsP[i].moving)
             continue;
-        int numMoving = 0;
-        for (int j = 0; j < MAX_NUM_BUL_P; ++j) {
-            if (!bulsP[i][j].moving)
-                continue;
-            const int flgCur = bulsP[i][j].flgHit;
-            updateBullet(&bulsP[i][j]);
-            if (bulsP[i][j].flgHit == 2 || !bulsP[i][j].moving) {
-                bulsP[i][j] = Bullet();
-                continue;
-            }
-            numMoving++;
-        }
-        if (numMoving == 0)
-            mapBulsP[i] = 0;
+        const int flgCur = bulsP[i].flgHit;
+        updateBullet(&bulsP[i]);
+        if (bulsP[i].flgHit == 2)
+            bulsE[i].moving = false;
     }
 
-    for (int i = 0; i < MAX_KND_BUL_E; ++i) {
-        if (mapBulsE[i] == 0)
+    for (int i = 0; i < MAX_BUL_E; ++i) {
+        if (!bulsE[i].moving)
             continue;
-        int numMoving = 0;
-        for (int j = 0; j < MAX_NUM_BUL_E; ++j) {
-            if (!bulsE[i][j].moving)
-                continue;
-            const int flgCur = bulsE[i][j].flgHit;
-            updateBullet(&bulsE[i][j]);
-            if (bulsE[i][j].flgHit == 2 || !bulsE[i][j].moving) {
-                bulsE[i][j] = Bullet();
-                continue;
-            }
-            numMoving++;
-        }
-        if (numMoving == 0) 
-            mapBulsE[i] = 0;
+        const int flgCur = bulsE[i].flgHit;
+        updateBullet(&bulsE[i]);
+        if (bulsE[i].flgHit == 2)
+            bulsE[i].moving = false;
     }
 }
 

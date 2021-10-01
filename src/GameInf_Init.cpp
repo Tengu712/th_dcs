@@ -31,8 +31,6 @@ GameInf::GameInf() :
     cameraUI(Camera()),
     // Game
     player(Player()),
-    mapBulsE(nullptr),
-    mapBulsP(nullptr),
     bulsE(nullptr),
     bulsP(nullptr)
 {}
@@ -48,24 +46,10 @@ GameInf::~GameInf() {
         delete queUI;
     if (queFont != nullptr)
         delete queFont;
-    if (mapBulsE != nullptr)
-        delete mapBulsE;
-    if (mapBulsP != nullptr)
-        delete mapBulsP;
-    if (bulsE != nullptr) {
-        for (int i = 0; i < MAX_KND_BUL_E; ++i) {
-            if (bulsE[i] != nullptr)
-                delete bulsE[i];
-        }
+    if (bulsE != nullptr)
         delete bulsE;
-    }
-    if (bulsP != nullptr) {
-        for (int i = 0; i < MAX_KND_BUL_P; ++i) {
-            if (bulsP[i] != nullptr)
-                delete bulsP[i];
-        }
-        delete bulsE;
-    }
+    if (bulsP != nullptr)
+        delete bulsP;
 }
 
 bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName,
@@ -109,25 +93,9 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
             queFont[i] = nullptr;
         }
 
-        // Bullets map
-        mapBulsE = new int[MAX_KND_BUL_E];
-        mapBulsP = new int[MAX_KND_BUL_P];
-        for (int i = 0; i < MAX_KND_BUL_E; ++i) {
-            mapBulsE[i] = 0;
-        }
-        for (int i = 0; i < MAX_KND_BUL_P; ++i) {
-            mapBulsP[i] = 0;
-        }
-
         // Bullets
-        bulsE = new Bullet*[MAX_KND_BUL_E];
-        bulsP = new Bullet*[MAX_KND_BUL_P];
-        for (int i = 0; i < MAX_KND_BUL_E; ++i) {
-            bulsE[i] = new Bullet[MAX_NUM_BUL_E];
-        }
-        for (int i = 0; i < MAX_KND_BUL_P; ++i) {
-            bulsP[i] = new Bullet[MAX_NUM_BUL_P];
-        }
+        bulsE = new Bullet[MAX_BUL_E];
+        bulsP = new Bullet[MAX_BUL_P];
 
         // Idea
         const unsigned int kNumVtx = 4U;

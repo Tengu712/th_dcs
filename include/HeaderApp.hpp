@@ -49,6 +49,13 @@ struct Bullet : public Entity {
     Fact fact;
 };
 
+struct Enemy : public Entity {
+    unsigned int cnt;
+    int hp;
+    int ptn;
+    Fact fact;
+};
+
 struct SaveData {
     int scoreTotal;
     int spdNorm;
@@ -72,10 +79,8 @@ struct SaveData {
 #define MAX_QUE_BG 20
 #define MAX_QUE_UI 50
 #define MAX_QUE_FNT 50
-#define MAX_KND_BUL_E 5
-#define MAX_NUM_BUL_E 150
-#define MAX_KND_BUL_P 2
-#define MAX_NUM_BUL_P 20
+#define MAX_BUL_E 150
+#define MAX_BUL_P 20
 
 enum struct SCE_ID : char {
     Title,
@@ -116,10 +121,8 @@ class GameInf {
         Fact** queBG;
         Fact** queUI;
         Fact** queFont;
-        int* mapBulsE;
-        int* mapBulsP;
-        Bullet** bulsE;
-        Bullet** bulsP;
+        Bullet* bulsE;
+        Bullet* bulsP;
     public:
         // System
         SCE_ID sceCur;

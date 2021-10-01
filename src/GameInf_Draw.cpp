@@ -35,27 +35,26 @@ void GameInf::draw() {
     dmanager.drawModel(&idea);
 
     // Bullet
-    for (int i = 0; i < MAX_KND_BUL_P; ++i) {
-        if (mapBulsP[i] == 0)
+    int texCur = 0;
+    for (int i = 0; i < MAX_BUL_P; ++i) {
+        if (!bulsP[i].moving)
             continue;
-        dmanager.applyTexture(getTexture(mapBulsP[i]));
-        for (int j = 0; j < MAX_NUM_BUL_P; ++j) {
-            if (!bulsP[i][j].moving)
-                continue;
-            applyFact(&bulsP[i][j].fact);
-            dmanager.drawModel(&idea);
+        if (texCur != bulsP[i].fact.texid) {
+            texCur = bulsP[i].fact.texid;
+            dmanager.applyTexture(getTexture(texCur));
         }
+        applyFact(&bulsP[i].fact);
+        dmanager.drawModel(&idea);
     }
-    for (int i = 0; i < MAX_KND_BUL_E; ++i) {
-        if (mapBulsE[i] == 0)
+    for (int i = 0; i < MAX_BUL_E; ++i) {
+        if (!bulsE[i].moving)
             continue;
-        dmanager.applyTexture(getTexture(mapBulsE[i]));
-        for (int j = 0; j < MAX_NUM_BUL_E; ++j) {
-            if (!bulsE[i][j].moving)
-                continue;
-            applyFact(&bulsE[i][j].fact);
-            dmanager.drawModel(&idea);
+        if (texCur != bulsE[i].fact.texid) {
+            texCur = bulsE[i].fact.texid;
+            dmanager.applyTexture(getTexture(texCur));
         }
+        applyFact(&bulsE[i].fact);
+        dmanager.drawModel(&idea);
     }
 
     // Slow
