@@ -29,13 +29,25 @@ void GameInf::draw() {
 
     dmanager.applyCamera(&cameraGame, false);
 
+    // Enemy
+    int texCur = 0;
+    for (int i = 0; i < MAX_ENEMY; ++i) {
+        if (!enemies[i].moving)
+            continue;
+        if (texCur != enemies[i].fact.texid) {
+            texCur = enemies[i].fact.texid;
+            dmanager.applyTexture(getTexture(texCur));
+        }
+        applyFact(&enemies[i].fact);
+        dmanager.drawModel(&idea);        
+    }
+
     // Player
     applyFact(&player.fact);
     dmanager.applyTexture(getTexture(player.fact.texid));
     dmanager.drawModel(&idea);
 
     // Bullet
-    int texCur = 0;
     for (int i = 0; i < MAX_BUL_P; ++i) {
         if (!bulsP[i].moving)
             continue;

@@ -17,6 +17,8 @@ GameInf::~GameInf() {
         delete bulsE;
     if (bulsP != nullptr)
         delete bulsP;
+    if (enemies != nullptr)
+        delete enemies;
 }
 
 bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName,
@@ -46,7 +48,7 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
             fonts[i] = Texture();
         }
 
-        // Queue
+        // Storage
         queBG = new Fact*[MAX_QUE_BG];
         queUI = new Fact*[MAX_QUE_UI];
         queFont = new Fact*[MAX_QUE_FNT];
@@ -59,10 +61,9 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         for (int i = 0; i < MAX_QUE_FNT; ++i) {
             queFont[i] = nullptr;
         }
-
-        // Bullets
         bulsE = new Bullet[MAX_BUL_E];
         bulsP = new Bullet[MAX_BUL_P];
+        enemies = new Enemy[MAX_ENEMY];
 
         // Idea
         const unsigned int kNumVtx = 4U;
@@ -118,6 +119,8 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         flg = flg && addTexture(hModule, TEX_CH_MARISA_R1);
         flg = flg && addTexture(hModule, TEX_CH_MARISA_L0);
         flg = flg && addTexture(hModule, TEX_CH_MARISA_L1);
+        flg = flg && addTexture(hModule, TEX_CH_FAIRY_R0);
+        flg = flg && addTexture(hModule, TEX_CH_FAIRY_R1);
         flg = flg && addFont(Lpcstr2uint("0"));
         flg = flg && addFont(Lpcstr2uint("1"));
         flg = flg && addFont(Lpcstr2uint("2"));

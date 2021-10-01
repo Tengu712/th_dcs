@@ -9,6 +9,13 @@ void SceneTutorial::init(GameInf* pGinf) {
 }
 
 void SceneTutorial::update(GameInf* pGinf) {
+    if (cnt % 100 == 0) {
+        Enemy e = Enemy();
+        pGinf->createEnemy(&e, TEX_CH_FAIRY_R0);
+        e.deg = 270;
+        e.spd = 200;
+        pGinf->pushEnemy(&e);
+    }
     pGinf->pushBG(&bg);
     gameUpdate(pGinf);
 }

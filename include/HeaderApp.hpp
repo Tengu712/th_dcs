@@ -69,10 +69,13 @@ struct Bullet : public Entity {
 
 struct Enemy : public Entity {
     int hp;
-    int ptn;
+    int ptnMov, ptnFire;
+    bool moving;
     Enemy() :
         hp(0),
-        ptn(0)
+        ptnMov(0),
+        ptnFire(0),
+        moving(false)
     {}
 };
 
@@ -101,6 +104,7 @@ struct SaveData {
 #define MAX_QUE_FNT 50
 #define MAX_BUL_E 150
 #define MAX_BUL_P 20
+#define MAX_ENEMY 20
 
 enum struct SCE_ID : char {
     Title,
@@ -135,6 +139,7 @@ class GameInf {
         ModelInf idea;
         FrameBuffer fbBG;
         FrameBuffer fbGame;
+        SaveData data;
         // Storage
         Texture* texs;
         Texture* fonts;
@@ -143,11 +148,6 @@ class GameInf {
         Fact** queFont;
         Bullet* bulsE;
         Bullet* bulsP;
-    public:
-        // System
-        SCE_ID sceCur;
-        SCE_ID sceNex;
-        SaveData data;
         // Camera
         Camera cameraBG;
         Camera cameraGame;
@@ -159,6 +159,10 @@ class GameInf {
         long lastTime;
         // Game
         Player player;
+        Enemy* enemies;
+    public:
+        SCE_ID sceCur;
+        SCE_ID sceNex;
 
         // Method
         GameInf() :
@@ -168,6 +172,7 @@ class GameInf {
             idea(ModelInf()),
             fbBG(FrameBuffer()),
             fbGame(FrameBuffer()),
+            data(SaveData()),
             texs(nullptr),
             fonts(nullptr),
             queBG(nullptr),
@@ -175,9 +180,6 @@ class GameInf {
             queFont(nullptr),
             bulsE(nullptr),
             bulsP(nullptr),
-            sceCur(SCE_ID::Title),
-            sceNex(SCE_ID::Title),
-            data(SaveData()),
             cameraBG(Camera()),
             cameraGame(Camera()),
             cameraUI(Camera()),
@@ -185,7 +187,10 @@ class GameInf {
             fps(0.0f),
             startTime(timeGetTime()),
             lastTime(timeGetTime()),
-            player(Player())
+            player(Player()),
+            enemies(nullptr),
+            sceCur(SCE_ID::Title),
+            sceNex(SCE_ID::Title)
     {}
         ~GameInf();
         bool init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName, 
@@ -207,11 +212,15 @@ class GameInf {
         void pushFont(Fact* pFact);
         // Object
         void createBullet(Bullet* pBul, int knd);
+        void createEnemy(Enemy* pEnemy, int knd);
         void pushBulletE(Bullet* pBul);
         void pushBulletP(Bullet* pBul);
+        void pushEnemy(Enemy* pEnemy);
         void updateEntity(Entity* pEntity);
         void updateBullet(Bullet* pBul);
         void updateBullets();
+        void updateEnemy(Enemy* pEnemy);
+        void updateEnemies();
         void updatePlayer();
 };
 
@@ -219,6 +228,16 @@ class AScene {
     public:
         virtual void init(GameInf* pGinf) = 0;
         virtual void update(GameInf* pGinf) = 0;
+};
+
+class ASceneGame {
+    private:
+        Fact frame;
+    public:
+        int cnt;
+        ASceneGame() : frame(Fact()), cnt(0) {}
+        void gameInit(GameInf* pGinf);
+        void gameUpdate(GameInf* pGinf);
 };
 
 class SceneTitle : public AScene {
@@ -230,18 +249,7 @@ class SceneTitle : public AScene {
         void update(GameInf* pGinf);
 };
 
-class ASceneGame : public AScene {
-    private:
-        Fact frame;
-    public:
-        ASceneGame() : frame(Fact()) {}
-        void gameInit(GameInf* pGinf);
-        void gameUpdate(GameInf* pGinf);
-        virtual void init(GameInf* pGinf) = 0;
-        virtual void update(GameInf* pGinf) = 0;
-};
-
-class SceneTutorial : public ASceneGame {
+class SceneTutorial : public AScene, ASceneGame {
     private:
         Fact bg;
     public:
