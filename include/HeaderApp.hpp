@@ -30,30 +30,50 @@ struct Fact {
 };
 
 struct Entity {
-    int x, y, r, rGrz;
+    unsigned int cnt;
+    int x, y;
+    int r, rGrz;
     int deg, spd;
+    Fact fact;
+    Entity() :
+        cnt(0U),
+        x(0),
+        y(0),
+        r(0),
+        rGrz(0),
+        deg(0),
+        spd(0),
+        fact(Fact())
+    {}
 };
 
 struct Player : public Entity {
-    unsigned int cnt;
     unsigned int cntSlow;
-    Fact fact;
+    Player() :
+        cntSlow(0U)
+    {}
 };
 
 struct Bullet : public Entity {
-    unsigned int cnt;
     int atk;
     int ptn;
     int flgHit;
     bool moving;
-    Fact fact;
+    Bullet() :
+        atk(0),
+        ptn(0),
+        flgHit(0),
+        moving(false)
+    {}
 };
 
 struct Enemy : public Entity {
-    unsigned int cnt;
     int hp;
     int ptn;
-    Fact fact;
+    Enemy() :
+        hp(0),
+        ptn(0)
+    {}
 };
 
 struct SaveData {
@@ -141,7 +161,32 @@ class GameInf {
         Player player;
 
         // Method
-        GameInf();
+        GameInf() :
+            dmanager(D3DManager()),
+            imanager(InputManager()),
+            amanager(AudioManager()),
+            idea(ModelInf()),
+            fbBG(FrameBuffer()),
+            fbGame(FrameBuffer()),
+            texs(nullptr),
+            fonts(nullptr),
+            queBG(nullptr),
+            queUI(nullptr),
+            queFont(nullptr),
+            bulsE(nullptr),
+            bulsP(nullptr),
+            sceCur(SCE_ID::Title),
+            sceNex(SCE_ID::Title),
+            data(SaveData()),
+            cameraBG(Camera()),
+            cameraGame(Camera()),
+            cameraUI(Camera()),
+            cntFps(0),
+            fps(0.0f),
+            startTime(timeGetTime()),
+            lastTime(timeGetTime()),
+            player(Player())
+    {}
         ~GameInf();
         bool init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName, 
                 unsigned int width, unsigned int height, bool windowed);
@@ -180,7 +225,7 @@ class SceneTitle : public AScene {
     private:
         Fact bg;
     public:
-        SceneTitle();
+        SceneTitle() : bg(Fact()) {}
         void init(GameInf* pGinf);
         void update(GameInf* pGinf);
 };
@@ -189,7 +234,7 @@ class ASceneGame : public AScene {
     private:
         Fact frame;
     public:
-        ASceneGame();
+        ASceneGame() : frame(Fact()) {}
         void gameInit(GameInf* pGinf);
         void gameUpdate(GameInf* pGinf);
         virtual void init(GameInf* pGinf) = 0;
@@ -200,7 +245,7 @@ class SceneTutorial : public ASceneGame {
     private:
         Fact bg;
     public:
-        SceneTutorial();
+        SceneTutorial() : bg(Fact()) {}
         void init(GameInf* pGinf);
         void update(GameInf* pGinf);
 };

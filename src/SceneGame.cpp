@@ -1,7 +1,5 @@
 #include "../include/HeaderApp.hpp"
 
-ASceneGame::ASceneGame() : frame(Fact()) {}
-
 void ASceneGame::gameInit(GameInf* pGinf) {
     frame.texid = TEX_UI_FRAME;
     frame.posZ = 1.2f;

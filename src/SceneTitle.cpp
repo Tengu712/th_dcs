@@ -1,7 +1,5 @@
 #include "../include/HeaderApp.hpp"
 
-SceneTitle::SceneTitle() : bg(Fact()) {}
-
 void SceneTitle::init(GameInf* pGinf) {
 }
 

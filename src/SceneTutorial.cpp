@@ -1,7 +1,5 @@
 #include "../include/HeaderApp.hpp"
 
-SceneTutorial::SceneTutorial() : bg(Fact()) {}
-
 void SceneTutorial::init(GameInf* pGinf) {
     gameInit(pGinf);
     bg.posZ = 500.0f;

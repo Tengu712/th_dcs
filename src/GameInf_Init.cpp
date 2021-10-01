@@ -2,39 +2,6 @@
 
 #include <stdio.h>
 
-GameInf::GameInf() :
-    // Manager
-    dmanager(D3DManager()),
-    imanager(InputManager()),
-    amanager(AudioManager()),
-    // System
-    sceCur(SCE_ID::Title),
-    sceNex(SCE_ID::Title),
-    texs(nullptr),
-    fonts(nullptr),
-    idea(ModelInf()),
-    data(SaveData()),
-    fbBG(FrameBuffer()),
-    fbGame(FrameBuffer()),
-    // Queue
-    queBG(nullptr),
-    queUI(nullptr),
-    queFont(nullptr),
-    // Fps
-    cntFps(0),
-    fps(0.0f),
-    startTime(timeGetTime()),
-    lastTime(timeGetTime()),
-    // Camera
-    cameraBG(Camera()),
-    cameraGame(Camera()),
-    cameraUI(Camera()),
-    // Game
-    player(Player()),
-    bulsE(nullptr),
-    bulsP(nullptr)
-{}
-
 GameInf::~GameInf() {
     if (texs != nullptr)
         delete texs;
