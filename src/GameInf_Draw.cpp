@@ -74,25 +74,23 @@ void GameInf::draw() {
         fact = Fact();
         fact.posX = player.fact.posX;
         fact.posY = player.fact.posY;
+        fact.sclX = (float)data.r;
+        fact.sclY = (float)data.r;
         // Atari
         if (player.cntSlow < 10U) {
-            fact.sclX = 1600.0f + 500.0f * (1.0f - (float)player.cntSlow / 10U);
-            fact.sclY = 1600.0f + 500.0f * (1.0f - (float)player.cntSlow / 10U);
-        } else {
-            fact.sclX = 1600.0f;
-            fact.sclY = 1600.0f;
+            fact.sclX += 500.0f * (1.0f - (float)player.cntSlow / 10U);
+            fact.sclY += 500.0f * (1.0f - (float)player.cntSlow / 10U);
+        } else 
             fact.degZ = (float)player.cntSlow * 4.0f;
-        }
         applyFact(&fact);
         dmanager.applyTexture(getTexture(TEX_CH_ATARI));
         dmanager.drawModel(&idea);
+        fact.sclX = 10000.0f;
+        fact.sclY = 10000.0f;
         // Circle
-         if (player.cntSlow < 10U) {
-            fact.sclX = 10000.0f + 5000.0f * (1.0f - (float)player.cntSlow / 10U);
-            fact.sclY = 10000.0f + 5000.0f * (1.0f - (float)player.cntSlow / 10U);
-        } else {
-            fact.sclX = 10000.0f;
-            fact.sclY = 10000.0f;
+        if (player.cntSlow < 10U) {
+            fact.sclX += 5000.0f * (1.0f - (float)player.cntSlow / 10U);
+            fact.sclY += 5000.0f * (1.0f - (float)player.cntSlow / 10U);
         }
         applyFact(&fact);
         dmanager.applyTexture(getTexture(TEX_CH_SLOWCIRCLE));
@@ -102,11 +100,40 @@ void GameInf::draw() {
         dmanager.drawModel(&idea);
     }
 
+    dmanager.applyCamera(&cameraUI, false);
+
+    if (log.flg) {
+        // Box
+        fact = Fact();
+        fact.posY = -400.0f;
+        fact.colR = 0.0f;
+        fact.colG = 0.0f;
+        fact.colB = 0.0f;
+        fact.colA = 0.5f;
+        fact.sclX = 6.0f;
+        applyFact(&fact);
+        dmanager.applyTexture(nullptr);
+        dmanager.drawModel(&idea);
+        // Logue
+        fact = Fact();
+        fact.posY = -400.0f;
+        fact.posX = -200.0f;
+        fact.sclX = 0.3f;
+        fact.sclY = 0.3f;
+        for (int i = 0; i < MAX_LOGUE; ++i) {
+            if (texidsLog[i] == 0)
+                break;
+            fact.posX += 30.0f;
+            applyFact(&fact);
+            dmanager.applyTexture(getFont(texidsLog[i]));
+            dmanager.drawModel(&idea);
+        }
+    }
+
     // ============================================================================================================= //
 
     dmanager.drawBegin(false);
 
-    dmanager.applyCamera(&cameraUI, false);
     fact = Fact();
     fact.sclX = 12.8f;
     fact.sclY = 9.6f;

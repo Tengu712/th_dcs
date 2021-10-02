@@ -24,10 +24,55 @@ bool GameInf::addFont(unsigned int code) {
     return true;
 }
 
+void GameInf::clearFontTmp() {
+    if (fontsTmp != nullptr)
+        delete fontsTmp;
+    fontsTmp = new Texture[MAX_FNT_TMP];
+}
+
+bool GameInf::addFontTmp(unsigned int code) {
+    for (int i = 0; i < MAX_FNT_TMP; ++i) {
+        if (fontsTmp[i].id != 0)
+            continue;
+        if (!dmanager.createFont(code, &fontsTmp[i]))
+            return false;
+        fontsTmp[i].id = code;
+        break;
+    }
+    return true;
+}
+
+bool GameInf::addSentence(LPCSTR str) {
+    const int len = strlen(str);
+    for (int i = 0; i < len; ++i) {
+        if (IsDBCSLeadByte(str[i])) {
+            if (!addFontTmp((unsigned char)str[i] << 8 | (unsigned char)str[i + 1]))
+                return false;
+            i++;
+        } else {
+            if (!addFontTmp((unsigned int)str[i]))
+                return false;
+        }
+    }
+    return true;
+}
+
 Texture* GameInf::getTexture(unsigned int id) {
     for (int i = 0; i < MAX_TEX; ++i) {
         if (texs[i].id == id)
             return &texs[i];
+    }
+    return nullptr;
+}
+
+Texture* GameInf::getFont(unsigned int code) {
+    for (int i = 0; i < MAX_FNT; ++i) {
+        if (fonts[i].id == code)
+            return &fonts[i];
+    }
+    for (int i = 0; i < MAX_FNT_TMP; ++i) {
+        if (fontsTmp[i].id == code)
+            return &fontsTmp[i];
     }
     return nullptr;
 }
@@ -39,14 +84,6 @@ void GameInf::pushBG(Fact* pFact) {
         queBG[i] = pFact;
         break;
     }
-}
-
-Texture* GameInf::getFont(unsigned int code) {
-    for (int i = 0; i < MAX_FNT; ++i) {
-        if (fonts[i].id == code)
-            return &fonts[i];
-    }
-    return nullptr;
 }
 
 void GameInf::pushUI(Fact* pFact) {

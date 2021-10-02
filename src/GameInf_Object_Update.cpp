@@ -26,19 +26,27 @@ void GameInf::updateBullets() {
     for (int i = 0; i < MAX_BUL_P; ++i) {
         if (!bulsP[i].moving)
             continue;
-        const int flgCur = bulsP[i].flgHit;
         updateBullet(&bulsP[i]);
-        //! ishit
+        for (int j = 0; j < MAX_ENEMY; ++j) {
+            if (!enemies[j].moving)
+                continue;
+            if (isHit(&bulsP[i], &enemies[j]) == 2) {
+                enemies[j].hp -= bulsP[i].atk;
+            }
+        }
         if (bulsP[i].flgHit == 2)
-            bulsE[i].moving = false;
+            bulsP[i].moving = false;
     }
 
     for (int i = 0; i < MAX_BUL_E; ++i) {
         if (!bulsE[i].moving)
             continue;
-        const int flgCur = bulsE[i].flgHit;
         updateBullet(&bulsE[i]);
-        //! ishit
+        const int flgHit = isHit(&bulsE[i], &player);
+        if (flgHit == 1) {
+        }
+        else if (flgHit == 2) {
+        }
         if (bulsE[i].flgHit == 2)
             bulsE[i].moving = false;
     }

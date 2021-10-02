@@ -79,6 +79,19 @@ struct Enemy : public Entity {
     {}
 };
 
+struct Logue {
+    bool flg;
+    bool right;
+    unsigned int texidLeft;
+    unsigned int texidRight;
+    Logue() :
+        flg(false),
+        right(false),
+        texidLeft(0),
+        texidRight(0)
+    {}
+};
+
 struct SaveData {
     int scoreTotal;
     int spdNorm;
@@ -98,13 +111,15 @@ struct SaveData {
 
 
 #define MAX_TEX 100
-#define MAX_FNT 100
+#define MAX_FNT 20
+#define MAX_FNT_TMP 100
 #define MAX_QUE_BG 20
 #define MAX_QUE_UI 50
 #define MAX_QUE_FNT 50
 #define MAX_BUL_E 150
 #define MAX_BUL_P 20
 #define MAX_ENEMY 20
+#define MAX_LOGUE 20
 
 enum struct SCE_ID : char {
     Title,
@@ -143,11 +158,13 @@ class GameInf {
         // Storage
         Texture* texs;
         Texture* fonts;
+        Texture* fontsTmp;
         Fact** queBG;
         Fact** queUI;
         Fact** queFont;
         Bullet* bulsE;
         Bullet* bulsP;
+        unsigned int* texidsLog;
         // Camera
         Camera cameraBG;
         Camera cameraGame;
@@ -160,6 +177,15 @@ class GameInf {
         // Game
         Player player;
         Enemy* enemies;
+        Logue log;
+        // Method
+        bool setKeyConfig();
+        bool addFontTmp(unsigned int code);
+        void applyFact(Fact* pFact);
+        void updateEntity(Entity* pEntity);
+        void updateBullet(Bullet* pBul);
+        void updateEnemy(Enemy* pEnemy);
+        int isHit(Bullet* pBul, Entity* pEntity);
     public:
         SCE_ID sceCur;
         SCE_ID sceNex;
@@ -175,11 +201,13 @@ class GameInf {
             data(SaveData()),
             texs(nullptr),
             fonts(nullptr),
+            fontsTmp(nullptr),
             queBG(nullptr),
             queUI(nullptr),
             queFont(nullptr),
             bulsE(nullptr),
             bulsP(nullptr),
+            texidsLog(nullptr),
             cameraBG(Camera()),
             cameraGame(Camera()),
             cameraUI(Camera()),
@@ -189,6 +217,7 @@ class GameInf {
             lastTime(timeGetTime()),
             player(Player()),
             enemies(nullptr),
+            log(Logue()),
             sceCur(SCE_ID::Title),
             sceNex(SCE_ID::Title)
     {}
@@ -199,27 +228,25 @@ class GameInf {
         void draw();
         // Static
         bool saveData();
-        bool setKeyConfig();
         bool getKey(KEY_CODE code, KEY_STA status);
         bool addTexture(HMODULE hModule, unsigned int id);
         bool addFont(unsigned int code);
+        bool addSentence(LPCSTR str);
+        void clearFontTmp();
         Texture* getTexture(unsigned int id);
         Texture* getFont(unsigned int code);
-        void applyFact(Fact* pFact);
         // Queue
         void pushBG(Fact* pFact);
         void pushUI(Fact* pFact);
         void pushFont(Fact* pFact);
         // Object
+        void applyLogue(bool flg, bool right, unsigned int texidLeft, unsigned int texidRight, LPCSTR str);
         void createBullet(Bullet* pBul, int knd);
         void createEnemy(Enemy* pEnemy, int knd);
         void pushBulletE(Bullet* pBul);
         void pushBulletP(Bullet* pBul);
         void pushEnemy(Enemy* pEnemy);
-        void updateEntity(Entity* pEntity);
-        void updateBullet(Bullet* pBul);
         void updateBullets();
-        void updateEnemy(Enemy* pEnemy);
         void updateEnemies();
         void updatePlayer();
 };

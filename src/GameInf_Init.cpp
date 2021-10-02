@@ -7,6 +7,8 @@ GameInf::~GameInf() {
         delete texs;
     if (fonts != nullptr)
         delete fonts;
+    if (fontsTmp != nullptr)
+        delete fontsTmp;
     if (queBG != nullptr)
         delete queBG;
     if (queUI != nullptr)
@@ -17,6 +19,8 @@ GameInf::~GameInf() {
         delete bulsE;
     if (bulsP != nullptr)
         delete bulsP;
+    if (texidsLog != nullptr)
+        delete texidsLog;
     if (enemies != nullptr)
         delete enemies;
 }
@@ -41,11 +45,15 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         // Resource
         texs = new Texture[MAX_TEX];
         fonts = new Texture[MAX_FNT];
+        fontsTmp = new Texture[MAX_FNT_TMP];
         for (int i = 0; i < MAX_TEX; ++i) {
             texs[i] = Texture();
         }
         for (int i = 0; i < MAX_FNT; ++i) {
             fonts[i] = Texture();
+        }
+        for (int i = 0; i < MAX_FNT_TMP; ++i) {
+            fontsTmp[i] = Texture();
         }
 
         // Storage
@@ -63,6 +71,7 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         }
         bulsE = new Bullet[MAX_BUL_E];
         bulsP = new Bullet[MAX_BUL_P];
+        texidsLog = new unsigned int[MAX_LOGUE];
         enemies = new Enemy[MAX_ENEMY];
 
         // Idea
@@ -150,8 +159,8 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         data.scoreTotal = 0;
         data.spdNorm = 800;
         data.spdSlow = 400;
-        data.r = 10;
-        data.rGrz = 100;
+        data.r = 1500;
+        data.rGrz = 5000;
         data.atk = 100;
         data.interval = 8;
         data.numOpt = 0;
