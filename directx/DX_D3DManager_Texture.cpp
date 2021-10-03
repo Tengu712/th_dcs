@@ -10,7 +10,7 @@ bool D3DManager::createTexture(HMODULE hModule, unsigned int id, Texture* pTextu
         ZeroMemory(pTexture, sizeof(Texture));
         pTexture->id = id;
 
-        HRSRC hImageRes = FindResource(hModule, MAKEINTRESOURCE(id), "IMAGE");
+        HRSRC hImageRes = FindResourceA(hModule, MAKEINTRESOURCEA(id), "IMAGE");
         if (!hImageRes)
             throw "Failed to find resource.";
 
@@ -89,7 +89,7 @@ bool D3DManager::createTexture(HMODULE hModule, unsigned int id, Texture* pTextu
     return true;
 }
 
-void D3DManager::applyTexture(Texture* pTexture){
+void D3DManager::applyTexture(Texture* pTexture) {
     if (pTexture == nullptr || pTexture->pSRView == nullptr) {
         DirectX::XMStoreFloat4(&inf.cbuffer.params, DirectX::XMVectorSet(
                     0.0f, inf.cbuffer.params.y, inf.cbuffer.params.y, inf.cbuffer.params.z));

@@ -48,33 +48,6 @@ void GameInf::createEnemy(Enemy* pEnemy, int knd) {
         pEnemy->moving = false;
 }
 
-void GameInf::pushBulletE(Bullet* pBul) {
-    for (int i = 0; i < MAX_BUL_E; ++i) {
-        if (bulsE[i].moving)
-            continue;
-        bulsE[i] = *pBul;
-        return;
-    }
-}
-
-void GameInf::pushBulletP(Bullet* pBul) {
-    for (int i = 0; i < MAX_BUL_E; ++i) {
-        if (bulsP[i].moving)
-            continue;
-        bulsP[i] = *pBul;
-        return;
-    }
-}
-
-void GameInf::pushEnemy(Enemy* pEnemy) {
-    for (int i = 0; i < MAX_ENEMY; ++i) {
-        if (enemies[i].moving)
-            continue;
-        enemies[i] = *pEnemy;
-        return;
-    }
-}
-
 int GameInf::isHit(Bullet* pBul, Entity* pEntity) {
     const unsigned long long dis = 
         (long long)(pBul->x - pEntity->x) * (long long)(pBul->x - pEntity->x)

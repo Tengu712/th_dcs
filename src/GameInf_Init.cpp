@@ -2,29 +2,6 @@
 
 #include <stdio.h>
 
-GameInf::~GameInf() {
-    if (texs != nullptr)
-        delete texs;
-    if (fonts != nullptr)
-        delete fonts;
-    if (fontsTmp != nullptr)
-        delete fontsTmp;
-    if (queBG != nullptr)
-        delete queBG;
-    if (queUI != nullptr)
-        delete queUI;
-    if (queFont != nullptr)
-        delete queFont;
-    if (bulsE != nullptr)
-        delete bulsE;
-    if (bulsP != nullptr)
-        delete bulsP;
-    if (texidsLog != nullptr)
-        delete texidsLog;
-    if (enemies != nullptr)
-        delete enemies;
-}
-
 bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName,
         unsigned int width, unsigned int height, bool windowed) 
 {
@@ -57,18 +34,9 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         }
 
         // Storage
-        queBG = new Fact*[MAX_QUE_BG];
-        queUI = new Fact*[MAX_QUE_UI];
-        queFont = new Fact*[MAX_QUE_FNT];
-        for (int i = 0; i < MAX_QUE_BG; ++i) {
-            queBG[i] = nullptr;
-        }
-        for (int i = 0; i < MAX_QUE_UI; ++i) {
-            queUI[i] = nullptr;
-        }
-        for (int i = 0; i < MAX_QUE_FNT; ++i) {
-            queFont[i] = nullptr;
-        }
+        queBG = new Fact[MAX_QUE_BG];
+        queUI = new Fact[MAX_QUE_UI];
+        queFont = new Fact[MAX_QUE_FNT];
         bulsE = new Bullet[MAX_BUL_E];
         bulsP = new Bullet[MAX_BUL_P];
         texidsLog = new unsigned int[MAX_LOGUE];
@@ -96,11 +64,11 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         cameraUI.posZ = -100.0f;
         
         // Frame buffers
-        dmanager.createFrameBuffer(width, height, &fbBG);
-        dmanager.createFrameBuffer(width, height, &fbGame);
+        dmanager.createFrameBuffer(width, height, &fb0);
+        dmanager.createFrameBuffer(width, height, &fb1);
 
         // Load screen
-        if (!addTexture(hModule, TEX_BG_LOAD))
+        if (!loadTexture(hModule, TEX_BG_LOAD))
             throw "Failed to load image for load screen.";
         Fact bgLoad = Fact();
         bgLoad.posZ = 1.5f;
@@ -115,41 +83,41 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
 
         // Load beginning
         bool flg = true;
-        flg = flg && addTexture(hModule, TEX_BG_TUTORIAL);
-        flg = flg && addTexture(hModule, TEX_BG_KEIDAI);
-        flg = flg && addTexture(hModule, TEX_BG_CLOUD0);
-        flg = flg && addTexture(hModule, TEX_BG_CLOUD1);
-        flg = flg && addTexture(hModule, TEX_UI_FRAME);
-        flg = flg && addTexture(hModule, TEX_BU_SELF0);
-        flg = flg && addTexture(hModule, TEX_CH_ATARI);
-        flg = flg && addTexture(hModule, TEX_CH_SLOWCIRCLE);
-        flg = flg && addTexture(hModule, TEX_CH_MARISA_B0);
-        flg = flg && addTexture(hModule, TEX_CH_MARISA_B1);
-        flg = flg && addTexture(hModule, TEX_CH_MARISA_B2);
-        flg = flg && addTexture(hModule, TEX_CH_MARISA_B3);
-        flg = flg && addTexture(hModule, TEX_CH_MARISA_R0);
-        flg = flg && addTexture(hModule, TEX_CH_MARISA_R1);
-        flg = flg && addTexture(hModule, TEX_CH_MARISA_L0);
-        flg = flg && addTexture(hModule, TEX_CH_MARISA_L1);
-        flg = flg && addTexture(hModule, TEX_CH_FAIRY_R0);
-        flg = flg && addTexture(hModule, TEX_CH_FAIRY_R1);
-        flg = flg && addTexture(hModule, TEX_TC_MARISA0);
-        flg = flg && addTexture(hModule, TEX_TC_MARISA1);
-        flg = flg && addTexture(hModule, TEX_TC_MARISA2);
-        flg = flg && addFont(Lpcstr2uint("0"));
-        flg = flg && addFont(Lpcstr2uint("1"));
-        flg = flg && addFont(Lpcstr2uint("2"));
-        flg = flg && addFont(Lpcstr2uint("3"));
-        flg = flg && addFont(Lpcstr2uint("4"));
-        flg = flg && addFont(Lpcstr2uint("5"));
-        flg = flg && addFont(Lpcstr2uint("6"));
-        flg = flg && addFont(Lpcstr2uint("7"));
-        flg = flg && addFont(Lpcstr2uint("8"));
-        flg = flg && addFont(Lpcstr2uint("9"));
-        flg = flg && addFont(Lpcstr2uint("."));
-        flg = flg && addFont(Lpcstr2uint("f"));
-        flg = flg && addFont(Lpcstr2uint("p"));
-        flg = flg && addFont(Lpcstr2uint("s"));
+        flg = flg && loadTexture(hModule, TEX_BG_TUTORIAL);
+        flg = flg && loadTexture(hModule, TEX_BG_KEIDAI);
+        flg = flg && loadTexture(hModule, TEX_BG_CLOUD0);
+        flg = flg && loadTexture(hModule, TEX_BG_CLOUD1);
+        flg = flg && loadTexture(hModule, TEX_UI_FRAME);
+        flg = flg && loadTexture(hModule, TEX_BU_SELF0);
+        flg = flg && loadTexture(hModule, TEX_CH_ATARI);
+        flg = flg && loadTexture(hModule, TEX_CH_SLOWCIRCLE);
+        flg = flg && loadTexture(hModule, TEX_CH_MARISA_B0);
+        flg = flg && loadTexture(hModule, TEX_CH_MARISA_B1);
+        flg = flg && loadTexture(hModule, TEX_CH_MARISA_B2);
+        flg = flg && loadTexture(hModule, TEX_CH_MARISA_B3);
+        flg = flg && loadTexture(hModule, TEX_CH_MARISA_R0);
+        flg = flg && loadTexture(hModule, TEX_CH_MARISA_R1);
+        flg = flg && loadTexture(hModule, TEX_CH_MARISA_L0);
+        flg = flg && loadTexture(hModule, TEX_CH_MARISA_L1);
+        flg = flg && loadTexture(hModule, TEX_CH_FAIRY_R0);
+        flg = flg && loadTexture(hModule, TEX_CH_FAIRY_R1);
+        flg = flg && loadTexture(hModule, TEX_TC_MARISA0);
+        flg = flg && loadTexture(hModule, TEX_TC_MARISA1);
+        flg = flg && loadTexture(hModule, TEX_TC_MARISA2);
+        flg = flg && loadFont(Lpcstr2uint("0"));
+        flg = flg && loadFont(Lpcstr2uint("1"));
+        flg = flg && loadFont(Lpcstr2uint("2"));
+        flg = flg && loadFont(Lpcstr2uint("3"));
+        flg = flg && loadFont(Lpcstr2uint("4"));
+        flg = flg && loadFont(Lpcstr2uint("5"));
+        flg = flg && loadFont(Lpcstr2uint("6"));
+        flg = flg && loadFont(Lpcstr2uint("7"));
+        flg = flg && loadFont(Lpcstr2uint("8"));
+        flg = flg && loadFont(Lpcstr2uint("9"));
+        flg = flg && loadFont(Lpcstr2uint("."));
+        flg = flg && loadFont(Lpcstr2uint("f"));
+        flg = flg && loadFont(Lpcstr2uint("p"));
+        flg = flg && loadFont(Lpcstr2uint("s"));
         flg = flg && setKeyConfig();
 
         // Load ending

@@ -1,35 +1,35 @@
 #include "../include/HeaderApp.hpp"
 
-void GameInf::draw() {
+void GameInf::drawGame() {
 
-    // ============================================================================================================= //
+    Fact fact = Fact();
 
-    dmanager.drawBeginWithFrameBuffer(&fbBG, true);
+    // Back ground : bg 0 t
+
+    dmanager.drawBeginWithFrameBuffer(&fb0, true);
     dmanager.applyCamera(&cameraBG, true);
 
     for (int i = 0; i < MAX_QUE_BG; ++i) {
-        if (queBG[i] == nullptr)
+        if (!queBG[i].enable)
             continue;
-        applyFact(queBG[i]);
-        dmanager.applyTexture(getTexture(queBG[i]->texid));
+        applyFact(&queBG[i]);
+        dmanager.applyTexture(getTexture(queBG[i].texid));
         dmanager.drawModel(&idea);
     }
 
-    // ============================================================================================================= //
+    // Player Enemy Bullets : game 1 f
 
-    dmanager.drawBeginWithFrameBuffer(&fbGame, false);
+    dmanager.drawBeginWithFrameBuffer(&fb1, false);
 
     dmanager.applyCamera(&cameraUI, false);
-    Fact fact = Fact();
     fact.sclX = 12.8f;
     fact.sclY = 9.6f;
     applyFact(&fact);
-    dmanager.applyTexture(&fbBG.texture);
+    dmanager.applyTexture(&fb0.texture);
     dmanager.drawModel(&idea);
 
     dmanager.applyCamera(&cameraGame, false);
 
-    // Enemy
     int texCur = 0;
     for (int i = 0; i < MAX_ENEMY; ++i) {
         if (!enemies[i].moving)
@@ -42,12 +42,10 @@ void GameInf::draw() {
         dmanager.drawModel(&idea);        
     }
 
-    // Player
     applyFact(&player.fact);
     dmanager.applyTexture(getTexture(player.fact.texid));
     dmanager.drawModel(&idea);
 
-    // Bullet
     for (int i = 0; i < MAX_BUL_P; ++i) {
         if (!bulsP[i].moving)
             continue;
@@ -58,6 +56,7 @@ void GameInf::draw() {
         applyFact(&bulsP[i].fact);
         dmanager.drawModel(&idea);
     }
+
     for (int i = 0; i < MAX_BUL_E; ++i) {
         if (!bulsE[i].moving)
             continue;
@@ -69,14 +68,13 @@ void GameInf::draw() {
         dmanager.drawModel(&idea);
     }
 
-    // Slow
     if (player.cntSlow > 0U) {
         fact = Fact();
         fact.posX = player.fact.posX;
         fact.posY = player.fact.posY;
-        fact.sclX = (float)data.r;
-        fact.sclY = (float)data.r;
         // Atari
+        fact.sclX = (float)data.r + 300.0f;
+        fact.sclY = (float)data.r + 300.0f;
         if (player.cntSlow < 10U) {
             fact.sclX += 500.0f * (1.0f - (float)player.cntSlow / 10U);
             fact.sclY += 500.0f * (1.0f - (float)player.cntSlow / 10U);
@@ -85,9 +83,9 @@ void GameInf::draw() {
         applyFact(&fact);
         dmanager.applyTexture(getTexture(TEX_CH_ATARI));
         dmanager.drawModel(&idea);
-        fact.sclX = 12000.0f;
-        fact.sclY = 12000.0f;
         // Circle
+        fact.sclX = 13000.0f;
+        fact.sclY = 13000.0f;
         if (player.cntSlow < 10U) {
             fact.sclX += 5000.0f * (1.0f - (float)player.cntSlow / 10U);
             fact.sclY += 5000.0f * (1.0f - (float)player.cntSlow / 10U);
@@ -100,25 +98,32 @@ void GameInf::draw() {
         dmanager.drawModel(&idea);
     }
 
+    // UI Font Frame Logue : ui 1 f
+
     dmanager.applyCamera(&cameraUI, false);
 
-    // UI
     for(int i = 0; i < MAX_QUE_UI; ++i) {
-        if (queUI[i] == nullptr)
+        if (!queUI[i].enable)
             continue;
-        applyFact(queUI[i]);
-        dmanager.applyTexture(getTexture(queUI[i]->texid));
+        applyFact(&queUI[i]);
+        dmanager.applyTexture(getTexture(queUI[i].texid));
         dmanager.drawModel(&idea);
     }
 
-    // Font
     for(int i = 0; i < MAX_QUE_FNT; ++i) {
-        if (queFont[i] == nullptr)
+        if (!queFont[i].enable)
             continue;
-        applyFact(queFont[i]);
-        dmanager.applyTexture(getFont(queFont[i]->texid));
+        applyFact(&queFont[i]);
+        dmanager.applyTexture(getFont(queFont[i].texid));
         dmanager.drawModel(&idea);
     }
+
+    fact = Fact();
+    fact.sclX = 12.8f;
+    fact.sclY = 9.6f;
+    applyFact(&fact);
+    dmanager.applyTexture(getTexture(TEX_UI_FRAME));
+    dmanager.drawModel(&idea);
 
     if (log.flg) {
         // Tachie
@@ -159,7 +164,7 @@ void GameInf::draw() {
         }
     }
 
-    // ============================================================================================================= //
+    // Fps : ui - f
 
     dmanager.drawBegin(false);
 
@@ -167,35 +172,10 @@ void GameInf::draw() {
     fact.sclX = 12.8f;
     fact.sclY = 9.6f;
     applyFact(&fact);
-    dmanager.applyTexture(&fbGame.texture);
+    dmanager.applyTexture(&fb1.texture);
     dmanager.drawModel(&idea);
 
-    // Fps
-    const unsigned int tmpfps = (unsigned int)(fps * 10.0f);
-    for (int i = 0; i < 7; ++i) {
-        fact = Fact();
-        if (i == 0) 
-            fact.texid = ((tmpfps / 100) % 10) + 48U;
-        else if (i == 1)
-            fact.texid = ((tmpfps / 10) % 10) + 48U;
-        else if (i == 3)
-            fact.texid = (tmpfps % 10) + 48U;
-        else if (i == 2)
-            fact.texid = Lpcstr2uint(".");
-        else if (i == 4)
-            fact.texid = Lpcstr2uint("f");
-        else if (i == 5)
-            fact.texid = Lpcstr2uint("p");
-        else 
-            fact.texid = Lpcstr2uint("s");
-        fact.posX = 15.0f * (float)i + 532.0f;
-        fact.posY = -457.0f;
-        fact.sclX = 0.15f;
-        fact.sclY = 0.2f;
-        applyFact(&fact);
-        dmanager.applyTexture(getFont(fact.texid));
-        dmanager.drawModel(&idea);
-    }
+    drawFps();
 
     dmanager.drawEnd();
 }

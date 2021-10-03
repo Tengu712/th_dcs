@@ -13,13 +13,13 @@ void GameInf::update() {
     cntFps++;
 
     for (int i = 0; i < MAX_QUE_BG; ++i) {
-        queBG[i] = nullptr;
+        queBG[i].enable = false;
     }
     for (int i = 0; i < MAX_QUE_UI; ++i) {
-        queUI[i] = nullptr;
+        queUI[i].enable = false;
     }
     for (int i = 0; i < MAX_QUE_FNT; ++i) {
-        queFont[i] = nullptr;
+        queFont[i].enable = false;
     }
 
     imanager.inspect();

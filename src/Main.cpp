@@ -1,4 +1,4 @@
-﻿#include "../include/HeaderApp.hpp"
+﻿#include "../include/HeaderScene.hpp"
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
 
@@ -43,7 +43,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
             ginf.sceCur = ginf.sceNex;
         }
         sce->update(&ginf);
-        ginf.draw();
     }
 
     UnregisterClassW(L"TH_DCS", hInst);

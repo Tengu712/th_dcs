@@ -1,3 +1,6 @@
+#ifndef INCLUDE_APP
+#define INCLUDE_APP
+
 #include "HeaderDX11.hpp"
 #include "resource.hpp"
 
@@ -11,6 +14,7 @@ struct Fact {
     float degX, degY, degZ;
     float sclX, sclY, sclZ;
     float colR, colG, colB, colA;
+    bool enable;
     Fact() :
         texid(0U),
         posX(0.0f),
@@ -25,7 +29,8 @@ struct Fact {
         colR(1.0f),
         colG(1.0f),
         colB(1.0f),
-        colA(1.0f)
+        colA(1.0f),
+        enable(false)
     {}
 };
 
@@ -110,9 +115,6 @@ struct SaveData {
 };
 
 
-// --------------------------------------------------------------------------------------------------------------------
-
-
 #define MAX_TEX 100
 #define MAX_FNT 20
 #define MAX_FNT_TMP 100
@@ -155,16 +157,16 @@ class GameInf {
         AudioManager amanager;
         // System
         ModelInf idea;
-        FrameBuffer fbBG;
-        FrameBuffer fbGame;
+        FrameBuffer fb0;
+        FrameBuffer fb1;
         SaveData data;
         // Storage
         Texture* texs;
         Texture* fonts;
         Texture* fontsTmp;
-        Fact** queBG;
-        Fact** queUI;
-        Fact** queFont;
+        Fact* queBG;
+        Fact* queUI;
+        Fact* queFont;
         Bullet* bulsE;
         Bullet* bulsP;
         unsigned int* texidsLog;
@@ -182,12 +184,13 @@ class GameInf {
         Logue log;
         // Method
         bool setKeyConfig();
-        bool addFontTmp(unsigned int code);
+        bool loadFontTmp(unsigned int code);
         void applyFact(Fact* pFact);
         void updateEntity(Entity* pEntity);
         void updateBullet(Bullet* pBul);
         void updateEnemy(Enemy* pEnemy);
         int isHit(Bullet* pBul, Entity* pEntity);
+        void drawFps();
     public:
         SCE_ID sceCur;
         SCE_ID sceNex;
@@ -199,8 +202,8 @@ class GameInf {
             imanager(InputManager()),
             amanager(AudioManager()),
             idea(ModelInf()),
-            fbBG(FrameBuffer()),
-            fbGame(FrameBuffer()),
+            fb0(FrameBuffer()),
+            fb1(FrameBuffer()),
             data(SaveData()),
             texs(nullptr),
             fonts(nullptr),
@@ -224,72 +227,39 @@ class GameInf {
             sceNex(SCE_ID::Title),
             cameraBG(Camera())
     {}
-        ~GameInf();
         bool init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName, 
                 unsigned int width, unsigned int height, bool windowed);
-        void update();
-        void draw();
         // Static
-        bool saveData();
-        bool getKey(KEY_CODE code, KEY_STA status);
-        bool addTexture(HMODULE hModule, unsigned int id);
-        bool addFont(unsigned int code);
-        bool addSentence(LPCSTR str);
+        ~GameInf();
         void clearFontTmp();
         Texture* getTexture(unsigned int id);
         Texture* getFont(unsigned int code);
-        // Queue
+        bool getKey(KEY_CODE code, KEY_STA status);
+        bool saveData();
+        // Load
+        bool loadTexture(HMODULE hModule, unsigned int id);
+        bool loadFont(unsigned int code);
+        bool loadSentence(LPCSTR str);
+        // Push
         void pushBG(Fact* pFact);
         void pushUI(Fact* pFact);
         void pushFont(Fact* pFact);
+        void pushBulletE(Bullet* pBul);
+        void pushBulletP(Bullet* pBul);
+        void pushEnemy(Enemy* pEnemy);
         // Object
         void applyLogue(bool flg, bool right, unsigned int texidLeft, unsigned int texidRight, LPCSTR str);
         void createBullet(Bullet* pBul, int knd);
         void createEnemy(Enemy* pEnemy, int knd);
-        void pushBulletE(Bullet* pBul);
-        void pushBulletP(Bullet* pBul);
-        void pushEnemy(Enemy* pEnemy);
+        // Update
+        void update();
         void updateBullets();
         void updateEnemies();
         void updatePlayer();
+        // Draw
+        void drawTitle();
+        void drawGame();
+        void drawMainMenu();
 };
 
-class AScene {
-    public:
-        virtual void init(GameInf* pGinf) = 0;
-        virtual void update(GameInf* pGinf) = 0;
-};
-
-class ASceneGame {
-    private:
-        Fact frame;
-    public:
-        int cnt;
-        ASceneGame() : frame(Fact()), cnt(0) {}
-        void gameInit(GameInf* pGinf);
-        void gameUpdate(GameInf* pGinf);
-};
-
-class SceneTitle : public AScene {
-    private:
-        Fact bg;
-    public:
-        SceneTitle() : bg(Fact()) {}
-        void init(GameInf* pGinf);
-        void update(GameInf* pGinf);
-};
-
-class SceneTutorial : public AScene, ASceneGame {
-    private:
-        Fact bg0, bg1, cl0, cl1;
-    public:
-        SceneTutorial() :
-            bg0(Fact()),
-            bg1(Fact()),
-            cl0(Fact()),
-            cl1(Fact())
-    {}
-        void init(GameInf* pGinf);
-        void update(GameInf* pGinf);
-};
-
+#endif
