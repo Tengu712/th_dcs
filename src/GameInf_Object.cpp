@@ -6,8 +6,8 @@ void GameInf::applyLogue(bool flg, bool right, unsigned int texidLeft, unsigned 
     }
     log.flg = flg;
     log.right = right;
-    log.texidLeft = log.texidLeft;
-    log.texidRight = log.texidRight;
+    log.texidLeft = texidLeft;
+    log.texidRight = texidRight;
     int cnt = 0;
     const int len = strlen(str);
     for (int i = 0; i < len; ++i) {

@@ -85,8 +85,8 @@ void GameInf::draw() {
         applyFact(&fact);
         dmanager.applyTexture(getTexture(TEX_CH_ATARI));
         dmanager.drawModel(&idea);
-        fact.sclX = 10000.0f;
-        fact.sclY = 10000.0f;
+        fact.sclX = 12000.0f;
+        fact.sclY = 12000.0f;
         // Circle
         if (player.cntSlow < 10U) {
             fact.sclX += 5000.0f * (1.0f - (float)player.cntSlow / 10U);
@@ -101,45 +101,6 @@ void GameInf::draw() {
     }
 
     dmanager.applyCamera(&cameraUI, false);
-
-    if (log.flg) {
-        // Box
-        fact = Fact();
-        fact.posY = -400.0f;
-        fact.colR = 0.0f;
-        fact.colG = 0.0f;
-        fact.colB = 0.0f;
-        fact.colA = 0.5f;
-        fact.sclX = 6.0f;
-        applyFact(&fact);
-        dmanager.applyTexture(nullptr);
-        dmanager.drawModel(&idea);
-        // Logue
-        fact = Fact();
-        fact.posY = -400.0f;
-        fact.posX = -200.0f;
-        fact.sclX = 0.3f;
-        fact.sclY = 0.3f;
-        for (int i = 0; i < MAX_LOGUE; ++i) {
-            if (texidsLog[i] == 0)
-                break;
-            fact.posX += 30.0f;
-            applyFact(&fact);
-            dmanager.applyTexture(getFont(texidsLog[i]));
-            dmanager.drawModel(&idea);
-        }
-    }
-
-    // ============================================================================================================= //
-
-    dmanager.drawBegin(false);
-
-    fact = Fact();
-    fact.sclX = 12.8f;
-    fact.sclY = 9.6f;
-    applyFact(&fact);
-    dmanager.applyTexture(&fbGame.texture);
-    dmanager.drawModel(&idea);
 
     // UI
     for(int i = 0; i < MAX_QUE_UI; ++i) {
@@ -158,6 +119,56 @@ void GameInf::draw() {
         dmanager.applyTexture(getFont(queFont[i]->texid));
         dmanager.drawModel(&idea);
     }
+
+    if (log.flg) {
+        // Tachie
+        if (log.texidLeft != 0) {
+            fact = Fact();
+            fact.posX = -390.0f;
+            fact.posY = -160.0f;
+            fact.sclX = 6.5f;
+            fact.sclY = 6.5f;
+            applyFact(&fact);
+            dmanager.applyTexture(getTexture(log.texidLeft));
+            dmanager.drawModel(&idea);
+        }
+        // Box
+        fact = Fact();
+        fact.posY = -350.0f;
+        fact.colR = 0.0f;
+        fact.colG = 0.0f;
+        fact.colB = 0.0f;
+        fact.colA = 0.5f;
+        fact.sclX = 6.0f;
+        applyFact(&fact);
+        dmanager.applyTexture(nullptr);
+        dmanager.drawModel(&idea);
+        // Logue
+        fact = Fact();
+        fact.posY = -320.0f;
+        fact.posX = -260.0f;
+        fact.sclX = 0.27f;
+        fact.sclY = 0.27f;
+        for (int i = 0; i < MAX_LOGUE; ++i) {
+            if (texidsLog[i] == 0)
+                break;
+            fact.posX += 27.0f;
+            applyFact(&fact);
+            dmanager.applyTexture(getFont(texidsLog[i]));
+            dmanager.drawModel(&idea);
+        }
+    }
+
+    // ============================================================================================================= //
+
+    dmanager.drawBegin(false);
+
+    fact = Fact();
+    fact.sclX = 12.8f;
+    fact.sclY = 9.6f;
+    applyFact(&fact);
+    dmanager.applyTexture(&fbGame.texture);
+    dmanager.drawModel(&idea);
 
     // Fps
     const unsigned int tmpfps = (unsigned int)(fps * 10.0f);

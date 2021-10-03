@@ -116,6 +116,9 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         // Load beginning
         bool flg = true;
         flg = flg && addTexture(hModule, TEX_BG_TUTORIAL);
+        flg = flg && addTexture(hModule, TEX_BG_KEIDAI);
+        flg = flg && addTexture(hModule, TEX_BG_CLOUD0);
+        flg = flg && addTexture(hModule, TEX_BG_CLOUD1);
         flg = flg && addTexture(hModule, TEX_UI_FRAME);
         flg = flg && addTexture(hModule, TEX_BU_SELF0);
         flg = flg && addTexture(hModule, TEX_CH_ATARI);
@@ -130,6 +133,9 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
         flg = flg && addTexture(hModule, TEX_CH_MARISA_L1);
         flg = flg && addTexture(hModule, TEX_CH_FAIRY_R0);
         flg = flg && addTexture(hModule, TEX_CH_FAIRY_R1);
+        flg = flg && addTexture(hModule, TEX_TC_MARISA0);
+        flg = flg && addTexture(hModule, TEX_TC_MARISA1);
+        flg = flg && addTexture(hModule, TEX_TC_MARISA2);
         flg = flg && addFont(Lpcstr2uint("0"));
         flg = flg && addFont(Lpcstr2uint("1"));
         flg = flg && addFont(Lpcstr2uint("2"));

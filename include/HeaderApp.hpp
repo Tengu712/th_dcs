@@ -166,7 +166,6 @@ class GameInf {
         Bullet* bulsP;
         unsigned int* texidsLog;
         // Camera
-        Camera cameraBG;
         Camera cameraGame;
         Camera cameraUI;
         // Fps
@@ -189,6 +188,7 @@ class GameInf {
     public:
         SCE_ID sceCur;
         SCE_ID sceNex;
+        Camera cameraBG;
 
         // Method
         GameInf() :
@@ -208,7 +208,6 @@ class GameInf {
             bulsE(nullptr),
             bulsP(nullptr),
             texidsLog(nullptr),
-            cameraBG(Camera()),
             cameraGame(Camera()),
             cameraUI(Camera()),
             cntFps(0),
@@ -219,7 +218,8 @@ class GameInf {
             enemies(nullptr),
             log(Logue()),
             sceCur(SCE_ID::Title),
-            sceNex(SCE_ID::Title)
+            sceNex(SCE_ID::Title),
+            cameraBG(Camera())
     {}
         ~GameInf();
         bool init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndClassName, 
@@ -278,9 +278,14 @@ class SceneTitle : public AScene {
 
 class SceneTutorial : public AScene, ASceneGame {
     private:
-        Fact bg;
+        Fact bg0, bg1, cl0, cl1;
     public:
-        SceneTutorial() : bg(Fact()) {}
+        SceneTutorial() :
+            bg0(Fact()),
+            bg1(Fact()),
+            cl0(Fact()),
+            cl1(Fact())
+    {}
         void init(GameInf* pGinf);
         void update(GameInf* pGinf);
 };

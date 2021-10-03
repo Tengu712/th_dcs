@@ -5,6 +5,9 @@
 
 #define TEX_BG_LOAD 100
 #define TEX_BG_TUTORIAL 101
+#define TEX_BG_KEIDAI 102
+#define TEX_BG_CLOUD0 103
+#define TEX_BG_CLOUD1 104
 
 #define TEX_UI_FRAME 500
 
@@ -22,5 +25,9 @@
 #define TEX_CH_MARISA_L1 1007
 #define TEX_CH_FAIRY_R0 1008
 #define TEX_CH_FAIRY_R1 1009
+
+#define TEX_TC_MARISA0 2000
+#define TEX_TC_MARISA1 2001
+#define TEX_TC_MARISA2 2002
 
 #endif
