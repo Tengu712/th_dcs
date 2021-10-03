@@ -93,7 +93,10 @@ struct Logue {
 };
 
 struct SaveData {
-    int scoreTotal;
+    unsigned int cntPlay;
+    unsigned int cntWorldRound;
+    unsigned int scoreTotalGot;
+    unsigned int scoreTotal;
     int spdNorm;
     int spdSlow;
     int r;

@@ -23,4 +23,6 @@ void GameInf::update() {
     }
 
     imanager.inspect();
+
+    data.cntPlay++;
 }

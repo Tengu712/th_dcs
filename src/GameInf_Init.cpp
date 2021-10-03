@@ -162,6 +162,9 @@ bool GameInf::init(HINSTANCE hInst, int cmdShow, LPCWSTR wndName, LPCWSTR wndCla
             throw "Failed to open savedata.dat.";
 
         // Load data
+        data.cntPlay = 0;
+        data.cntWorldRound = 0;
+        data.scoreTotalGot = 0;
         data.scoreTotal = 0;
         data.spdNorm = 800;
         data.spdSlow = 400;
