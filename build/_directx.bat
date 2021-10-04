@@ -14,8 +14,8 @@ set kOptInclude=^
 
 set delimiter= 
 set pathFiles=
-if exist "..\directx\*.cpp" (
-    for /f "tokens=* delims=" %%x in ('dir ..\directx\*.cpp /S /B') do (
+if exist "..\directx\*.c" (
+    for /f "tokens=* delims=" %%x in ('dir ..\directx\*.c /S /B') do (
         set pathFiles=!pathFiles!%%x!delimiter!
     )
 )
