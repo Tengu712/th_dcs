@@ -1,4 +1,4 @@
-#include "../include/HeaderDX11.h"
+#include "../include/HeaderD3D11.h"
 
 void InitModelInf(struct ModelInf* pMinf) {
     memset(pMinf, 0, sizeof(struct ModelInf));

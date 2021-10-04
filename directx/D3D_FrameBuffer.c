@@ -1,4 +1,4 @@
-#include "../include/HeaderDX11.h"
+#include "../include/HeaderD3D11.h"
 
 BOOL CreateFrameBuffer(struct D3DInf* pDinf, struct FrameBuffer* pFBuffer, unsigned int width, unsigned int height) {
 

@@ -1,10 +1,10 @@
 #pragma once
-#ifndef _HEADER_HPP_
-#define _HEADER_HPP_
+#ifndef _HEADER_D3D_H_
+#define _HEADER_D3D_H_
 
 #include <d3d11.h>
 #include <windows.h>
-#include <xinput.h>
+
 #include <xaudio2.h>
 
 #pragma comment(lib, "user32.lib")
@@ -12,7 +12,7 @@
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
-#pragma comment (lib, "xinput.lib")
+
 #pragma comment (lib, "xaudio2.lib")
 
 // ================================================================================================================= //
@@ -102,7 +102,6 @@ struct D3DInf {
 
 #define COMRelease(c) {(c)->lpVtbl->Release((c)); (c) = NULL;}
 
-// General
 inline unsigned int Lpcstr2uint(LPCSTR c) {
     if (IsDBCSLeadByte(*c))
         return (unsigned char)c[0] << 8 | (unsigned char)c [1];
@@ -148,31 +147,7 @@ BOOL CreateModelBuffer(struct D3DInf* pDinf, struct ModelInf* pMinf, unsigned in
 
 
 /*
-enum struct GAMEPAD_KEYTYPE : char {
-    Buttons, LTrigger, RTrigger,
-    ThumbLL, ThumbLR, ThumbLU, ThumbLD,
-    ThumbRL, ThumbRR, ThumbRU, ThumbRD,
-};
 
-struct KeyInf {
-    char state;
-    char codeKey;
-    char codeKeyboard;
-    GAMEPAD_KEYTYPE typeGamepadKey;
-    short codeGamepad;
-};
-
-class InputManager {
-    private:
-        int numRegistered;
-        char statePrev[64];
-        KeyInf inf[64];
-    public:
-        InputManager();
-        bool addKeycode(char codeKey, char codeKeyboard, GAMEPAD_KEYTYPE typeGamepadKey, short codeGamepad);
-        void inspect();
-        char getKey(char codeKey);
-};
 
 class VoiceCallback : public IXAudio2VoiceCallback
 {
