@@ -4,8 +4,8 @@
 
 void CreateInputInf(struct InputInf* pIinf) {
     pIinf->numRegistered = 0;
-    pIinf->statePrev = (char*)malloc(MD_MAX_KEY);
-    pIinf->inf = (struct KeyInf*)malloc(MD_MAX_KEY);
+    pIinf->statePrev = (char*)malloc(sizeof(char) * MD_MAX_KEY);
+    pIinf->inf = (struct KeyInf*)malloc(sizeof(struct KeyInf) * MD_MAX_KEY);
 }
 
 void FreeInputInf(struct InputInf* pIinf) {

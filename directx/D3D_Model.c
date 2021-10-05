@@ -1,6 +1,6 @@
 #include "../include/HeaderD3D11.h"
 
-void InitModelInf(struct ModelInf* pMinf) {
+void CreateModelInf(struct ModelInf* pMinf) {
     memset(pMinf, 0, sizeof(struct ModelInf));
     struct ModelInf tmp = {
         0U,
@@ -8,8 +8,7 @@ void InitModelInf(struct ModelInf* pMinf) {
         0.0f, 0.0f, 0.0f,
         1.0f, 1.0f, 1.0f,
         1.0f, 1.0f, 1.0f, 1.0f,
-        NULL,
-        NULL
+        NULL, NULL
     };
     *pMinf = tmp;
 }
@@ -42,4 +41,12 @@ BOOL CreateModelBuffer(struct D3DInf* pDinf, struct ModelInf* pMinf,
         return FALSE;
 
     return TRUE;
+}
+
+void FreeModelInf(struct ModelInf* pMinf) {
+    if (pMinf->pVBuffer != NULL)
+        COMRelease(pMinf->pVBuffer);
+    if (pMinf->pIBuffer != NULL)
+        COMRelease(pMinf->pIBuffer);
+    memset(pMinf, 0, sizeof(struct ModelInf));
 }

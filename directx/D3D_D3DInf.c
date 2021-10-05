@@ -191,7 +191,7 @@ BOOL CreateD3DInf(struct D3DInf* pDinf, HINSTANCE hInst, LPCWSTR nameWnd, LPCWST
         pDinf->cbuffer.params = params;
 
         pDinf->pImContext->lpVtbl->UpdateSubresource(
-            pDinf->pImContext, pDinf->pResCBuffer, 0U, NULL, &pDinf->cbuffer, 0U, 0U);
+                pDinf->pImContext, pDinf->pResCBuffer, 0U, NULL, &pDinf->cbuffer, 0U, 0U);
         pDinf->pImContext->lpVtbl->VSSetConstantBuffers(pDinf->pImContext, 0U, 1U, &pDinf->pCBuffer);
     }
 
@@ -235,14 +235,25 @@ BOOL CreateD3DInf(struct D3DInf* pDinf, HINSTANCE hInst, LPCWSTR nameWnd, LPCWST
 }
 
 void FreeD3DInf(struct D3DInf* pDinf) {
-    COMRelease(pDinf->pDevice);
-    COMRelease(pDinf->pImContext);
-    COMRelease(pDinf->pSwapChain);
-    COMRelease(pDinf->pRTView);
-    COMRelease(pDinf->pDSView);
-    COMRelease(pDinf->pVShader);
-    COMRelease(pDinf->pPShader);
-    COMRelease(pDinf->pILayout);
-    COMRelease(pDinf->pCBuffer);
-    COMRelease(pDinf->pResCBuffer);
+    if (pDinf->pDevice != NULL)
+        COMRelease(pDinf->pDevice);
+    if (pDinf->pImContext != NULL)
+        COMRelease(pDinf->pImContext);
+    if (pDinf->pSwapChain != NULL)
+        COMRelease(pDinf->pSwapChain);
+    if (pDinf->pRTView != NULL)
+        COMRelease(pDinf->pRTView);
+    if (pDinf->pDSView != NULL)
+        COMRelease(pDinf->pDSView);
+    if (pDinf->pVShader != NULL)
+        COMRelease(pDinf->pVShader);
+    if (pDinf->pPShader != NULL)
+        COMRelease(pDinf->pPShader);
+    if (pDinf->pILayout != NULL)
+        COMRelease(pDinf->pILayout);
+    if (pDinf->pCBuffer != NULL)
+        COMRelease(pDinf->pCBuffer);
+    if (pDinf->pResCBuffer != NULL)
+        COMRelease(pDinf->pResCBuffer);
+    memset(pDinf, 0, sizeof(struct D3DInf));
 }

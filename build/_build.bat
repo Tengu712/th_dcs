@@ -19,8 +19,8 @@ set kOptLibrary=/link ^
 
 set delimiter= 
 set pathFiles=
-if exist "..\src\*.cpp" (
-    for /f "tokens=* delims=" %%x in ('dir ..\src\*.cpp /S /B') do (
+if exist "..\src\*.c" (
+    for /f "tokens=* delims=" %%x in ('dir ..\src\*.c /S /B') do (
         set pathFiles=!pathFiles!%%x!delimiter!
     )
 )

@@ -5,19 +5,11 @@
 #include <d3d11.h>
 #include <windows.h>
 
-#include <xaudio2.h>
-
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "gdi32.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
-
-#pragma comment (lib, "xaudio2.lib")
-
-// ================================================================================================================= //
-//                                          Constants
-// ================================================================================================================= //
 
 #define MD_PIDIV4 0.785398163f
 
@@ -114,8 +106,8 @@ inline BOOL ThrowError(LPCSTR error) {
 }
 
 BOOL CreateD3DInf(
-    struct D3DInf* pDinf, HINSTANCE hInst, LPCWSTR nameWnd, LPCWSTR nameWndClass,
-    unsigned int width, unsigned int height, BOOL windowed);
+        struct D3DInf* pDinf, HINSTANCE hInst, LPCWSTR nameWnd, LPCWSTR nameWndClass,
+        unsigned int width, unsigned int height, BOOL windowed);
 void FreeD3DInf(struct D3DInf* pDinf);
 
 void DrawBegin(struct D3DInf* pDinf, struct FrameBuffer* pFBuffer, BOOL depth);
@@ -134,66 +126,10 @@ void FreeFrameBuffer(struct FrameBuffer* pFBuffer);
 void CreateCamera(float width, float height, struct Camera* pCamera);
 void ApplyCamera(struct D3DInf* pDinf, struct Camera* pCamera, BOOL parse);
 
-void InitModelInf(struct ModelInf* pMinf);
-BOOL CreateModelBuffer(struct D3DInf* pDinf, struct ModelInf* pMinf, unsigned int numVtx, struct Vertex* dataPCU, unsigned int* dataIdx);
+void CreateModelInf(struct ModelInf* pMinf);
+BOOL CreateModelBuffer(struct D3DInf* pDinf, struct ModelInf* pMinf,
+        unsigned int numVtx, struct Vertex* dataPCU, unsigned int* dataIdx);
+void FreeModelInf(struct ModelInf* pMinf);
 
-
-
-
-
-
-
-
-
-
-/*
-
-
-class VoiceCallback : public IXAudio2VoiceCallback
-{
-    public:
-        HANDLE event;
-        VoiceCallback() : event(CreateEvent(NULL, FALSE, FALSE, NULL)) {}
-        ~VoiceCallback() { CloseHandle(event); }
-        void STDMETHODCALLTYPE OnStreamEnd() {}
-        void STDMETHODCALLTYPE OnVoiceProcessingPassEnd() {}
-        void STDMETHODCALLTYPE OnVoiceProcessingPassStart(UINT32 SamplesRequired) {}
-        void STDMETHODCALLTYPE OnBufferEnd(void* pBufferContext) { SetEvent(event); }
-        void STDMETHODCALLTYPE OnBufferStart(void* pBufferContext) {}
-        void STDMETHODCALLTYPE OnLoopEnd(void* pBufferContext) {}
-        void STDMETHODCALLTYPE OnVoiceError(void* pBufferContext, HRESULT Error) {}
-};
-
-struct AudioParam {
-    int nABPS;
-    HMMIO hMmio;
-    IXAudio2SourceVoice* pSVoice;
-    VoiceCallback callback;
-};
-
-class Audio {
-    public:
-        IXAudio2SourceVoice* pSVoice;
-        XAUDIO2_BUFFER buffer;
-        Audio();
-        ~Audio();
-        void play();
-        void stop();
-        void restart();
-};
-
-class AudioManager {
-    private:
-        IXAudio2* pXAudio;
-        IXAudio2MasteringVoice* pMVoice;
-    public:
-        AudioManager();
-        ~AudioManager();
-        bool init();
-        bool createAudio(unsigned int id, Audio* pAudio);
-};
-
-*/
 
 #endif
-
