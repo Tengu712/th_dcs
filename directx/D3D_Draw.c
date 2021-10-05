@@ -40,9 +40,13 @@ void DrawModel(struct D3DInf* pDinf, struct ModelInf* pMinf) {
         0.0f, 0.0f, 1.0f, pMinf->posZ,
         0.0f, 0.0f, 0.0f, 1.0f
     };
+    struct MDFLOAT4 vecColor = {
+        pMinf->colR, pMinf->colG, pMinf->colB, pMinf->colA
+    };
     pDinf->cbuffer.matScl = matScl;
     pDinf->cbuffer.matRot = matRot;
     pDinf->cbuffer.matTrs = matTrs;
+    pDinf->cbuffer.vecColor = vecColor;
 
     pDinf->pImContext->lpVtbl->UpdateSubresource(pDinf->pImContext, pDinf->pResCBuffer, 0U, NULL, &pDinf->cbuffer, 0U, 0U);
     pDinf->pImContext->lpVtbl->VSSetConstantBuffers(pDinf->pImContext, 0U, 1U, &pDinf->pCBuffer);

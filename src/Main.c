@@ -33,10 +33,10 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
     unsigned int cntFps = 0;
 
     void (*funcsInitScene[])(struct GameInf*) = {
-        InitTitle,
+        InitTitle, InitTutorial
     };
-    void (*funcsUpdateScene[])(struct GameInf*, struct D3DInf*) = {
-        UpdateTitle,
+    void (*funcsUpdateScene[])(struct GameInf*, struct D3DInf*, struct InputInf*) = {
+        UpdateTitle, UpdateTutorial
     };
 
     MSG msg;
@@ -63,7 +63,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
             ginf.sceCur = ginf.sceNex;
             funcsInitScene[ginf.sceCur](&ginf);
         }
-        funcsUpdateScene[ginf.sceCur](&ginf, &dinf);
+        funcsUpdateScene[ginf.sceCur](&ginf, &dinf, &iinf);
     }
 
     FreeGameInf(&ginf);

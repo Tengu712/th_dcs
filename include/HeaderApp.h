@@ -66,6 +66,7 @@ struct Bullet {
 };
 
 struct BulletInf {
+    unsigned int imgid;
     int r, rGrz;
     float sclX, sclY;
     float colR, colG, colB, colA;

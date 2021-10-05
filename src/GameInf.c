@@ -69,6 +69,14 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, unsigned int wid
     pGinf->bulsP = (struct Bullet*)malloc(sizeof(struct Bullet) * MAX_BUL_P);
     pGinf->binfs = (struct BulletInf*)malloc(sizeof(struct BulletInf) * MAX_KND_BUL);
     pGinf->imgidsLog = (unsigned int*)malloc(sizeof(struct Logue) * MAX_LOGUE);
+    memset(pGinf->imgs, 0, sizeof(struct Image) * MAX_IMG);
+    memset(pGinf->imgsTmp, 0, sizeof(struct Image) * MAX_IMG_TMP);
+    memset(pGinf->queBG, 0, sizeof(struct Fact) * MAX_QUE_BG);
+    memset(pGinf->queUI, 0, sizeof(struct Fact) * MAX_QUE_UI);
+    memset(pGinf->bulsE, 0, sizeof(struct Bullet) * MAX_BUL_E);
+    memset(pGinf->bulsP, 0, sizeof(struct Bullet) * MAX_BUL_P);
+    memset(pGinf->binfs, 0, sizeof(struct BulletInf) * MAX_KND_BUL);
+    memset(pGinf->imgidsLog, 0, sizeof(struct Logue) * MAX_LOGUE);
 
     CreatePlayer(&pGinf->player);
     memset(&pGinf->log, 0, sizeof(struct Logue));
@@ -126,10 +134,11 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, unsigned int wid
         return ThrowError("Failed to load.");
 
     struct BulletInf binf0 = {
-            50000, 100000,
-            5000.0f, 5000.0f,
-            1.0f, 1.0f, 1.0f, 1.0f
-        };
+        IMG_BU_SELF0,
+        50000, 100000,
+        5000.0f, 5000.0f,
+        1.0f, 1.0f, 1.0f, 1.0f
+    };
     pGinf->binfs[0] = binf0;
 
     fclose(pFile);
