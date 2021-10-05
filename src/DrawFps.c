@@ -1,6 +1,6 @@
 #include "../include/HeaderApp.h"
 
-void DrawFps(struct GameInf* pGinf, struct D3DInf* pDinf) {
+void DrawFps(struct D3DInf* pDinf, struct GameInf* pGinf) {
     struct Fact fact;
     CreateFact(&fact);
     fact.posX = 525.0f;

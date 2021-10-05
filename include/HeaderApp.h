@@ -183,7 +183,7 @@ void UpdateBullet(struct GameInf* pGinf, struct Bullet* pBul);
 void CreatePlayer(struct Player* pPlayer);
 void UpdatePlayer(struct GameInf* pGinf, struct InputInf* pIinf, struct Player* pPlayer);
 
-void DrawFps(struct GameInf* pGinf, struct D3DInf* pDinf);
+void DrawFps(struct D3DInf* pDinf, struct GameInf* pGinf);
 
 void ApplyLogue(struct GameInf* pGinf, char flg, char right, unsigned int imgidL, unsigned int imgidR, LPCSTR str);
 

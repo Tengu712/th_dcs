@@ -73,54 +73,64 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, unsigned int wid
     CreatePlayer(&pGinf->player);
     memset(&pGinf->log, 0, sizeof(struct Logue));
 
-    //! load
-    /*
-            bool flg = true;
-        flg = flg && loadTexture(hModule, TEX_BG_TUTORIAL);
-        flg = flg && loadTexture(hModule, TEX_BG_KEIDAI);
-        flg = flg && loadTexture(hModule, TEX_BG_CLOUD0);
-        flg = flg && loadTexture(hModule, TEX_BG_CLOUD1);
-        flg = flg && loadTexture(hModule, TEX_UI_FRAME);
-        flg = flg && loadTexture(hModule, TEX_BU_SELF0);
-        flg = flg && loadTexture(hModule, TEX_CH_ATARI);
-        flg = flg && loadTexture(hModule, TEX_CH_SLOWCIRCLE);
-        flg = flg && loadTexture(hModule, TEX_CH_MARISA_B0);
-        flg = flg && loadTexture(hModule, TEX_CH_MARISA_B1);
-        flg = flg && loadTexture(hModule, TEX_CH_MARISA_B2);
-        flg = flg && loadTexture(hModule, TEX_CH_MARISA_B3);
-        flg = flg && loadTexture(hModule, TEX_CH_MARISA_R0);
-        flg = flg && loadTexture(hModule, TEX_CH_MARISA_R1);
-        flg = flg && loadTexture(hModule, TEX_CH_MARISA_L0);
-        flg = flg && loadTexture(hModule, TEX_CH_MARISA_L1);
-        flg = flg && loadTexture(hModule, TEX_CH_FAIRY_R0);
-        flg = flg && loadTexture(hModule, TEX_CH_FAIRY_R1);
-        flg = flg && loadTexture(hModule, TEX_TC_MARISA0);
-        flg = flg && loadTexture(hModule, TEX_TC_MARISA1);
-        flg = flg && loadTexture(hModule, TEX_TC_MARISA2);
-        flg = flg && loadFont(Lpcstr2uint("0"));
-        flg = flg && loadFont(Lpcstr2uint("1"));
-        flg = flg && loadFont(Lpcstr2uint("2"));
-        flg = flg && loadFont(Lpcstr2uint("3"));
-        flg = flg && loadFont(Lpcstr2uint("4"));
-        flg = flg && loadFont(Lpcstr2uint("5"));
-        flg = flg && loadFont(Lpcstr2uint("6"));
-        flg = flg && loadFont(Lpcstr2uint("7"));
-        flg = flg && loadFont(Lpcstr2uint("8"));
-        flg = flg && loadFont(Lpcstr2uint("9"));
-        flg = flg && loadFont(Lpcstr2uint("."));
-        flg = flg && loadFont(Lpcstr2uint("f"));
-        flg = flg && loadFont(Lpcstr2uint("p"));
-        flg = flg && loadFont(Lpcstr2uint("s"));
-        flg = flg && setKeyConfig();
-    */
+    // Load
+    if (!LoadAddImage(pGinf, pDinf, hModule, IMG_BG_LOAD))
+        return ThrowError("Failed to load image for loading.");
+    pGinf->idea.sclX = 12.8f;
+    pGinf->idea.sclY = 9.6f;
+    DrawBegin(pDinf, NULL, FALSE);
+    ApplyCamera(pDinf, &pGinf->cameraBG, FALSE);
+    ApplyImage(pDinf, GetImage(pGinf, IMG_BG_LOAD));
+    DrawModel(pDinf, &pGinf->idea);
+    DrawEnd(pDinf);
+
+    char flg = 1;
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BG_TUTORIAL);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BG_KEIDAI);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BG_CLOUD0);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BG_CLOUD1);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_UI_FRAME);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BU_SELF0);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_ATARI);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_SLOWCIRCLE);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_MARISA_B0);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_MARISA_B1);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_MARISA_B2);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_MARISA_B3);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_MARISA_R0);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_MARISA_R1);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_MARISA_L0);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_MARISA_L1);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_FAIRY_R0);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_FAIRY_R1);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_TC_MARISA0);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_TC_MARISA1);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_TC_MARISA2);
+    flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("0"));
+    flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("1"));
+    flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("2"));
+    flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("3"));
+    flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("4"));
+    flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("5"));
+    flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("6"));
+    flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("7"));
+    flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("8"));
+    flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("9"));
+    flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("."));
+    flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("f"));
+    flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("p"));
+    flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("s"));
+    //flg = flg && setKeyConfig();
+
+    if (!flg) 
+        return ThrowError("Failed to load.");
 
     struct BulletInf binf0 = {
-        50000, 100000,
-        5000.0f, 5000.0f,
-        1.0f, 1.0f, 1.0f, 1.0f
-    };
+            50000, 100000,
+            5000.0f, 5000.0f,
+            1.0f, 1.0f, 1.0f, 1.0f
+        };
     pGinf->binfs[0] = binf0;
-    
 
     fclose(pFile);
     FreeLibrary(hModule);
