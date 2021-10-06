@@ -1,6 +1,8 @@
 cbuffer mats : register (b0) {
     float4x4 matScl;
-    float4x4 matRot;
+    float4x4 matRtX;
+    float4x4 matRtY;
+    float4x4 matRtZ;
     float4x4 matTrs;
     float4x4 matView;
     float4x4 matProj;
@@ -27,14 +29,19 @@ VS_OUT vs_main(VS_IN input) {
     VS_OUT output;
 
     output.pos = mul(input.pos, matScl);
-    output.pos = mul(output.pos, matRot);
+    output.pos = mul(output.pos, matRtX);
+    output.pos = mul(output.pos, matRtY);
+    output.pos = mul(output.pos, matRtZ);
     output.pos = mul(output.pos, matTrs);
     output.pos = mul(output.pos, matView);
     output.pos = mul(output.pos, matProj);
 
+    float4 nor = mul(input.nor, matRtX);
+    nor = mul(nor, matRtY);
+    nor = mul(nor, matRtZ);
+    float3 norRes = normalize(nor.xyz);
     float4 col = input.col * vecColor;
-    float3 nor = normalize(mul(input.nor, matRot).xyz);
-    output.col = float4(col.xyz * (dot(-nor, vecLight.xyz) * 0.5 + 0.5), col.w);
+    output.col = float4(col.xyz * (dot(-norRes, vecLight.xyz) * 0.5 + 0.5), col.w);
 
     output.tex = input.tex;
     output.prm = params;

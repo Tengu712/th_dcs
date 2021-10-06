@@ -34,7 +34,9 @@ struct MDFLOAT4x4 {
 
 struct ConstantBuffer {
     struct MDFLOAT4x4 matScl;
-    struct MDFLOAT4x4 matRot;
+    struct MDFLOAT4x4 matRtX;
+    struct MDFLOAT4x4 matRtY;
+    struct MDFLOAT4x4 matRtZ;
     struct MDFLOAT4x4 matTrs;
     struct MDFLOAT4x4 matView;
     struct MDFLOAT4x4 matProj;

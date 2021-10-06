@@ -1,5 +1,11 @@
 #include "../include/HeaderD3D11.h"
 
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979
+#endif
+
 void DrawBegin(struct D3DInf* pDinf, struct FrameBuffer* pFBuffer, BOOL depth) {
     pDinf->pImContext->lpVtbl->OMSetRenderTargets(
         pDinf->pImContext, 1U, pFBuffer == NULL ? &pDinf->pRTView : &pFBuffer->pRTView, depth ? pDinf->pDSView : NULL);
@@ -28,11 +34,26 @@ void DrawModel(struct D3DInf* pDinf, struct ModelInf* pMinf) {
         0.0f, 0.0f, pMinf->sclZ, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f
     };
-    struct MDFLOAT4x4 matRot = {
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f
+    const double radX = (double)pMinf->degX / 180.0f * M_PI;
+    const double radY = (double)pMinf->degY / 180.0f * M_PI;
+    const double radZ = (double)pMinf->degZ / 180.0f * M_PI;
+    struct MDFLOAT4x4 matRtX = {
+        1.0f,             0.0f,              0.0f, 0.0f,
+        0.0f, (float)cos(radX), -(float)sin(radX), 0.0f,
+        0.0f, (float)sin(radX),  (float)cos(radX), 0.0f,
+        0.0f,             0.0f,              0.0f, 1.0f
+    };
+    struct MDFLOAT4x4 matRtY = {
+         (float)cos(radY), 0.0f, (float)sin(radY), 0.0f,
+                     0.0f, 1.0f,             0.0f, 0.0f,
+        -(float)sin(radY), 0.0f, (float)cos(radY), 0.0f,
+                     0.0f, 0.0f,             0.0f, 1.0f
+    };
+    struct MDFLOAT4x4 matRtZ = {
+        (float)cos(radZ), -(float)sin(radZ), 0.0f, 0.0f,
+        (float)sin(radZ),  (float)cos(radZ), 0.0f, 0.0f,
+                    0.0f,              0.0f, 1.0f, 0.0f,
+                    0.0f,              0.0f, 0.0f, 1.0f
     };
     struct MDFLOAT4x4 matTrs = {
         1.0f, 0.0f, 0.0f, pMinf->posX,
@@ -44,7 +65,9 @@ void DrawModel(struct D3DInf* pDinf, struct ModelInf* pMinf) {
         pMinf->colR, pMinf->colG, pMinf->colB, pMinf->colA
     };
     pDinf->cbuffer.matScl = matScl;
-    pDinf->cbuffer.matRot = matRot;
+    pDinf->cbuffer.matRtX = matRtX;
+    pDinf->cbuffer.matRtY = matRtY;
+    pDinf->cbuffer.matRtZ = matRtZ;
     pDinf->cbuffer.matTrs = matTrs;
     pDinf->cbuffer.vecColor = vecColor;
 

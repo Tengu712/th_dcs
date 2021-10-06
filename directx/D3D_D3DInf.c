@@ -182,7 +182,9 @@ BOOL CreateD3DInf(struct D3DInf* pDinf, HINSTANCE hInst, LPCWSTR nameWnd, LPCWST
         struct MDFLOAT4 params = { 0.0f, 0.0f, 0.0f, 0.0f };
 
         pDinf->cbuffer.matScl = matE;
-        pDinf->cbuffer.matRot = matE;
+        pDinf->cbuffer.matRtX = matE;
+        pDinf->cbuffer.matRtY = matE;
+        pDinf->cbuffer.matRtZ = matE;
         pDinf->cbuffer.matTrs = matE;
         pDinf->cbuffer.matView = matE;
         pDinf->cbuffer.matProj = matProj;
