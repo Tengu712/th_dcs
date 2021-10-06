@@ -1,14 +1,10 @@
 #include "../include/HeaderScene.h"
 
-char mode = 0;
 
 void InitGame(struct GameInf* pGinf) {
-    mode = 0;
 }
 
-char UpdateGame(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf) {
-    // Game
-    if (mode == 0) {
+void UpdateGame(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf) {
         UpdatePlayer(pGinf, pIinf, &pGinf->player);
         for (int i = 0; i < MAX_BUL_P; ++i) {
             if (pGinf->bulsP[i].flg == 0)
@@ -22,9 +18,6 @@ char UpdateGame(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pI
             UpdateBullet(pGinf, &pGinf->bulsE[i]);
             //! hit
         }
-    }
-
-    return mode;
 }
 
 inline void DrawImage(struct GameInf* pGinf, struct D3DInf* pDinf, struct Fact* pFact, struct Image* pImage) {

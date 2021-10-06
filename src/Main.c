@@ -25,7 +25,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
     CreateInputInf(&iinf);
 
     struct GameInf ginf;
-    if (!CreateGameInf(&ginf, &dinf, 1280U, 960U)) 
+    if (!CreateGameInf(&ginf, &dinf, &iinf, 1280U, 960U)) 
         return ErrorExit("Failed to create GameInf.", hInst);
 
     long startTime = timeGetTime();
@@ -58,6 +58,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
         }
         cntFps++;
 
+        InspectInput(&iinf);
         UpdateGameInf(&ginf);
         if (ginf.sceCur != ginf.sceNex) {
             ginf.sceCur = ginf.sceNex;

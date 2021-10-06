@@ -127,7 +127,8 @@ struct GameInf {
 //                                          Functions
 // ================================================================================================================= //
 
-char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, unsigned int width, unsigned int height);
+char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf,
+        unsigned int width, unsigned int height);
 void UpdateGameInf(struct GameInf* pGinf);
 void FreeGameInf(struct GameInf* pGinf);
 

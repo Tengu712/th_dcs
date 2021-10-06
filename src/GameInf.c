@@ -2,7 +2,9 @@
 
 #include <stdio.h>
 
-char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, unsigned int width, unsigned int height) {
+char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf,
+        unsigned int width, unsigned int height)
+{
 
     memset(pGinf, 0, sizeof(struct GameInf));
 
@@ -32,26 +34,6 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, unsigned int wid
     // frame buffers
     CreateFrameBuffer(pDinf, &pGinf->fb0, width, height);
     CreateFrameBuffer(pDinf, &pGinf->fb1, width, height);
-
-    //! data
-    FILE* pFile = fopen("./savedata.dat", "r");
-    if (!pFile) 
-        return ThrowError("Failed to open savedata.dat.");
-    memset(&pGinf->data, 0, sizeof(struct SaveData));
-    pGinf->data.cntPlay = 0;
-    pGinf->data.cntWorldRound = 0;
-    pGinf->data.scoreTotalGot = 0;
-    pGinf->data.scoreTotal = 0;
-    pGinf->data.spdNorm = 800;
-    pGinf->data.spdSlow = 400;
-    pGinf->data.r = 1500;
-    pGinf->data.rGrz = 5000;
-    pGinf->data.atk = 100;
-    pGinf->data.interval = 8;
-    pGinf->data.numOpt = 0;
-    pGinf->data.widthShot = 0;
-    pGinf->data.kndShot = 0;
-    pGinf->data.kndSkill = 0;
 
     // cameras
     CreateCamera((float)width, (float)height, &pGinf->cameraBG);
@@ -128,10 +110,139 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, unsigned int wid
     flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("f"));
     flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("p"));
     flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("s"));
-    //flg = flg && setKeyConfig();
-
     if (!flg) 
         return ThrowError("Failed to load.");
+
+    {
+        FILE* pKC = fopen("./keyconfig.cfg", "r");
+        if (!pKC) 
+            return ThrowError("Failed to open keyconfig.cfg.");
+        int cntKey = 0;
+        int cntBuf = 0;
+        int buf = 0;
+        int bufs[2] = {0,0};
+        char mapKey[7] = {VK_UP, VK_DOWN, VK_LEFT, VK_RIGHT, 0x5A, VK_SHIFT, VK_ESCAPE};
+        while ((buf = fgetc(pKC)) != EOF) {
+            if (buf != 'u' && buf != 'd' && buf != 'l' && buf != 'r' 
+                    && buf != 's' && buf != 't' && buf != 'b' && buf != 'c'
+                    && buf != '1' && buf != '2' && buf != '3'
+                    && buf != 'a' && buf != 'b' && buf != 'x' && buf != 'y' && buf != ',')
+                continue;
+            if (cntKey >= 7 || cntBuf > 2)
+                return ThrowError("Invalid keyconfig.");
+            if (buf == ',') {
+                char t = 0;
+                short c = 0;
+                if (bufs[0] == 'l' && bufs[1] == '2') {
+                    t = MD_GAMEPAD_KEYTYPE_LTRIGGER;
+                    c = 128;
+                } else if (bufs[0] == 'r' && bufs[1] == '2') {
+                    t = MD_GAMEPAD_KEYTYPE_RTRIGGER;
+                    c = 128;
+                } else if (bufs[0] == 'l' && bufs[1] == 'l') {
+                    t = MD_GAMEPAD_KEYTYPE_THUMBLL;
+                    c = 128;
+                } else if (bufs[0] == 'l' && bufs[1] == 'r') {
+                    t = MD_GAMEPAD_KEYTYPE_THUMBLR;
+                    c = 128;
+                } else if (bufs[0] == 'l' && bufs[1] == 'u') {
+                    t = MD_GAMEPAD_KEYTYPE_THUMBLU;
+                    c = 128;
+                } else if (bufs[0] == 'l' && bufs[1] == 'd') {
+                    t = MD_GAMEPAD_KEYTYPE_THUMBLD;
+                    c = 128;
+                } else if (bufs[0] == 'r' && bufs[1] == 'l') {
+                    t = MD_GAMEPAD_KEYTYPE_THUMBRL;
+                    c = 128;
+                } else if (bufs[0] == 'r' && bufs[1] == 'r') {
+                    t = MD_GAMEPAD_KEYTYPE_THUMBRR;
+                    c = 128;
+                } else if (bufs[0] == 'r' && bufs[1] == 'u') {
+                    t = MD_GAMEPAD_KEYTYPE_THUMBRU;
+                    c = 128;
+                } else if (bufs[0] == 'r' && bufs[1] == 'd') {
+                    t = MD_GAMEPAD_KEYTYPE_THUMBRD;
+                    c = 128;
+                } else if (bufs[0] == 's' && bufs[1] == 't') {
+                    t = MD_GAMEPAD_KEYTYPE_BUTTONS;
+                    c = XINPUT_GAMEPAD_START;
+                } else if (bufs[0] == 'b' && bufs[1] == 'c') {
+                    t = MD_GAMEPAD_KEYTYPE_BUTTONS;
+                    c = XINPUT_GAMEPAD_BACK;
+                } else if (bufs[0] == 'l' && bufs[1] == '1') {
+                    t = MD_GAMEPAD_KEYTYPE_BUTTONS;
+                    c = XINPUT_GAMEPAD_LEFT_SHOULDER;
+                } else if (bufs[0] == 'r' && bufs[1] == '1') {
+                    t = MD_GAMEPAD_KEYTYPE_BUTTONS;
+                    c = XINPUT_GAMEPAD_RIGHT_SHOULDER;
+                } else if (bufs[0] == 'l' && bufs[1] == '3') {
+                    t = MD_GAMEPAD_KEYTYPE_BUTTONS;
+                    c = XINPUT_GAMEPAD_LEFT_THUMB;
+                } else if (bufs[0] == 'r' && bufs[1] == '3') {
+                    t = MD_GAMEPAD_KEYTYPE_BUTTONS;
+                    c = XINPUT_GAMEPAD_RIGHT_THUMB;
+                } else if (bufs[0] == 'u') {
+                    t = MD_GAMEPAD_KEYTYPE_BUTTONS;
+                    c = XINPUT_GAMEPAD_DPAD_UP;
+                } else if (bufs[0] == 'd') {
+                    t = MD_GAMEPAD_KEYTYPE_BUTTONS;
+                    c = XINPUT_GAMEPAD_DPAD_DOWN;
+                } else if (bufs[0] == 'l') {
+                    t = MD_GAMEPAD_KEYTYPE_BUTTONS;
+                    c = XINPUT_GAMEPAD_DPAD_LEFT;
+                } else if (bufs[0] == 'r') {
+                    t = MD_GAMEPAD_KEYTYPE_BUTTONS;
+                    c = XINPUT_GAMEPAD_DPAD_RIGHT;
+                } else if (bufs[0] == 'a') {
+                    t = MD_GAMEPAD_KEYTYPE_BUTTONS;
+                    c = XINPUT_GAMEPAD_A;
+                } else if (bufs[0] == 'b') {
+                    t = MD_GAMEPAD_KEYTYPE_BUTTONS;
+                    c = XINPUT_GAMEPAD_B;
+                } else if (bufs[0] == 'x') {
+                    t = MD_GAMEPAD_KEYTYPE_BUTTONS;
+                    c = XINPUT_GAMEPAD_X;
+                } else if (bufs[0] == 'y') {
+                    t = MD_GAMEPAD_KEYTYPE_BUTTONS;
+                    c = XINPUT_GAMEPAD_Y;
+                } else
+                    return ThrowError("Invalid keycode.");
+                if (!AddKeycode(pIinf, cntKey + 1, mapKey[cntKey], t, c))
+                    return ThrowError("Failed to add key.");
+                cntKey++;
+                cntBuf = 0;
+                bufs[0] = 0;
+                bufs[1] = 0;
+                continue;
+            }
+            bufs[cntBuf] = buf;
+            cntBuf++;
+        }
+        fclose(pKC);
+    }
+
+    //! data
+    {
+        FILE* pSD = fopen("./savedata.dat", "r");
+        if (!pSD) 
+            return ThrowError("Failed to open savedata.dat.");
+        memset(&pGinf->data, 0, sizeof(struct SaveData));
+        pGinf->data.cntPlay = 0;
+        pGinf->data.cntWorldRound = 0;
+        pGinf->data.scoreTotalGot = 0;
+        pGinf->data.scoreTotal = 0;
+        pGinf->data.spdNorm = 800;
+        pGinf->data.spdSlow = 400;
+        pGinf->data.r = 1500;
+        pGinf->data.rGrz = 5000;
+        pGinf->data.atk = 100;
+        pGinf->data.interval = 8;
+        pGinf->data.numOpt = 0;
+        pGinf->data.widthShot = 0;
+        pGinf->data.kndShot = 0;
+        pGinf->data.kndSkill = 0;
+        fclose(pSD);
+    }
 
     struct BulletInf binf0 = {
         IMG_BU_SELF0,
@@ -141,7 +252,6 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, unsigned int wid
     };
     pGinf->binfs[0] = binf0;
 
-    fclose(pFile);
     FreeLibrary(hModule);
     return 1;
 }

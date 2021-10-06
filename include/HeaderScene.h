@@ -11,7 +11,7 @@ void InitTitle(struct GameInf* pGinf);
 void UpdateTitle(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf);
 
 void InitGame(struct GameInf* pGinf);
-char UpdateGame(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf);
+void UpdateGame(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf);
 void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf);
 
 void InitTutorial(struct GameInf* pGinf);
