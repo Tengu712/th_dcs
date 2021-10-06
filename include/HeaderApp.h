@@ -8,6 +8,12 @@
 
 #pragma comment(lib, "mydx.lib")
 
+#include<math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979
+#endif
+
 // ================================================================================================================= //
 //                                          Constants
 // ================================================================================================================= //
@@ -57,19 +63,22 @@ struct Player {
 struct Bullet {
     // 0:empty 1:moving 2:grazed 3:hitted
     unsigned int flg;
-    unsigned int cnt;
-    unsigned int knd;
-    int atk;
-    int ptn;
-    int x, y;
-    int deg, spd;
-};
-
-struct BulletInf {
     unsigned int imgid;
-    int r, rGrz;
+    unsigned int cnt;
+    unsigned int atk, ptn;
+    int x, y, r;
+    int deg, spd;
     float sclX, sclY;
     float colR, colG, colB, colA;
+};
+
+struct Enemy {
+    unsigned int imgid;
+    unsigned int cnt;
+    unsigned int timlim;
+    int hp, hpMax;
+    int x, y;
+    int deg, spd;
 };
 
 struct Logue {
@@ -82,8 +91,9 @@ struct Logue {
 struct SaveData {
     unsigned int cntPlay;
     unsigned int cntWorldRound;
-    unsigned int scoreTotalGot;
-    unsigned int scoreTotal;
+    unsigned long long scoreTotalGot;
+    unsigned long long scoreTotal;
+    long long scoreInit;
     int spdNorm;
     int spdSlow;
     int r;
@@ -116,10 +126,15 @@ struct GameInf {
     struct Fact* queUI; //!
     struct Bullet* bulsE;
     struct Bullet* bulsP;
-    struct BulletInf* binfs;
     unsigned int* imgidsLog;
     // Game
+    unsigned int cntAll;
+    unsigned int cntSce;
+    unsigned int mode;
+    unsigned int grz;
+    long long score;
     struct Player player;
+    struct Enemy enemy;
     struct Logue log;
 };
 
@@ -151,23 +166,27 @@ void pushUI(struct GameInf* pGinf, struct Fact* pFact);
 void pushBulletE(struct GameInf* pGinf, struct Bullet* pBul);
 void pushBulletP(struct GameInf* pGinf, struct Bullet* pBul);
 
+inline void MoveEntity(int* x, int* y, int deg, int spd) {
+    const double rad = (double)deg / 180.0 * M_PI;
+    *x += (int)(cos(rad) * 10000.0f) * spd / 100;
+    *y += (int)(sin(rad) * 10000.0f) * spd / 100;
+}
+
 inline void CreateFact(struct Fact* pFact) {
     memset(pFact, 0, sizeof(struct Fact));
-    struct Fact tmp = {
-        0, 0U,
-        0.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 0.0f,
-        1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 1.0f
-    };
-    *pFact = tmp;
+    pFact->sclX = 1.0f;
+    pFact->sclY = 1.0f;
+    pFact->sclZ = 1.0f;
+    pFact->colR = 1.0f;
+    pFact->colG = 1.0f;
+    pFact->colB = 1.0f;
+    pFact->colA = 1.0f;
 }
 void ApplyFact(struct GameInf* pGinf, struct Fact* pFact);
 
 void CreateBullet(struct Bullet* pBul, unsigned int knd);
 void UpdateBullet(struct GameInf* pGinf, struct Bullet* pBul);
 
-void CreatePlayer(struct Player* pPlayer);
 void UpdatePlayer(struct GameInf* pGinf, struct InputInf* pIinf, struct Player* pPlayer);
 
 void DrawFps(struct D3DInf* pDinf, struct GameInf* pGinf);

@@ -5,7 +5,6 @@
 char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf,
         unsigned int width, unsigned int height)
 {
-
     memset(pGinf, 0, sizeof(struct GameInf));
 
     HMODULE hModule = LoadLibraryA("./resource.dll");
@@ -49,7 +48,6 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
     pGinf->queUI = (struct Fact*)malloc(sizeof(struct Fact) * MAX_QUE_UI);
     pGinf->bulsE = (struct Bullet*)malloc(sizeof(struct Bullet) * MAX_BUL_E);
     pGinf->bulsP = (struct Bullet*)malloc(sizeof(struct Bullet) * MAX_BUL_P);
-    pGinf->binfs = (struct BulletInf*)malloc(sizeof(struct BulletInf) * MAX_KND_BUL);
     pGinf->imgidsLog = (unsigned int*)malloc(sizeof(struct Logue) * MAX_LOGUE);
     memset(pGinf->imgs, 0, sizeof(struct Image) * MAX_IMG);
     memset(pGinf->imgsTmp, 0, sizeof(struct Image) * MAX_IMG_TMP);
@@ -57,11 +55,7 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
     memset(pGinf->queUI, 0, sizeof(struct Fact) * MAX_QUE_UI);
     memset(pGinf->bulsE, 0, sizeof(struct Bullet) * MAX_BUL_E);
     memset(pGinf->bulsP, 0, sizeof(struct Bullet) * MAX_BUL_P);
-    memset(pGinf->binfs, 0, sizeof(struct BulletInf) * MAX_KND_BUL);
     memset(pGinf->imgidsLog, 0, sizeof(struct Logue) * MAX_LOGUE);
-
-    CreatePlayer(&pGinf->player);
-    memset(&pGinf->log, 0, sizeof(struct Logue));
 
     // Load
     if (!LoadAddImage(pGinf, pDinf, hModule, IMG_BG_LOAD))
@@ -229,11 +223,12 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
         memset(&pGinf->data, 0, sizeof(struct SaveData));
         pGinf->data.cntPlay = 0;
         pGinf->data.cntWorldRound = 0;
-        pGinf->data.scoreTotalGot = 0;
-        pGinf->data.scoreTotal = 0;
+        pGinf->data.scoreTotalGot = 10000000LL;
+        pGinf->data.scoreTotal = 10000000LL;
+        pGinf->data.scoreInit = 10000000LL;
         pGinf->data.spdNorm = 800;
         pGinf->data.spdSlow = 400;
-        pGinf->data.r = 1500;
+        pGinf->data.r = 1000;
         pGinf->data.rGrz = 5000;
         pGinf->data.atk = 100;
         pGinf->data.interval = 8;
@@ -243,14 +238,6 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
         pGinf->data.kndSkill = 0;
         fclose(pSD);
     }
-
-    struct BulletInf binf0 = {
-        IMG_BU_SELF0,
-        50000, 100000,
-        5000.0f, 5000.0f,
-        1.0f, 1.0f, 1.0f, 1.0f
-    };
-    pGinf->binfs[0] = binf0;
 
     FreeLibrary(hModule);
     return 1;
@@ -272,8 +259,6 @@ void FreeGameInf(struct GameInf* pGinf) {
         free(pGinf->bulsE);
     if (pGinf->bulsP != NULL)
         free(pGinf->bulsP);
-    if (pGinf->binfs != NULL)
-        free(pGinf->binfs);
     if (pGinf->imgidsLog != NULL)
         free(pGinf->imgidsLog);
     memset(pGinf, 0, sizeof(struct GameInf));
