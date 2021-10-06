@@ -2,10 +2,6 @@
 
 #include <math.h>
 
-#ifndef M_PI
-#define M_PI 3.14159265358979
-#endif
-
 void DrawBegin(struct D3DInf* pDinf, struct FrameBuffer* pFBuffer, BOOL depth) {
     pDinf->pImContext->lpVtbl->OMSetRenderTargets(
         pDinf->pImContext, 1U, pFBuffer == NULL ? &pDinf->pRTView : &pFBuffer->pRTView, depth ? pDinf->pDSView : NULL);
@@ -34,26 +30,23 @@ void DrawModel(struct D3DInf* pDinf, struct ModelInf* pMinf) {
         0.0f, 0.0f, pMinf->sclZ, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f
     };
-    const double radX = (double)pMinf->degX / 180.0f * M_PI;
-    const double radY = (double)pMinf->degY / 180.0f * M_PI;
-    const double radZ = (double)pMinf->degZ / 180.0f * M_PI;
     struct MDFLOAT4x4 matRtX = {
-        1.0f,             0.0f,              0.0f, 0.0f,
-        0.0f, (float)cos(radX), -(float)sin(radX), 0.0f,
-        0.0f, (float)sin(radX),  (float)cos(radX), 0.0f,
-        0.0f,             0.0f,              0.0f, 1.0f
+        1.0f,                    0.0f,                     0.0f, 0.0f,
+        0.0f, (float)cos(pMinf->radX), -(float)sin(pMinf->radX), 0.0f,
+        0.0f, (float)sin(pMinf->radX),  (float)cos(pMinf->radX), 0.0f,
+        0.0f,                    0.0f,                     0.0f, 1.0f
     };
     struct MDFLOAT4x4 matRtY = {
-         (float)cos(radY), 0.0f, (float)sin(radY), 0.0f,
-                     0.0f, 1.0f,             0.0f, 0.0f,
-        -(float)sin(radY), 0.0f, (float)cos(radY), 0.0f,
-                     0.0f, 0.0f,             0.0f, 1.0f
+         (float)cos(pMinf->radY), 0.0f, (float)sin(pMinf->radY), 0.0f,
+                            0.0f, 1.0f,                    0.0f, 0.0f,
+        -(float)sin(pMinf->radY), 0.0f, (float)cos(pMinf->radY), 0.0f,
+                            0.0f, 0.0f,                    0.0f, 1.0f
     };
     struct MDFLOAT4x4 matRtZ = {
-        (float)cos(radZ), -(float)sin(radZ), 0.0f, 0.0f,
-        (float)sin(radZ),  (float)cos(radZ), 0.0f, 0.0f,
-                    0.0f,              0.0f, 1.0f, 0.0f,
-                    0.0f,              0.0f, 0.0f, 1.0f
+        (float)cos(pMinf->radZ), -(float)sin(pMinf->radZ), 0.0f, 0.0f,
+        (float)sin(pMinf->radZ),  (float)cos(pMinf->radZ), 0.0f, 0.0f,
+                           0.0f,                     0.0f, 1.0f, 0.0f,
+                           0.0f,                     0.0f, 0.0f, 1.0f
     };
     struct MDFLOAT4x4 matTrs = {
         1.0f, 0.0f, 0.0f, pMinf->posX,

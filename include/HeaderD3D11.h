@@ -67,7 +67,7 @@ struct Camera {
 struct ModelInf {
     unsigned int numIdx;
     float posX, posY, posZ;
-    float degX, degY, degZ;
+    float radX, radY, radZ;
     float sclX, sclY, sclZ;
     float colR, colG, colB, colA;
     ID3D11Buffer* pVBuffer;

@@ -71,7 +71,7 @@ void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf) {
         }
         fact.posX = (float)pGinf->bulsP[i].x;
         fact.posY = (float)pGinf->bulsP[i].y;
-        fact.degZ = (float)pGinf->bulsP[i].deg;
+        fact.degZ = (float)pGinf->bulsP[i].deg - 90.0f;
         fact.sclX = pGinf->binfs[pGinf->bulsP[i].knd].sclX;
         fact.sclY = pGinf->binfs[pGinf->bulsP[i].knd].sclY;
         fact.colR = pGinf->binfs[pGinf->bulsP[i].knd].colR;
@@ -91,7 +91,7 @@ void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf) {
         }
         fact.posX = (float)pGinf->bulsE[i].x;
         fact.posY = (float)pGinf->bulsE[i].y;
-        fact.degZ = (float)pGinf->bulsE[i].deg;
+        fact.degZ = (float)pGinf->bulsE[i].deg - 90.0f;
         fact.sclX = pGinf->binfs[pGinf->bulsE[i].knd].sclX;
         fact.sclY = pGinf->binfs[pGinf->bulsE[i].knd].sclY;
         fact.colR = pGinf->binfs[pGinf->bulsE[i].knd].colR;
