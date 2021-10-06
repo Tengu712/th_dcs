@@ -69,6 +69,8 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
     DrawEnd(pDinf);
 
     char flg = 1;
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BG_MAINMENU);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BG_MAINMENU_OVER);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BG_TUTORIAL);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BG_KEIDAI);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BG_CLOUD0);

@@ -168,8 +168,8 @@ void pushBulletP(struct GameInf* pGinf, struct Bullet* pBul);
 
 inline void MoveEntity(int* x, int* y, int deg, int spd) {
     const double rad = (double)deg / 180.0 * M_PI;
-    *x += (int)(cos(rad) * 10000.0f) * spd / 100;
-    *y += (int)(sin(rad) * 10000.0f) * spd / 100;
+    *x += (int)(cos(rad) * 10000.0) * spd / 100;
+    *y += (int)(sin(rad) * 10000.0) * spd / 100;
 }
 
 inline void CreateFact(struct Fact* pFact) {

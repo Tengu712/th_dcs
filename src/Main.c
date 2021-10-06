@@ -34,6 +34,10 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
 
     void (*funcsInitScene[MAX_NUM_SCE])(struct GameInf*, struct D3DInf*);
     void (*funcsUpdateScene[MAX_NUM_SCE])(struct GameInf*, struct D3DInf*, struct InputInf*);
+    for (int i = 0; i < MAX_NUM_SCE; ++i) {
+        funcsInitScene[i] = InitMainMenu;
+        funcsUpdateScene[i] = UpdateMainMenu;
+    }
     funcsInitScene[SCE_Title] = InitTitle;
     funcsUpdateScene[SCE_Title] = UpdateTitle;
     funcsInitScene[SCE_Tutorial] = InitTutorial;

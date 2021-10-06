@@ -1,6 +1,8 @@
 #include "../include/resource.h"
 
 IMG_BG_LOAD IMAGE "./bg_load.png"
+IMG_BG_MAINMENU IMAGE "./bg_mainmenu.png"
+IMG_BG_MAINMENU_OVER IMAGE "./bg_mainmenu_over.png"
 IMG_BG_TUTORIAL IMAGE "./bg_tutorial.png"
 IMG_BG_KEIDAI IMAGE "./bg_keidai.png"
 IMG_BG_CLOUD0 IMAGE "./bg_cloud0.png"

@@ -19,7 +19,6 @@ BOOL CreateD3DInf(struct D3DInf* pDinf, HINSTANCE hInst, LPCWSTR nameWnd, LPCWST
     // Create Window
     {
         const DWORD kDwStyle = windowed ? WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX : WS_POPUP;
-        const DWORD kDwExStyle = windowed ? 0 : WS_EX_TOPMOST;
         const int kCmdShow = windowed ? SW_SHOW : SW_SHOWMAXIMIZED;
 
         WNDCLASSEXW wcex = {sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L, hInst, NULL, NULL, NULL,
@@ -28,9 +27,9 @@ BOOL CreateD3DInf(struct D3DInf* pDinf, HINSTANCE hInst, LPCWSTR nameWnd, LPCWST
             return ThrowError("Error: Failed to register window class.");
 
         RECT rect = { 0, 0, (long)width, (long)height };
-        AdjustWindowRectEx(&rect, kDwStyle, FALSE, kDwExStyle);
+        AdjustWindowRectEx(&rect, kDwStyle, FALSE, 0);
 
-        pDinf->hWnd = CreateWindowExW(kDwExStyle, nameWndClass, nameWnd, kDwStyle, CW_USEDEFAULT, CW_USEDEFAULT,
+        pDinf->hWnd = CreateWindowExW(0, nameWndClass, nameWnd, kDwStyle, CW_USEDEFAULT, CW_USEDEFAULT,
                 rect.right - rect.left, rect.bottom - rect.top, NULL, NULL, hInst, NULL);
         if (!pDinf->hWnd)
             return ThrowError("Error: Failed to create window handle.");

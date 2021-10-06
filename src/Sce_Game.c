@@ -65,12 +65,6 @@ void UpdateGame(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pI
     }
 }
 
-inline void DrawImage(struct GameInf* pGinf, struct D3DInf* pDinf, struct Fact* pFact, struct Image* pImage) {
-    ApplyFact(pGinf, pFact);
-    ApplyImage(pDinf, pImage);
-    DrawModel(pDinf, &pGinf->idea);
-}
-
 void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf) {
 
     struct Fact fact;

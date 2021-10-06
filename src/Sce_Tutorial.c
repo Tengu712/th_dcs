@@ -46,14 +46,25 @@ void UpdateTutorial(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf
             }
         }
         UpdateGame(pGinf, pDinf, pIinf);
+        pGinf->cntAll++;
     }
     // Clear
     else if (pGinf->mode == 2U) {
-
+        if (GetKey(pIinf, KEY_CODE_Z) & KEY_STA_Down)
+            pGinf->cntSce++;
+        if (pGinf->cntSce == 0U)
+            ApplyLogue(pGinf, 1, 0, IMG_TC_MARISA1, 0, "1010");
+        else {
+            ApplyLogue(pGinf, 0, 0, 0, 0, "");
+            pGinf->cntSce = 0;
+            pGinf->mode = 3U;
+        }
+        pGinf->player.cnt++;
+        pGinf->cntAll++;
     }
     // Result
     else if (pGinf->mode == 3U) {
-        
+        pGinf->sceNex = SCE_MainMenu;
     }
 
     DrawGame(pGinf, pDinf);
