@@ -112,8 +112,8 @@ struct GameInf {
     // Storage
     struct Image* imgs;
     struct Image* imgsTmp;
-    struct Fact* queBG;
-    struct Fact* queUI;
+    struct Fact* queBG; //!
+    struct Fact* queUI; //!
     struct Bullet* bulsE;
     struct Bullet* bulsP;
     struct BulletInf* binfs;
@@ -129,7 +129,6 @@ struct GameInf {
 
 char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf,
         unsigned int width, unsigned int height);
-void UpdateGameInf(struct GameInf* pGinf);
 void FreeGameInf(struct GameInf* pGinf);
 
 char LoadAddImage(struct GameInf* pGinf, struct D3DInf* pDinf, HMODULE hModule, unsigned int id);

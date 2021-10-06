@@ -256,16 +256,6 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
     return 1;
 }
 
-void UpdateGameInf(struct GameInf* pGinf) {
-    for (int i = 0; i < MAX_QUE_BG; ++i) {
-        pGinf->queBG[i].enable = 0;
-    }
-    for (int i = 0; i < MAX_QUE_UI; ++i) {
-        pGinf->queUI[i].enable = 0;
-    }
-    pGinf->data.cntPlay++;
-}
-
 void FreeGameInf(struct GameInf* pGinf) {
     FreeModelInf(&pGinf->idea);
     FreeFrameBuffer(&pGinf->fb0);

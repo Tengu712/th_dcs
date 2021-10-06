@@ -32,12 +32,12 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
     long lastTime = timeGetTime();
     unsigned int cntFps = 0;
 
-    void (*funcsInitScene[])(struct GameInf*) = {
-        InitTitle, InitTutorial
-    };
-    void (*funcsUpdateScene[])(struct GameInf*, struct D3DInf*, struct InputInf*) = {
-        UpdateTitle, UpdateTutorial
-    };
+    void (*funcsInitScene[MAX_NUM_SCE])(struct GameInf*, struct D3DInf*);
+    void (*funcsUpdateScene[MAX_NUM_SCE])(struct GameInf*, struct D3DInf*, struct InputInf*);
+    funcsInitScene[SCE_Title] = InitTitle;
+    funcsUpdateScene[SCE_Title] = UpdateTitle;
+    funcsInitScene[SCE_Tutorial] = InitTutorial;
+    funcsUpdateScene[SCE_Tutorial] = UpdateTutorial;
 
     MSG msg;
     memset(&msg, 0, sizeof(MSG));
@@ -58,12 +58,16 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
         }
         cntFps++;
 
+        ginf.data.cntPlay++;
         InspectInput(&iinf);
-        UpdateGameInf(&ginf);
+
         if (ginf.sceCur != ginf.sceNex) {
+            if (ginf.sceNex == SCE_Exit)
+                break;
             ginf.sceCur = ginf.sceNex;
-            funcsInitScene[ginf.sceCur](&ginf);
+            funcsInitScene[ginf.sceCur](&ginf, &dinf);
         }
+        
         funcsUpdateScene[ginf.sceCur](&ginf, &dinf, &iinf);
     }
 

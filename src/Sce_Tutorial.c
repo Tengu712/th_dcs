@@ -1,16 +1,38 @@
-#include "../include/HeaderScene.h"
+﻿#include "../include/HeaderScene.h"
 
-int mode = 0;
+unsigned int cntAll = 0;
+unsigned int cntSce = 0;
+unsigned int mode = 0;
 
-void InitTutorial(struct GameInf* pGinf) {
+void InitTutorial(struct GameInf* pGinf, struct D3DInf* pDinf) {
     InitGame(pGinf);
-    mode = 0;
+    ClearFontTmp(pGinf);
+    LoadSentence(pGinf, pDinf, "なんていうか今回は");
+    cntAll = 0U;
+    cntSce = 0U;
+    mode = 0U;
 }
 
 void UpdateTutorial(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf) {
-    UpdateGame(pGinf, pDinf, pIinf);
 
-    ApplyLogue(pGinf, 1, 0, IMG_TC_MARISA0, 0, "0110.");
+    // Logue
+    if (mode == 0U) {
+        if (GetKey(pIinf, KEY_CODE_Z) & KEY_STA_Down)
+            cntSce++;
+        if (cntSce == 0U)
+            ApplyLogue(pGinf, 1, 0, IMG_TC_MARISA0, 0, "なんていうか今回は");
+        else {
+            ApplyLogue(pGinf, 0, 0, 0, 0, "");
+            cntSce = 0;
+            mode = 1U;
+        }
+        pGinf->player.cnt++;
+        cntAll++;
+    }
+    // Game
+    else if (mode == 1U) {
+        UpdateGame(pGinf, pDinf, pIinf);
+    }
 
     DrawGame(pGinf, pDinf);
 }

@@ -2,6 +2,7 @@
 
 
 void InitGame(struct GameInf* pGinf) {
+    CreatePlayer(&pGinf->player);
 }
 
 void UpdateGame(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf) {

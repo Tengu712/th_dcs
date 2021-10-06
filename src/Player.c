@@ -1,13 +1,20 @@
 #include "../include/HeaderApp.h"
 
-#include<math.h>
+#include <math.h>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979
 #endif
 
+const int kDegs[3][3] = {
+    {225, 180, 135},
+    {270, 999, 90},
+    {315, 0, 45}
+};
+
 void CreatePlayer(struct Player* pPlayer) {
     memset(pPlayer, 0, sizeof(struct Player));
+    pPlayer->y = -2400000;
 }
 
 void UpdatePlayer(struct GameInf* pGinf, struct InputInf* pIinf, struct Player* pPlayer) {
@@ -34,24 +41,8 @@ void UpdatePlayer(struct GameInf* pGinf, struct InputInf* pIinf, struct Player* 
     const int dy = (GetKey(pIinf, KEY_CODE_Up) & KEY_STA_Pressed > 0) - (GetKey(pIinf, KEY_CODE_Down) & KEY_STA_Pressed > 0);
 
     int spd = pPlayer->cntSlow > 0U ? pGinf->data.spdSlow : pGinf->data.spdNorm;
-    int deg = 0;
-    if (dx == 1 && dy == 0)
-        deg = 0;
-    else if (dx == 1 && dy == 1)
-        deg = 45;
-    else if (dx == 0 && dy == 1)
-        deg = 90;
-    else if (dx == -1 && dy == 1)
-        deg = 135;
-    else if (dx == -1 && dy == 0)
-        deg = 180;
-    else if (dx == -1 && dy == -1)
-        deg = 225;
-    else if (dx == 0 && dy == -1)
-        deg = 270;
-    else if (dx == 1 && dy == -1)
-        deg = 315;
-    else
+    int deg = kDegs[dx + 1][dy + 1];
+    if (dx == 0 && dy == 0)
         spd = 0;
 
     const double rad = (double)deg / 180.0 * M_PI;
