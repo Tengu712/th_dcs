@@ -1,5 +1,7 @@
 #include "../include/resource.h"
 
+FNT_NOTO_SANS IMAGE "./NotoSansMono-Regular.ttf"
+
 IMG_BG_LOAD IMAGE "./bg_load.png"
 IMG_BG_MAINMENU IMAGE "./bg_mainmenu.png"
 IMG_BG_MAINMENU_OVER IMAGE "./bg_mainmenu_over.png"

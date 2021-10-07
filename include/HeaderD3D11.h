@@ -120,7 +120,7 @@ BOOL CreateImage(struct D3DInf* pDinf, struct Image* pImage, HMODULE hModule, un
 void ApplyImage(struct D3DInf* pDinf, struct Image* pImage);
 void FreeImage(struct Image* pImage);
 
-BOOL CreateFontImage(struct D3DInf* pDinf, struct Image* pImage, unsigned int code);
+BOOL CreateFontImage(struct D3DInf* pDinf, struct Image* pImage, LOGFONTA* pFont, unsigned int code);
 
 BOOL CreateFrameBuffer(struct D3DInf* pDinf, struct FrameBuffer* pFBuffer, unsigned int width, unsigned int height);
 void FreeFrameBuffer(struct FrameBuffer* pFBuffer);

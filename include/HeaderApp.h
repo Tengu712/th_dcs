@@ -120,10 +120,9 @@ struct GameInf {
     struct Camera cameraGame;
     struct Camera cameraUI;
     // Storage
+    LOGFONTA font;
     struct Image* imgs;
     struct Image* imgsTmp;
-    struct Fact* queBG; //!
-    struct Fact* queUI; //!
     struct Bullet* bulsE;
     struct Bullet* bulsP;
     unsigned int* imgidsLog;

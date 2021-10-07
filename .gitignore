@@ -1,6 +1,9 @@
 /build/*.exe
 /build/*.wav
 /build/*.dll
+/build/*.lib
 /res/*.res
 /res/*.png
 /res/*.wav
+/res/*.ttf
+/.vscode/

@@ -44,15 +44,11 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
     // storages
     pGinf->imgs = (struct Image*)malloc(sizeof(struct Image) * MAX_IMG);
     pGinf->imgsTmp = (struct Image*)malloc(sizeof(struct Image) * MAX_IMG_TMP);
-    pGinf->queBG = (struct Fact*)malloc(sizeof(struct Fact) * MAX_QUE_BG);
-    pGinf->queUI = (struct Fact*)malloc(sizeof(struct Fact) * MAX_QUE_UI);
     pGinf->bulsE = (struct Bullet*)malloc(sizeof(struct Bullet) * MAX_BUL_E);
     pGinf->bulsP = (struct Bullet*)malloc(sizeof(struct Bullet) * MAX_BUL_P);
     pGinf->imgidsLog = (unsigned int*)malloc(sizeof(struct Logue) * MAX_LOGUE);
     memset(pGinf->imgs, 0, sizeof(struct Image) * MAX_IMG);
     memset(pGinf->imgsTmp, 0, sizeof(struct Image) * MAX_IMG_TMP);
-    memset(pGinf->queBG, 0, sizeof(struct Fact) * MAX_QUE_BG);
-    memset(pGinf->queUI, 0, sizeof(struct Fact) * MAX_QUE_UI);
     memset(pGinf->bulsE, 0, sizeof(struct Bullet) * MAX_BUL_E);
     memset(pGinf->bulsP, 0, sizeof(struct Bullet) * MAX_BUL_P);
     memset(pGinf->imgidsLog, 0, sizeof(struct Logue) * MAX_LOGUE);
@@ -68,6 +64,40 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
     DrawModel(pDinf, &pGinf->idea);
     DrawEnd(pDinf);
 
+    // font
+    {
+        HRSRC hFontRes = FindResourceA(hModule, MAKEINTRESOURCEA(FNT_NOTO_SANS), "IMAGE");
+        if (!hFontRes)
+            return ThrowError("Failed to find font resource.");
+        HGLOBAL hFontData = LoadResource(hModule, hFontRes);
+        if (!hFontData)
+            return ThrowError("Failed to load font resource.");
+        void* pLock = LockResource(hFontData);
+        if (!pLock)
+            return ThrowError("Failed to lock font resource.");
+        DWORD sizeRes = SizeofResource(hModule, hFontRes);
+        if (sizeRes == 0)
+            return ThrowError("Failed to get size of font resource.");
+        DWORD cntFont = 0;
+        HANDLE hFont = AddFontMemResourceEx(pLock, sizeRes, NULL, &cntFont);
+        if (!hFont)
+            return ThrowError("Failed to add font resource.");
+        LOGFONTA fonttmp = {
+            64, 0, 0, 0,
+            0, 0, 0, 0,
+            SHIFTJIS_CHARSET,
+            OUT_TT_ONLY_PRECIS,
+            CLIP_DEFAULT_PRECIS,
+            PROOF_QUALITY,
+            DEFAULT_PITCH | FF_MODERN,
+            "Noto Sans Mono",
+        };
+        pGinf->font = fonttmp;
+        if (!RemoveFontMemResourceEx(hFont))
+            return ThrowError("Failed to remove font resource.");
+    }
+
+    // resource
     char flg = 1;
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BG_MAINMENU);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BG_MAINMENU_OVER);
@@ -109,6 +139,7 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
     if (!flg) 
         return ThrowError("Failed to load.");
 
+    // keyconfig
     {
         FILE* pKC = fopen("./keyconfig.cfg", "r");
         if (!pKC) 
@@ -253,10 +284,6 @@ void FreeGameInf(struct GameInf* pGinf) {
         free(pGinf->imgs);
     if (pGinf->imgsTmp != NULL)
         free(pGinf->imgsTmp);
-    if (pGinf->queBG != NULL)
-        free(pGinf->queBG);
-    if (pGinf->queUI != NULL)
-        free(pGinf->queUI);
     if (pGinf->bulsE != NULL)
         free(pGinf->bulsE);
     if (pGinf->bulsP != NULL)

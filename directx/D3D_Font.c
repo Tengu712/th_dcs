@@ -1,21 +1,11 @@
 #include "../include/HeaderD3D11.h"
 
-BOOL CreateFontImage(struct D3DInf* pDinf, struct Image* pImage, unsigned int code) {
+BOOL CreateFontImage(struct D3DInf* pDinf, struct Image* pImage, LOGFONTA* pFont, unsigned int code) {
 
     memset(pImage, 0, sizeof(struct Image));
 
     // create font handle
-    LOGFONTA logfont = {
-        64, 0, 0, 0,
-        0, 0, 0, 0,
-        SHIFTJIS_CHARSET,
-        OUT_TT_ONLY_PRECIS,
-        CLIP_DEFAULT_PRECIS,
-        PROOF_QUALITY,
-        DEFAULT_PITCH | FF_MODERN,
-        "MS Gothic",
-    };
-    HFONT hFont = CreateFontIndirectA(&logfont);
+    HFONT hFont = CreateFontIndirectA(pFont);
     HDC hdc = GetDC(NULL);
     HFONT hFontOld = (HFONT)SelectObject(hdc, hFont);
 

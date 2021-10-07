@@ -16,7 +16,7 @@ char LoadAddFont(struct GameInf* pGinf, struct D3DInf* pDinf, unsigned int code)
     for (int i = 0; i < MAX_IMG; ++i) {
         if (pGinf->imgs[i].id != 0)
             continue;
-        if (!CreateFontImage(pDinf, &pGinf->imgs[i], code))
+        if (!CreateFontImage(pDinf, &pGinf->imgs[i], &pGinf->font, code))
             return 0;
         pGinf->imgs[i].id = ToFontID(code);
         break;
@@ -28,7 +28,7 @@ char LoadAddFontTmp(struct GameInf* pGinf, struct D3DInf* pDinf, unsigned int co
     for (int i = 0; i < MAX_IMG_TMP; ++i) {
         if (pGinf->imgsTmp[i].id != 0)
             continue;
-        if (!CreateFontImage(pDinf, &pGinf->imgsTmp[i], code))
+        if (!CreateFontImage(pDinf, &pGinf->imgsTmp[i], &pGinf->font, code))
             return 0;
         pGinf->imgsTmp[i].id = ToFontID(code);
         break;
