@@ -32,7 +32,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
     long lastTime = timeGetTime();
     unsigned int cntFps = 0;
 
-    void (*funcsInitScene[MAX_NUM_SCE])(struct GameInf*, struct D3DInf*);
+    char (*funcsInitScene[MAX_NUM_SCE])(struct GameInf*, struct D3DInf*);
     void (*funcsUpdateScene[MAX_NUM_SCE])(struct GameInf*, struct D3DInf*, struct InputInf*);
     for (int i = 0; i < MAX_NUM_SCE; ++i) {
         funcsInitScene[i] = InitMainMenu;
@@ -69,7 +69,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
             if (ginf.sceNex == SCE_Exit)
                 break;
             ginf.sceCur = ginf.sceNex;
-            funcsInitScene[ginf.sceCur](&ginf, &dinf);
+            if (!funcsInitScene[ginf.sceCur](&ginf, &dinf))
+                break;
         }
         
         funcsUpdateScene[ginf.sceCur](&ginf, &dinf, &iinf);

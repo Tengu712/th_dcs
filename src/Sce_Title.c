@@ -1,6 +1,7 @@
 #include "../include/HeaderScene.h"
 
-void InitTitle(struct GameInf* pGinf, struct D3DInf* pDinf) {
+char InitTitle(struct GameInf* pGinf, struct D3DInf* pDinf) {
+    return 1;
 }
 
 void UpdateTitle(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf) {

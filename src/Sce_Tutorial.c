@@ -1,8 +1,10 @@
 ﻿#include "../include/HeaderScene.h"
 
-void InitTutorial(struct GameInf* pGinf, struct D3DInf* pDinf) {
+char InitTutorial(struct GameInf* pGinf, struct D3DInf* pDinf) {
     InitGame(pGinf);
-    LoadSentence(pGinf, pDinf, "なんていうか今回は");
+    char res = 1;
+    res = res && LoadSentence(pGinf, pDinf, "なんていうか今回は");
+    return res;
 }
 
 void UpdateTutorial(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf) {

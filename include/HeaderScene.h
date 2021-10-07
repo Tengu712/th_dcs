@@ -16,17 +16,17 @@ inline void DrawImage(struct GameInf* pGinf, struct D3DInf* pDinf, struct Fact* 
     DrawModel(pDinf, &pGinf->idea);
 }
 
-void InitTitle(struct GameInf* pGinf, struct D3DInf* pDinf);
+char InitTitle(struct GameInf* pGinf, struct D3DInf* pDinf);
 void UpdateTitle(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf);
 
-void InitMainMenu(struct GameInf* pGinf, struct D3DInf* pDinf);
+char InitMainMenu(struct GameInf* pGinf, struct D3DInf* pDinf);
 void UpdateMainMenu(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf);
 
-void InitGame(struct GameInf* pGinf);
+char InitGame(struct GameInf* pGinf);
 void UpdateGame(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf);
 void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf);
 
-void InitTutorial(struct GameInf* pGinf, struct D3DInf* pDinf);
+char InitTutorial(struct GameInf* pGinf, struct D3DInf* pDinf);
 void UpdateTutorial(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf);
 
 #endif

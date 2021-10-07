@@ -14,6 +14,10 @@
 #define IMG_BG_CLOUD1 106
 
 #define IMG_UI_FRAME 500
+#define IMG_UI_BOX 501
+#define IMG_UI_BOX_DEST 502
+#define IMG_UI_BOX_DETAIL 503
+#define IMG_UI_MAINMENU 504
 
 #define IMG_BU_SELF0 800
 

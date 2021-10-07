@@ -1,6 +1,6 @@
 #include "../include/HeaderScene.h"
 
-void InitGame(struct GameInf* pGinf) {
+char InitGame(struct GameInf* pGinf) {
     pGinf->cntAll = 0U;
     pGinf->cntSce = 0U;
     pGinf->mode = 0U;
@@ -12,6 +12,7 @@ void InitGame(struct GameInf* pGinf) {
     pGinf->enemy.y = 2400000;
     memset(&pGinf->log, 0, sizeof(struct Logue));
     ClearFontTmp(pGinf);
+    return 1;
 }
 
 inline char IsHit(int x1, int y1, int r1, int x2, int y2, int r2) {

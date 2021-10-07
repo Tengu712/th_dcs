@@ -1,11 +1,5 @@
 #include "../include/HeaderApp.h"
 
-#include <math.h>
-
-#ifndef M_PI
-#define M_PI 3.14159265358979
-#endif
-
 void ApplyFact(struct GameInf* pGinf, struct Fact* pFact) {
     pGinf->idea.posX = pFact->posX;
     pGinf->idea.posY = pFact->posY;

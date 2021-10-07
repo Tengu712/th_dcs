@@ -106,6 +106,10 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BG_CLOUD0);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BG_CLOUD1);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_UI_FRAME);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_UI_BOX);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_UI_BOX_DEST);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_UI_BOX_DETAIL);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_UI_MAINMENU);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BU_SELF0);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_ATARI);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_SLOWCIRCLE);
@@ -255,7 +259,7 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
             return ThrowError("Failed to open savedata.dat.");
         memset(&pGinf->data, 0, sizeof(struct SaveData));
         pGinf->data.cntPlay = 0;
-        pGinf->data.cntWorldRound = 0;
+        pGinf->data.cntWorldRound = 1;
         pGinf->data.scoreTotalGot = 10000000LL;
         pGinf->data.scoreTotal = 10000000LL;
         pGinf->data.scoreInit = 10000000LL;

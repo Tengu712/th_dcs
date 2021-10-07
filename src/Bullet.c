@@ -24,3 +24,10 @@ void UpdateBullet(struct GameInf* pGinf, struct Bullet* pBul) {
     
     pBul->cnt++;
 }
+
+void ClearBulletE(struct GameInf* pGinf) {
+    for (int i = 0; i < MAX_BUL_E; ++i) {
+        //!
+        pGinf->bulsE[i].flg = 0;
+    }
+}

@@ -11,6 +11,10 @@ IMG_BG_CLOUD0 IMAGE "./bg_cloud0.png"
 IMG_BG_CLOUD1 IMAGE "./bg_cloud1.png"
 
 IMG_UI_FRAME IMAGE "./ui_frame.png"
+IMG_UI_BOX IMAGE "./ui_box.png"
+IMG_UI_BOX_DEST IMAGE "./ui_box_dest.png"
+IMG_UI_BOX_DETAIL IMAGE "./ui_box_detail.png"
+IMG_UI_MAINMENU IMAGE "./ui_mainmenu.png"
 
 IMG_BU_SELF0 IMAGE "./bu_self0.png"
 

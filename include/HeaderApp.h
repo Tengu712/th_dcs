@@ -185,6 +185,7 @@ void ApplyFact(struct GameInf* pGinf, struct Fact* pFact);
 
 void CreateBullet(struct Bullet* pBul, unsigned int knd);
 void UpdateBullet(struct GameInf* pGinf, struct Bullet* pBul);
+void ClearBulletE(struct GameInf* pGinf);
 
 void UpdatePlayer(struct GameInf* pGinf, struct InputInf* pIinf, struct Player* pPlayer);
 
