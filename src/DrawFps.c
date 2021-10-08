@@ -24,8 +24,6 @@ void DrawFps(struct D3DInf* pDinf, struct GameInf* pGinf) {
         else
             fact.imgid = ToFontID(Lpcstr2uint("s"));
         fact.posX += 15.0f;
-        ApplyFact(pGinf, &fact);
-        ApplyImage(pDinf, GetImage(pGinf, fact.imgid));
-        DrawModel(pDinf, &pGinf->idea);
+        DrawImage(pGinf, pDinf, &fact, GetImage(pGinf, fact.imgid));
     }
 }

@@ -26,15 +26,17 @@ inline char IsHit(int x1, int y1, int r1, int x2, int y2, int r2) {
 
 inline void Died(struct GameInf* pGinf) {
     pGinf->score -= 10000000LL * min(8, pGinf->data.cntWorldRound);
+    pGinf->grz = 0;
     memset(&pGinf->player, 0, sizeof(struct Player));
     pGinf->player.y = -2400000;
 }
 
 void UpdateGame(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf) {
-    UpdatePlayer(pGinf, pIinf, &pGinf->player);
+    UpdatePlayer(pGinf, pIinf, &pGinf->player, pGinf->mode == 1U && pGinf->score >= 0);
     MoveEntity(&pGinf->enemy.x, &pGinf->enemy.y, pGinf->enemy.deg, pGinf->enemy.spd);
     pGinf->enemy.cnt++;
-    if (IsHit(pGinf->player.x, pGinf->player.y, pGinf->data.r,
+    if (pGinf->mode == 1U 
+            && IsHit(pGinf->player.x, pGinf->player.y, pGinf->data.r,
                 pGinf->enemy.x, pGinf->enemy.y, 600000)) {
         Died(pGinf); //#Score
     }
@@ -42,7 +44,8 @@ void UpdateGame(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pI
         if (pGinf->bulsP[i].flg == 0)
             continue;
         UpdateBullet(pGinf, &pGinf->bulsP[i]);
-        if (IsHit(pGinf->bulsP[i].x, pGinf->bulsP[i].y, pGinf->bulsP[i].r,
+        if (pGinf->mode == 1U
+                && IsHit(pGinf->bulsP[i].x, pGinf->bulsP[i].y, pGinf->bulsP[i].r,
                     pGinf->enemy.x, pGinf->enemy.y, 600000)) {
             pGinf->enemy.hp -= pGinf->bulsP[i].atk;
             pGinf->score += 10; //#Score
@@ -53,12 +56,16 @@ void UpdateGame(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pI
         if (pGinf->bulsE[i].flg == 0)
             continue;
         UpdateBullet(pGinf, &pGinf->bulsE[i]);
-        if (IsHit(pGinf->bulsE[i].x, pGinf->bulsE[i].y, pGinf->bulsE[i].r,
+        if (pGinf->mode == 1U
+                && pGinf->bulsE[i].flg == 1
+                && IsHit(pGinf->bulsE[i].x, pGinf->bulsE[i].y, pGinf->bulsE[i].r,
                     pGinf->player.x, pGinf->player.y, pGinf->data.rGrz)) {
-            pGinf->score += 1; //#Score
+            pGinf->score += min(1000, pGinf->grz) * min(1000, pGinf->grz) / 10; //#Score
             pGinf->bulsE[i].flg = 2;
+            pGinf->grz++;
         }
-        if (IsHit(pGinf->bulsE[i].x, pGinf->bulsE[i].y, pGinf->bulsE[i].r,
+        if (pGinf->mode == 1U 
+                && IsHit(pGinf->bulsE[i].x, pGinf->bulsE[i].y, pGinf->bulsE[i].r,
                     pGinf->player.x, pGinf->player.y, pGinf->data.r)) {
             Died(pGinf); //#Score
             pGinf->bulsE[i].flg = 0;
@@ -86,7 +93,7 @@ void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf) {
     ApplyCamera(pDinf, &pGinf->cameraGame, FALSE);
 
     // Player
-    {
+    if (pGinf->score >= 0) {
         CreateFact(&fact);
         fact.posX = (float)pGinf->player.x;
         fact.posY = (float)pGinf->player.y;
@@ -155,13 +162,13 @@ void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf) {
     }
 
     // Slow circle
-    if (pGinf->player.cntSlow > 0U) {
+    if (pGinf->score >= 0 && pGinf->player.cntSlow > 0U) {
         CreateFact(&fact);
         fact.posX = (float)pGinf->player.x;
         fact.posY = (float)pGinf->player.y;
         // Atari
-        fact.sclX = (float)pGinf->data.r * 2.0f;
-        fact.sclY = (float)pGinf->data.r * 2.0f;
+        fact.sclX = (float)pGinf->data.r * 0.02f;
+        fact.sclY = (float)pGinf->data.r * 0.02f;
         if (pGinf->player.cntSlow < 10U) {
             fact.sclX += 500.0f * (1.0f - (float)pGinf->player.cntSlow / 10.0f);
             fact.sclY += 500.0f * (1.0f - (float)pGinf->player.cntSlow / 10.0f);
@@ -169,8 +176,8 @@ void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf) {
             fact.degZ = (float)pGinf->player.cntSlow * 4.0f;
         DrawImage(pGinf, pDinf, &fact, GetImage(pGinf, IMG_CH_ATARI));
         // Circle
-        fact.sclX = (float)pGinf->data.rGrz * 2.0f;
-        fact.sclY = (float)pGinf->data.rGrz * 2.0f;
+        fact.sclX = (float)pGinf->data.rGrz * 0.02f;
+        fact.sclY = (float)pGinf->data.rGrz * 0.02f;
         if (pGinf->player.cntSlow < 10U) {
             fact.sclX += 5000.0f * (1.0f - (float)pGinf->player.cntSlow / 10.0f);
             fact.sclY += 5000.0f * (1.0f - (float)pGinf->player.cntSlow / 10.0f);
@@ -196,7 +203,7 @@ void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf) {
     }
 
     // Score and graze
-    {
+    if (pGinf->score >= 0) {
         CreateFact(&fact);
         fact.posX = -145.0f;
         fact.posY = 435.0f;
@@ -228,10 +235,10 @@ void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf) {
         fact.sclX = 0.22f;
         fact.sclY = 0.25f;
         DrawImage(pGinf, pDinf, &fact, 
-            GetImage(pGinf, ToFontID((((pGinf->enemy.timlim - pGinf->enemy.cnt) / 600) % 10) + 48U)));
+                GetImage(pGinf, ToFontID((((pGinf->enemy.timlim - pGinf->enemy.cnt) / 600) % 10) + 48U)));
         fact.posX += 22.0f;
         DrawImage(pGinf, pDinf, &fact, 
-            GetImage(pGinf, ToFontID((((pGinf->enemy.timlim - pGinf->enemy.cnt) / 60) % 10) + 48U)));
+                GetImage(pGinf, ToFontID((((pGinf->enemy.timlim - pGinf->enemy.cnt) / 60) % 10) + 48U)));
     }
 
     // Frame
@@ -245,10 +252,21 @@ void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf) {
         // Tachie
         if (pGinf->log.imgidL != 0) {
             CreateFact(&fact);
+            if (pGinf->log.isRight) {
+            fact.posX = -440.0f;
+            fact.posY = -190.0f;
+            fact.sclX = 6.5f;
+            fact.sclY = 6.5f;
+            fact.colR = 0.5f;
+            fact.colG = 0.5f;
+            fact.colB = 0.5f;
+            }
+            else {
             fact.posX = -390.0f;
             fact.posY = -160.0f;
             fact.sclX = 6.5f;
             fact.sclY = 6.5f;
+            }
             DrawImage(pGinf, pDinf, &fact, GetImage(pGinf, pGinf->log.imgidL));
         }
         // Box

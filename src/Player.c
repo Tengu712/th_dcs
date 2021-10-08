@@ -6,8 +6,8 @@ const int kDegs[3][3] = {
     {315, 0, 45}
 };
 
-void UpdatePlayer(struct GameInf* pGinf, struct InputInf* pIinf, struct Player* pPlayer) {
-    if ((GetKey(pIinf, KEY_CODE_Z) & KEY_STA_Pressed) && pPlayer->cnt % pGinf->data.interval == 0) {
+void UpdatePlayer(struct GameInf* pGinf, struct InputInf* pIinf, struct Player* pPlayer, char shootable) {
+    if (shootable && (GetKey(pIinf, KEY_CODE_Z) & KEY_STA_Pressed) && pPlayer->cnt % pGinf->data.interval == 0) {
         struct Bullet bul;
         // Main shot
         CreateBullet(&bul, BUL_SELF_0);

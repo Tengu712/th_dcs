@@ -20,9 +20,7 @@
 
 #define MAX_IMG 100
 #define MAX_IMG_TMP 100
-#define MAX_QUE_BG 20
-#define MAX_QUE_UI 50
-#define MAX_BUL_E 150
+#define MAX_BUL_E 1024
 #define MAX_BUL_P 20
 #define MAX_LOGUE 20
 
@@ -40,6 +38,7 @@
 
 #define MAX_KND_BUL 10
 #define BUL_SELF_0 0
+#define BUL_HUDA 1
 
 // ================================================================================================================= //
 //                                          Structs
@@ -183,11 +182,17 @@ inline void CreateFact(struct Fact* pFact) {
 }
 void ApplyFact(struct GameInf* pGinf, struct Fact* pFact);
 
+inline void DrawImage(struct GameInf* pGinf, struct D3DInf* pDinf, struct Fact* pFact, struct Image* pImage) {
+    ApplyFact(pGinf, pFact);
+    ApplyImage(pDinf, pImage);
+    DrawModel(pDinf, &pGinf->idea);
+}
+
 void CreateBullet(struct Bullet* pBul, unsigned int knd);
 void UpdateBullet(struct GameInf* pGinf, struct Bullet* pBul);
 void ClearBulletE(struct GameInf* pGinf);
 
-void UpdatePlayer(struct GameInf* pGinf, struct InputInf* pIinf, struct Player* pPlayer);
+void UpdatePlayer(struct GameInf* pGinf, struct InputInf* pIinf, struct Player* pPlayer, char shootable);
 
 void DrawFps(struct D3DInf* pDinf, struct GameInf* pGinf);
 

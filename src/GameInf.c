@@ -111,6 +111,7 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_UI_BOX_DETAIL);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_UI_MAINMENU);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BU_SELF0);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_BU_HUDA);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_ATARI);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_SLOWCIRCLE);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_MARISA_B0);
@@ -265,8 +266,8 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
         pGinf->data.scoreInit = 10000000LL;
         pGinf->data.spdNorm = 800;
         pGinf->data.spdSlow = 400;
-        pGinf->data.r = 1000;
-        pGinf->data.rGrz = 5000;
+        pGinf->data.r = 100000;
+        pGinf->data.rGrz = 500000;
         pGinf->data.atk = 100;
         pGinf->data.interval = 8;
         pGinf->data.numOpt = 0;

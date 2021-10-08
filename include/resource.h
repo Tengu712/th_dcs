@@ -20,6 +20,7 @@
 #define IMG_UI_MAINMENU 504
 
 #define IMG_BU_SELF0 800
+#define IMG_BU_HUDA 801
 
 #define IMG_CH_ATARI 998
 #define IMG_CH_SLOWCIRCLE 999

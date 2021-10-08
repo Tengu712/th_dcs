@@ -17,6 +17,7 @@ IMG_UI_BOX_DETAIL IMAGE "./ui_box_detail.png"
 IMG_UI_MAINMENU IMAGE "./ui_mainmenu.png"
 
 IMG_BU_SELF0 IMAGE "./bu_self0.png"
+IMG_BU_HUDA IMAGE "./bu_huda.png"
 
 IMG_CH_ATARI IMAGE "./ch_atari.png"
 IMG_CH_SLOWCIRCLE IMAGE "./ch_slowcircle.png"

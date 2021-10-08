@@ -8,9 +8,15 @@ void CreateBullet(struct Bullet* pBul, unsigned int knd) {
     pBul->colA = 1.0f;
     if (knd == BUL_SELF_0) {
         pBul->imgid = IMG_BU_SELF0;
-        pBul->r = 1000;
+        pBul->r = 10000;
         pBul->sclX = 5000.0f;
         pBul->sclY = 5000.0f;
+    }
+    else if (knd == BUL_HUDA) {
+        pBul->imgid = IMG_BU_HUDA;
+        pBul->r = 10000;
+        pBul->sclX = 3000.0f;
+        pBul->sclY = 3000.0f;
     }
 }
 

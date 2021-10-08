@@ -10,12 +10,6 @@
 #define SCE_Tutorial 2
 #define SCE_Exit 255
 
-inline void DrawImage(struct GameInf* pGinf, struct D3DInf* pDinf, struct Fact* pFact, struct Image* pImage) {
-    ApplyFact(pGinf, pFact);
-    ApplyImage(pDinf, pImage);
-    DrawModel(pDinf, &pGinf->idea);
-}
-
 char InitTitle(struct GameInf* pGinf, struct D3DInf* pDinf);
 void UpdateTitle(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf);
 
