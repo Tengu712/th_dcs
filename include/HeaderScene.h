@@ -15,6 +15,7 @@
 #define SCE_GAME_Win 2
 #define SCE_GAME_Result 3
 #define SCE_GAME_Pause 4
+#define SCE_GAME_GameOver 5
 
 struct Infs {
     struct GameInf* pGinf;
@@ -29,17 +30,8 @@ char InitMainMenu(struct Infs* pinfs);
 void UpdateMainMenu(struct Infs* pinfs);
 
 char InitGame(struct Infs* pinfs);
-inline void SwitchPause(struct Infs* pinfs) {
-    if (GetKey(pinfs->pIinf, KEY_CODE_Esc) & KEY_STA_Down && pinfs->pGinf->cntSce1 != SCE_GAME_Result) {
-        if (pinfs->pGinf->cntSce1 == SCE_GAME_Pause) {
-            pinfs->pGinf->cntSce1 = 0; //!
-        } else {
-            pinfs->pGinf->cntSce1 = SCE_GAME_Pause;
-        }
-    }
-}
-void UpdateGame(struct Infs* pinfs);
-void DrawGame(struct Infs* pinfs);
+void UpdateGame(struct Infs* pinfs, void (*fLog)(struct Infs*),
+        void (*fGame)(struct Infs*), void (*fWin)(struct Infs*), void (*fBG)(struct Infs*));
 
 char InitTutorial(struct Infs* pinfs);
 void UpdateTutorial(struct Infs* pinfs);

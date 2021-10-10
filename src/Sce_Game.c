@@ -32,67 +32,107 @@ char InitGame(struct Infs* pinfs) {
     return 1;
 }
 
-void UpdateGame(struct Infs* pinfs) {
-    UpdatePlayer(pinfs->pGinf, pinfs->pIinf, &pinfs->pGinf->player, pinfs->pGinf->cntSce1 == 1U && pinfs->pGinf->score >= 0);
+void UpdateGame(struct Infs* pinfs, void (*fLog)(struct Infs*),
+        void (*fGame)(struct Infs*), void (*fWin)(struct Infs*), void (*fBG)(struct Infs*))
+{
+    // ============================================================================================================= //
+    //                                            Update
+    // ============================================================================================================= //
 
-    MoveEntity(&pinfs->pGinf->enemy.x, &pinfs->pGinf->enemy.y, pinfs->pGinf->enemy.deg, pinfs->pGinf->enemy.spd);
-    pinfs->pGinf->enemy.cnt++;
-
-    if (pinfs->pGinf->cntSce1 == SCE_GAME_Game
-            && IsHit(pinfs->pGinf->player.x, pinfs->pGinf->player.y, pinfs->pGinf->data.r,
-                pinfs->pGinf->enemy.x, pinfs->pGinf->enemy.y, 600000)) {
-        Died(pinfs->pGinf); //#Score
+    // Switch pause
+    if (GetKey(pinfs->pIinf, KEY_CODE_Esc) & KEY_STA_Down
+            && pinfs->pGinf->cntSce1 != SCE_GAME_Result
+            && pinfs->pGinf->cntSce1 != SCE_GAME_GameOver) {
+        if (pinfs->pGinf->cntSce1 == SCE_GAME_Pause) {
+            pinfs->pGinf->cntSce1 = 0; //!
+        } else {
+            pinfs->pGinf->cntSce1 = SCE_GAME_Pause;
+        }
     }
 
-    for (int i = 0; i < MAX_BUL_P; ++i) {
-        if (pinfs->pGinf->bulsP[i].flg == 0)
-            continue;
-        UpdateBullet(pinfs->pGinf, &pinfs->pGinf->bulsP[i]);
-        if (pinfs->pGinf->cntSce1 == SCE_GAME_Game
-                && IsHit(pinfs->pGinf->bulsP[i].x, pinfs->pGinf->bulsP[i].y, pinfs->pGinf->bulsP[i].r,
+    // Update scene
+    if (pinfs->pGinf->cntSce1 == SCE_GAME_Logue)
+        fLog(pinfs);
+    else if (pinfs->pGinf->cntSce1 == SCE_GAME_Game)
+        fGame(pinfs);
+    else if (pinfs->pGinf->cntSce1 == SCE_GAME_Win)
+        fWin(pinfs);
+
+    // Update entities
+    if (pinfs->pGinf->cntSce1 != SCE_GAME_Pause
+            && pinfs->pGinf->cntSce1 != SCE_GAME_Result
+            && pinfs->pGinf->cntSce1 != SCE_GAME_GameOver) {
+        const char isGame = pinfs->pGinf->cntSce1 == SCE_GAME_Game;
+
+        UpdatePlayer(pinfs->pGinf, pinfs->pIinf, &pinfs->pGinf->player, isGame && pinfs->pGinf->score >= 0);
+
+        MoveEntity(&pinfs->pGinf->enemy.x, &pinfs->pGinf->enemy.y, pinfs->pGinf->enemy.deg, pinfs->pGinf->enemy.spd);
+        pinfs->pGinf->enemy.cnt++;
+
+        if (isGame
+                && IsHit(pinfs->pGinf->player.x, pinfs->pGinf->player.y, pinfs->pGinf->data.r,
                     pinfs->pGinf->enemy.x, pinfs->pGinf->enemy.y, 600000)) {
-            pinfs->pGinf->enemy.hp -= pinfs->pGinf->bulsP[i].atk;
-            pinfs->pGinf->score += 10; //#Score
-            pinfs->pGinf->bulsP[i].flg = 0;
-        }
-    }
-    for (int i = 0; i < MAX_BUL_E; ++i) {
-        if (pinfs->pGinf->bulsE[i].flg == 0)
-            continue;
-        UpdateBullet(pinfs->pGinf, &pinfs->pGinf->bulsE[i]);
-        if (pinfs->pGinf->cntSce1 == SCE_GAME_Game
-                && pinfs->pGinf->bulsE[i].flg == 1
-                && IsHit(pinfs->pGinf->bulsE[i].x, pinfs->pGinf->bulsE[i].y, pinfs->pGinf->bulsE[i].r,
-                    pinfs->pGinf->player.x, pinfs->pGinf->player.y, pinfs->pGinf->data.rGrz)) {
-            pinfs->pGinf->score += min(1000, pinfs->pGinf->grz) * min(1000, pinfs->pGinf->grz) * 0.5; //#Score
-            pinfs->pGinf->bulsE[i].flg = 2;
-            pinfs->pGinf->grz++;
-        }
-        if (pinfs->pGinf->cntSce1 == SCE_GAME_Game
-                && IsHit(pinfs->pGinf->bulsE[i].x, pinfs->pGinf->bulsE[i].y, pinfs->pGinf->bulsE[i].r,
-                    pinfs->pGinf->player.x, pinfs->pGinf->player.y, pinfs->pGinf->data.r)) {
             Died(pinfs->pGinf); //#Score
-            pinfs->pGinf->bulsE[i].flg = 0;
+        }
+
+        for (int i = 0; i < MAX_BUL_P; ++i) {
+            if (pinfs->pGinf->bulsP[i].flg == 0)
+                continue;
+            UpdateBullet(pinfs->pGinf, &pinfs->pGinf->bulsP[i]);
+            if (isGame
+                    && IsHit(pinfs->pGinf->bulsP[i].x, pinfs->pGinf->bulsP[i].y, pinfs->pGinf->bulsP[i].r,
+                        pinfs->pGinf->enemy.x, pinfs->pGinf->enemy.y, 600000)) {
+                pinfs->pGinf->enemy.hp -= pinfs->pGinf->bulsP[i].atk;
+                pinfs->pGinf->score += 10; //#Score
+                pinfs->pGinf->bulsP[i].flg = 0;
+            }
+        }
+        for (int i = 0; i < MAX_BUL_E; ++i) {
+            if (pinfs->pGinf->bulsE[i].flg == 0)
+                continue;
+            UpdateBullet(pinfs->pGinf, &pinfs->pGinf->bulsE[i]);
+            if (isGame
+                    && pinfs->pGinf->bulsE[i].flg == 1
+                    && IsHit(pinfs->pGinf->bulsE[i].x, pinfs->pGinf->bulsE[i].y, pinfs->pGinf->bulsE[i].r,
+                        pinfs->pGinf->player.x, pinfs->pGinf->player.y, pinfs->pGinf->data.rGrz)) {
+                pinfs->pGinf->score += min(1000, pinfs->pGinf->grz) * min(1000, pinfs->pGinf->grz) * 0.5; //#Score
+                pinfs->pGinf->bulsE[i].flg = 2;
+                pinfs->pGinf->grz++;
+            }
+            if (isGame
+                    && IsHit(pinfs->pGinf->bulsE[i].x, pinfs->pGinf->bulsE[i].y, pinfs->pGinf->bulsE[i].r,
+                        pinfs->pGinf->player.x, pinfs->pGinf->player.y, pinfs->pGinf->data.r)) {
+                Died(pinfs->pGinf); //#Score
+                pinfs->pGinf->bulsE[i].flg = 0;
+            }
         }
     }
-}
 
-void DrawGame(struct Infs* pinfs) {
+    // ============================================================================================================= //
+    //                                            Frame Buffer 0
+    // ============================================================================================================= //
 
     struct Fact fact;
     CreateFact(&fact);
 
+    DrawBegin(pinfs->pDinf, &pinfs->pGinf->fb0, TRUE);
+
+    fBG(pinfs);
+
     // ============================================================================================================= //
+    //                                            Frame Buffer 1
     // ============================================================================================================= //
 
     DrawBegin(pinfs->pDinf, &pinfs->pGinf->fb1, FALSE);
 
     // Draw frame buffer
-    CreateFact(&fact);
-    fact.sclX = 12.8f;
-    fact.sclY = 9.6f;
-    ApplyCamera(pinfs->pDinf, &pinfs->pGinf->cameraUI, FALSE);
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, &pinfs->pGinf->fb0.image);
+    if (pinfs->pGinf->cntSce1 != SCE_GAME_Result && pinfs->pGinf->cntSce1 != SCE_GAME_GameOver) {
+        CreateFact(&fact);
+        fact.sclX = 12.8f;
+        fact.sclY = 9.6f;
+        ApplyCamera(pinfs->pDinf, &pinfs->pGinf->cameraUI, FALSE);
+        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, &pinfs->pGinf->fb0.image);
+    }
 
     // Camera for game
     ApplyCamera(pinfs->pDinf, &pinfs->pGinf->cameraGame, FALSE);
@@ -253,8 +293,9 @@ void DrawGame(struct Infs* pinfs) {
     }
 
     // ============================================================================================================= //
+    //                                            Back Buffer
     // ============================================================================================================= //
-    
+
     DrawBegin(pinfs->pDinf, NULL, FALSE);
 
     CreateFact(&fact);
@@ -280,19 +321,19 @@ void DrawGame(struct Infs* pinfs) {
         if (pinfs->pGinf->log.imgidL != 0) {
             CreateFact(&fact);
             if (pinfs->pGinf->log.isRight) {
-            fact.posX = -440.0f;
-            fact.posY = -190.0f;
-            fact.sclX = 6.5f;
-            fact.sclY = 6.5f;
-            fact.colR = 0.5f;
-            fact.colG = 0.5f;
-            fact.colB = 0.5f;
+                fact.posX = -440.0f;
+                fact.posY = -190.0f;
+                fact.sclX = 6.5f;
+                fact.sclY = 6.5f;
+                fact.colR = 0.5f;
+                fact.colG = 0.5f;
+                fact.colB = 0.5f;
             }
             else {
-            fact.posX = -390.0f;
-            fact.posY = -160.0f;
-            fact.sclX = 6.5f;
-            fact.sclY = 6.5f;
+                fact.posX = -390.0f;
+                fact.posY = -160.0f;
+                fact.sclX = 6.5f;
+                fact.sclY = 6.5f;
             }
             DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, pinfs->pGinf->log.imgidL));
         }
