@@ -1,9 +1,9 @@
 #include "../include/HeaderScene.h"
 
-char InitTitle(struct GameInf* pGinf, struct D3DInf* pDinf) {
+char InitTitle(struct Infs* pinfs) {
     return 1;
 }
 
-void UpdateTitle(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf) {
-    pGinf->sceNex = SCE_Tutorial;
+void UpdateTitle(struct Infs* pinfs) {
+    pinfs->pGinf->sceNex = SCE_Tutorial;
 }

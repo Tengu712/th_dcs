@@ -1,20 +1,5 @@
 #include "../include/HeaderScene.h"
 
-char InitGame(struct GameInf* pGinf) {
-    pGinf->cntAll = 0U;
-    pGinf->cntSce = 0U;
-    pGinf->mode = 0U;
-    pGinf->score = pGinf->data.scoreInit;
-    pGinf->grz = 0;
-    memset(&pGinf->player, 0, sizeof(struct Player));
-    pGinf->player.y = -2400000;
-    memset(&pGinf->enemy, 0, sizeof(struct Enemy));
-    pGinf->enemy.y = 2400000;
-    memset(&pGinf->log, 0, sizeof(struct Logue));
-    ClearFontTmp(pGinf);
-    return 1;
-}
-
 inline char IsHit(int x1, int y1, int r1, int x2, int y2, int r2) {
     const unsigned long long dis = 
         (unsigned long long)(x1 - x2) * (unsigned long long)(x1 - x2) + 
@@ -31,179 +16,205 @@ inline void Died(struct GameInf* pGinf) {
     pGinf->player.y = -2400000;
 }
 
-void UpdateGame(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf* pIinf) {
-    UpdatePlayer(pGinf, pIinf, &pGinf->player, pGinf->mode == 1U && pGinf->score >= 0);
-    MoveEntity(&pGinf->enemy.x, &pGinf->enemy.y, pGinf->enemy.deg, pGinf->enemy.spd);
-    pGinf->enemy.cnt++;
-    if (pGinf->mode == 1U 
-            && IsHit(pGinf->player.x, pGinf->player.y, pGinf->data.r,
-                pGinf->enemy.x, pGinf->enemy.y, 600000)) {
-        Died(pGinf); //#Score
+char InitGame(struct Infs* pinfs) {
+    pinfs->pGinf->cntSce0 = 0U;
+    pinfs->pGinf->cntSce1 = 0U;
+    pinfs->pGinf->cntSce2 = 0U;
+    pinfs->pGinf->cntSce3 = 0U;
+    pinfs->pGinf->score = pinfs->pGinf->data.scoreInit;
+    pinfs->pGinf->grz = 0;
+    memset(&pinfs->pGinf->player, 0, sizeof(struct Player));
+    pinfs->pGinf->player.y = -2400000;
+    memset(&pinfs->pGinf->enemy, 0, sizeof(struct Enemy));
+    pinfs->pGinf->enemy.y = 2400000;
+    memset(&pinfs->pGinf->log, 0, sizeof(struct Logue));
+    ClearFontTmp(pinfs->pGinf);
+    return 1;
+}
+
+void UpdateGame(struct Infs* pinfs) {
+    UpdatePlayer(pinfs->pGinf, pinfs->pIinf, &pinfs->pGinf->player, pinfs->pGinf->cntSce1 == 1U && pinfs->pGinf->score >= 0);
+
+    MoveEntity(&pinfs->pGinf->enemy.x, &pinfs->pGinf->enemy.y, pinfs->pGinf->enemy.deg, pinfs->pGinf->enemy.spd);
+    pinfs->pGinf->enemy.cnt++;
+
+    if (pinfs->pGinf->cntSce1 == SCE_GAME_Game
+            && IsHit(pinfs->pGinf->player.x, pinfs->pGinf->player.y, pinfs->pGinf->data.r,
+                pinfs->pGinf->enemy.x, pinfs->pGinf->enemy.y, 600000)) {
+        Died(pinfs->pGinf); //#Score
     }
+
     for (int i = 0; i < MAX_BUL_P; ++i) {
-        if (pGinf->bulsP[i].flg == 0)
+        if (pinfs->pGinf->bulsP[i].flg == 0)
             continue;
-        UpdateBullet(pGinf, &pGinf->bulsP[i]);
-        if (pGinf->mode == 1U
-                && IsHit(pGinf->bulsP[i].x, pGinf->bulsP[i].y, pGinf->bulsP[i].r,
-                    pGinf->enemy.x, pGinf->enemy.y, 600000)) {
-            pGinf->enemy.hp -= pGinf->bulsP[i].atk;
-            pGinf->score += 10; //#Score
-            pGinf->bulsP[i].flg = 0;
+        UpdateBullet(pinfs->pGinf, &pinfs->pGinf->bulsP[i]);
+        if (pinfs->pGinf->cntSce1 == SCE_GAME_Game
+                && IsHit(pinfs->pGinf->bulsP[i].x, pinfs->pGinf->bulsP[i].y, pinfs->pGinf->bulsP[i].r,
+                    pinfs->pGinf->enemy.x, pinfs->pGinf->enemy.y, 600000)) {
+            pinfs->pGinf->enemy.hp -= pinfs->pGinf->bulsP[i].atk;
+            pinfs->pGinf->score += 10; //#Score
+            pinfs->pGinf->bulsP[i].flg = 0;
         }
     }
     for (int i = 0; i < MAX_BUL_E; ++i) {
-        if (pGinf->bulsE[i].flg == 0)
+        if (pinfs->pGinf->bulsE[i].flg == 0)
             continue;
-        UpdateBullet(pGinf, &pGinf->bulsE[i]);
-        if (pGinf->mode == 1U
-                && pGinf->bulsE[i].flg == 1
-                && IsHit(pGinf->bulsE[i].x, pGinf->bulsE[i].y, pGinf->bulsE[i].r,
-                    pGinf->player.x, pGinf->player.y, pGinf->data.rGrz)) {
-            pGinf->score += min(1000, pGinf->grz) * min(1000, pGinf->grz) / 10; //#Score
-            pGinf->bulsE[i].flg = 2;
-            pGinf->grz++;
+        UpdateBullet(pinfs->pGinf, &pinfs->pGinf->bulsE[i]);
+        if (pinfs->pGinf->cntSce1 == SCE_GAME_Game
+                && pinfs->pGinf->bulsE[i].flg == 1
+                && IsHit(pinfs->pGinf->bulsE[i].x, pinfs->pGinf->bulsE[i].y, pinfs->pGinf->bulsE[i].r,
+                    pinfs->pGinf->player.x, pinfs->pGinf->player.y, pinfs->pGinf->data.rGrz)) {
+            pinfs->pGinf->score += min(1000, pinfs->pGinf->grz) * min(1000, pinfs->pGinf->grz) * 0.5; //#Score
+            pinfs->pGinf->bulsE[i].flg = 2;
+            pinfs->pGinf->grz++;
         }
-        if (pGinf->mode == 1U 
-                && IsHit(pGinf->bulsE[i].x, pGinf->bulsE[i].y, pGinf->bulsE[i].r,
-                    pGinf->player.x, pGinf->player.y, pGinf->data.r)) {
-            Died(pGinf); //#Score
-            pGinf->bulsE[i].flg = 0;
+        if (pinfs->pGinf->cntSce1 == SCE_GAME_Game
+                && IsHit(pinfs->pGinf->bulsE[i].x, pinfs->pGinf->bulsE[i].y, pinfs->pGinf->bulsE[i].r,
+                    pinfs->pGinf->player.x, pinfs->pGinf->player.y, pinfs->pGinf->data.r)) {
+            Died(pinfs->pGinf); //#Score
+            pinfs->pGinf->bulsE[i].flg = 0;
         }
     }
 }
 
-void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf) {
+void DrawGame(struct Infs* pinfs) {
 
     struct Fact fact;
     CreateFact(&fact);
 
     // ============================================================================================================= //
+    // ============================================================================================================= //
 
-    DrawBegin(pDinf, &pGinf->fb1, FALSE);
+    DrawBegin(pinfs->pDinf, &pinfs->pGinf->fb1, FALSE);
 
     // Draw frame buffer
     CreateFact(&fact);
     fact.sclX = 12.8f;
     fact.sclY = 9.6f;
-    ApplyCamera(pDinf, &pGinf->cameraUI, FALSE);
-    DrawImage(pGinf, pDinf, &fact, &pGinf->fb0.image);
+    ApplyCamera(pinfs->pDinf, &pinfs->pGinf->cameraUI, FALSE);
+    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, &pinfs->pGinf->fb0.image);
 
     // Camera for game
-    ApplyCamera(pDinf, &pGinf->cameraGame, FALSE);
+    ApplyCamera(pinfs->pDinf, &pinfs->pGinf->cameraGame, FALSE);
 
     // Player
-    if (pGinf->score >= 0) {
+    if (pinfs->pGinf->score >= 0) {
         CreateFact(&fact);
-        fact.posX = (float)pGinf->player.x;
-        fact.posY = (float)pGinf->player.y;
+        fact.posX = (float)pinfs->pGinf->player.x;
+        fact.posY = (float)pinfs->pGinf->player.y;
         fact.sclX = 8600.0f;
         fact.sclY = 8600.0f;
         int imgid = IMG_CH_MARISA_B0;
-        if (pGinf->player.dx == 1)
-            imgid = IMG_CH_MARISA_R0 + ((pGinf->player.cnt / 8) % 2);
-        else if (pGinf->player.dx == -1)
-            imgid = IMG_CH_MARISA_L0 + ((pGinf->player.cnt / 8) % 2);
+        if (pinfs->pGinf->player.dx == 1)
+            imgid = IMG_CH_MARISA_R0 + ((pinfs->pGinf->player.cnt / 8) % 2);
+        else if (pinfs->pGinf->player.dx == -1)
+            imgid = IMG_CH_MARISA_L0 + ((pinfs->pGinf->player.cnt / 8) % 2);
         else
-            imgid = IMG_CH_MARISA_B0 + ((pGinf->player.cnt / 8) % 4);
-        DrawImage(pGinf, pDinf, &fact, GetImage(pGinf, imgid));
+            imgid = IMG_CH_MARISA_B0 + ((pinfs->pGinf->player.cnt / 8) % 4);
+        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, imgid));
     }
 
     // Enemy
     CreateFact(&fact);
-    fact.posX = (float)pGinf->enemy.x;
-    fact.posY = (float)pGinf->enemy.y;
+    fact.posX = (float)pinfs->pGinf->enemy.x;
+    fact.posY = (float)pinfs->pGinf->enemy.y;
     fact.sclX = 12000.0f;
     fact.sclY = 12000.0f;
-    DrawImage(pGinf, pDinf, &fact, NULL);
+    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, NULL);
+
+    // change shader pram
+    pinfs->pDinf->cbuffer.params.y = 1.0;
 
     // Bullet player's
     int texCur = 0;
     CreateFact(&fact);
     for (int i = 0; i < MAX_BUL_P; ++i) {
-        if (!pGinf->bulsP[i].flg)
+        if (!pinfs->pGinf->bulsP[i].flg)
             continue;
-        if (texCur != pGinf->bulsP[i].imgid) {
-            texCur = pGinf->bulsP[i].imgid;
-            ApplyImage(pDinf, GetImage(pGinf, texCur));
+        if (texCur != pinfs->pGinf->bulsP[i].imgid) {
+            texCur = pinfs->pGinf->bulsP[i].imgid;
+            ApplyImage(pinfs->pDinf, GetImage(pinfs->pGinf, texCur));
         }
-        fact.posX = (float)pGinf->bulsP[i].x;
-        fact.posY = (float)pGinf->bulsP[i].y;
-        fact.degZ = (float)pGinf->bulsP[i].deg - 90.0f;
-        fact.sclX = pGinf->bulsP[i].sclX;
-        fact.sclY = pGinf->bulsP[i].sclY;
-        fact.colR = pGinf->bulsP[i].colR;
-        fact.colG = pGinf->bulsP[i].colG;
-        fact.colB = pGinf->bulsP[i].colB;
-        fact.colA = pGinf->bulsP[i].colA;
-        ApplyFact(pGinf, &fact);
-        DrawModel(pDinf, &pGinf->idea);
+        fact.posX = (float)pinfs->pGinf->bulsP[i].x;
+        fact.posY = (float)pinfs->pGinf->bulsP[i].y;
+        fact.degZ = (float)pinfs->pGinf->bulsP[i].deg - 90.0f;
+        fact.sclX = pinfs->pGinf->bulsP[i].sclX;
+        fact.sclY = pinfs->pGinf->bulsP[i].sclY;
+        fact.colR = pinfs->pGinf->bulsP[i].colR;
+        fact.colG = pinfs->pGinf->bulsP[i].colG;
+        fact.colB = pinfs->pGinf->bulsP[i].colB;
+        fact.colA = pinfs->pGinf->bulsP[i].colA;
+        ApplyFact(pinfs->pGinf, &fact);
+        DrawModel(pinfs->pDinf, &pinfs->pGinf->idea);
     }
 
     // Bullet enemy's
     for (int i = 0; i < MAX_BUL_E; ++i) {
-        if (!pGinf->bulsE[i].flg)
+        if (!pinfs->pGinf->bulsE[i].flg)
             continue;
-        if (texCur != pGinf->bulsE[i].imgid) {
-            texCur = pGinf->bulsE[i].imgid;
-            ApplyImage(pDinf, GetImage(pGinf, texCur));
+        if (texCur != pinfs->pGinf->bulsE[i].imgid) {
+            texCur = pinfs->pGinf->bulsE[i].imgid;
+            ApplyImage(pinfs->pDinf, GetImage(pinfs->pGinf, texCur));
         }
-        fact.posX = (float)pGinf->bulsE[i].x;
-        fact.posY = (float)pGinf->bulsE[i].y;
-        fact.degZ = (float)pGinf->bulsE[i].deg - 90.0f;
-        fact.sclX = pGinf->bulsE[i].sclX;
-        fact.sclY = pGinf->bulsE[i].sclY;
-        fact.colR = pGinf->bulsE[i].colR;
-        fact.colG = pGinf->bulsE[i].colG;
-        fact.colB = pGinf->bulsE[i].colB;
-        fact.colA = pGinf->bulsE[i].colA;
-        ApplyFact(pGinf, &fact);
-        DrawModel(pDinf, &pGinf->idea);
+        fact.posX = (float)pinfs->pGinf->bulsE[i].x;
+        fact.posY = (float)pinfs->pGinf->bulsE[i].y;
+        fact.degZ = (float)pinfs->pGinf->bulsE[i].deg - 90.0f;
+        fact.sclX = pinfs->pGinf->bulsE[i].sclX;
+        fact.sclY = pinfs->pGinf->bulsE[i].sclY;
+        fact.colR = pinfs->pGinf->bulsE[i].colR;
+        fact.colG = pinfs->pGinf->bulsE[i].colG;
+        fact.colB = pinfs->pGinf->bulsE[i].colB;
+        fact.colA = pinfs->pGinf->bulsE[i].colA;
+        ApplyFact(pinfs->pGinf, &fact);
+        DrawModel(pinfs->pDinf, &pinfs->pGinf->idea);
     }
 
+    // change shader pram
+    pinfs->pDinf->cbuffer.params.y = 0.0;
+
     // Slow circle
-    if (pGinf->score >= 0 && pGinf->player.cntSlow > 0U) {
+    if (pinfs->pGinf->score >= 0 && pinfs->pGinf->player.cntSlow > 0U) {
         CreateFact(&fact);
-        fact.posX = (float)pGinf->player.x;
-        fact.posY = (float)pGinf->player.y;
+        fact.posX = (float)pinfs->pGinf->player.x;
+        fact.posY = (float)pinfs->pGinf->player.y;
         // Atari
-        fact.sclX = (float)pGinf->data.r * 0.02f;
-        fact.sclY = (float)pGinf->data.r * 0.02f;
-        if (pGinf->player.cntSlow < 10U) {
-            fact.sclX += 500.0f * (1.0f - (float)pGinf->player.cntSlow / 10.0f);
-            fact.sclY += 500.0f * (1.0f - (float)pGinf->player.cntSlow / 10.0f);
+        fact.sclX = (float)pinfs->pGinf->data.r * 0.02f;
+        fact.sclY = (float)pinfs->pGinf->data.r * 0.02f;
+        if (pinfs->pGinf->player.cntSlow < 10U) {
+            fact.sclX += 500.0f * (1.0f - (float)pinfs->pGinf->player.cntSlow / 10.0f);
+            fact.sclY += 500.0f * (1.0f - (float)pinfs->pGinf->player.cntSlow / 10.0f);
         } else 
-            fact.degZ = (float)pGinf->player.cntSlow * 4.0f;
-        DrawImage(pGinf, pDinf, &fact, GetImage(pGinf, IMG_CH_ATARI));
+            fact.degZ = (float)pinfs->pGinf->player.cntSlow * 4.0f;
+        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, IMG_CH_ATARI));
         // Circle
-        fact.sclX = (float)pGinf->data.rGrz * 0.02f;
-        fact.sclY = (float)pGinf->data.rGrz * 0.02f;
-        if (pGinf->player.cntSlow < 10U) {
-            fact.sclX += 5000.0f * (1.0f - (float)pGinf->player.cntSlow / 10.0f);
-            fact.sclY += 5000.0f * (1.0f - (float)pGinf->player.cntSlow / 10.0f);
+        fact.sclX = (float)pinfs->pGinf->data.rGrz * 0.02f;
+        fact.sclY = (float)pinfs->pGinf->data.rGrz * 0.02f;
+        if (pinfs->pGinf->player.cntSlow < 10U) {
+            fact.sclX += 5000.0f * (1.0f - (float)pinfs->pGinf->player.cntSlow / 10.0f);
+            fact.sclY += 5000.0f * (1.0f - (float)pinfs->pGinf->player.cntSlow / 10.0f);
         }
-        DrawImage(pGinf, pDinf, &fact, GetImage(pGinf, IMG_CH_SLOWCIRCLE));
+        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, IMG_CH_SLOWCIRCLE));
         fact.degZ *= -1.0f;
-        ApplyFact(pGinf, &fact);
-        DrawModel(pDinf, &pGinf->idea);
+        ApplyFact(pinfs->pGinf, &fact);
+        DrawModel(pinfs->pDinf, &pinfs->pGinf->idea);
     }
 
     // ============================================================================================================= //
 
-    ApplyCamera(pDinf, &pGinf->cameraUI, FALSE);
+    ApplyCamera(pinfs->pDinf, &pinfs->pGinf->cameraUI, FALSE);
 
     // HP bar
-    if (pGinf->enemy.hp > 0 && pGinf->enemy.hpMax > 0) {
+    if (pinfs->pGinf->enemy.hp > 0 && pinfs->pGinf->enemy.hpMax > 0) {
         CreateFact(&fact);
-        fact.posX = -375.0f * (1.0f - (float)pGinf->enemy.hp / (float)pGinf->enemy.hpMax);
+        fact.posX = -375.0f * (1.0f - (float)pinfs->pGinf->enemy.hp / (float)pinfs->pGinf->enemy.hpMax);
         fact.posY = 460.0f;
-        fact.sclX = 7.5f - 7.5f * (1.0f - (float)pGinf->enemy.hp / (float)pGinf->enemy.hpMax);
+        fact.sclX = 7.5f - 7.5f * (1.0f - (float)pinfs->pGinf->enemy.hp / (float)pinfs->pGinf->enemy.hpMax);
         fact.sclY = 0.08f;
-        DrawImage(pGinf, pDinf, &fact, NULL);
+        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, NULL);
     }
 
     // Score and graze
-    if (pGinf->score >= 0) {
+    if (pinfs->pGinf->score >= 0) {
         CreateFact(&fact);
         fact.posX = -145.0f;
         fact.posY = 435.0f;
@@ -212,7 +223,7 @@ void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf) {
         long long dev = 1LL;
         for (int i = 0; i < 10; ++i) {
             fact.posX -= 22.0f;
-            DrawImage(pGinf, pDinf, &fact, GetImage(pGinf, ToFontID(((pGinf->score / dev) % 10) + 48U)));
+            DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(((pinfs->pGinf->score / dev) % 10) + 48U)));
             dev *= 10;
         }
         fact.posX = -293.0f;
@@ -222,37 +233,53 @@ void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf) {
         dev = 1LL;
         for (int i = 0; i < 4; ++i) {
             fact.posX -= 18.0f;
-            DrawImage(pGinf, pDinf, &fact, GetImage(pGinf, ToFontID(((pGinf->grz / dev) % 10) + 48U)));
+            DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(((pinfs->pGinf->grz / dev) % 10) + 48U)));
             dev *= 10;
         }
     }
 
     // Timer
-    if (pGinf->enemy.cnt > 0 && pGinf->enemy.timlim > pGinf->enemy.cnt) {
+    if (pinfs->pGinf->enemy.cnt > 0 && pinfs->pGinf->enemy.timlim > pinfs->pGinf->enemy.cnt) {
         CreateFact(&fact);
         fact.posX = 340.0f;
         fact.posY = 435.0f;
         fact.sclX = 0.22f;
         fact.sclY = 0.25f;
-        DrawImage(pGinf, pDinf, &fact, 
-                GetImage(pGinf, ToFontID((((pGinf->enemy.timlim - pGinf->enemy.cnt) / 600) % 10) + 48U)));
+        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, 
+                GetImage(pinfs->pGinf, ToFontID((((pinfs->pGinf->enemy.timlim - pinfs->pGinf->enemy.cnt) / 600) % 10) + 48U)));
         fact.posX += 22.0f;
-        DrawImage(pGinf, pDinf, &fact, 
-                GetImage(pGinf, ToFontID((((pGinf->enemy.timlim - pGinf->enemy.cnt) / 60) % 10) + 48U)));
+        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, 
+                GetImage(pinfs->pGinf, ToFontID((((pinfs->pGinf->enemy.timlim - pinfs->pGinf->enemy.cnt) / 60) % 10) + 48U)));
     }
+
+    // ============================================================================================================= //
+    // ============================================================================================================= //
+    
+    DrawBegin(pinfs->pDinf, NULL, FALSE);
+
+    CreateFact(&fact);
+    fact.sclX = 12.8f;
+    fact.sclY = 9.6f;
+    ApplyCamera(pinfs->pDinf, &pinfs->pGinf->cameraUI, FALSE);
+    ApplyFact(pinfs->pGinf, &fact);
+    ApplyImage(pinfs->pDinf, &pinfs->pGinf->fb1.image);
+    if (pinfs->pGinf->cntSce1 == SCE_GAME_Pause)
+        pinfs->pDinf->cbuffer.params.x = 2.0;
+    DrawModel(pinfs->pDinf, &pinfs->pGinf->idea);
+    pinfs->pDinf->cbuffer.params.x = 0.0;
 
     // Frame
     CreateFact(&fact);
     fact.sclX = 12.8f;
     fact.sclY = 9.6f;
-    DrawImage(pGinf, pDinf, &fact, GetImage(pGinf, IMG_UI_FRAME));
+    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, IMG_UI_FRAME));
 
     // Logue
-    if (pGinf->log.flg) {
+    if (pinfs->pGinf->log.flg && pinfs->pGinf->cntSce1 != SCE_GAME_Pause) {
         // Tachie
-        if (pGinf->log.imgidL != 0) {
+        if (pinfs->pGinf->log.imgidL != 0) {
             CreateFact(&fact);
-            if (pGinf->log.isRight) {
+            if (pinfs->pGinf->log.isRight) {
             fact.posX = -440.0f;
             fact.posY = -190.0f;
             fact.sclX = 6.5f;
@@ -267,7 +294,7 @@ void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf) {
             fact.sclX = 6.5f;
             fact.sclY = 6.5f;
             }
-            DrawImage(pGinf, pDinf, &fact, GetImage(pGinf, pGinf->log.imgidL));
+            DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, pinfs->pGinf->log.imgidL));
         }
         // Box
         CreateFact(&fact);
@@ -277,7 +304,7 @@ void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf) {
         fact.colG = 0.0f;
         fact.colB = 0.0f;
         fact.colA = 0.5f;
-        DrawImage(pGinf, pDinf, &fact, NULL);
+        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, NULL);
         // Logue
         CreateFact(&fact);
         fact.posX = -260.0f;
@@ -285,24 +312,14 @@ void DrawGame(struct GameInf* pGinf, struct D3DInf* pDinf) {
         fact.sclX = 0.27f;
         fact.sclY = 0.27f;
         for (int i = 0; i < MAX_LOGUE; ++i) {
-            if (pGinf->imgidsLog[i] == 0)
+            if (pinfs->pGinf->imgidsLog[i] == 0)
                 break;
             fact.posX += 27.0f;
-            DrawImage(pGinf, pDinf, &fact, GetImage(pGinf, pGinf->imgidsLog[i]));
+            DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, pinfs->pGinf->imgidsLog[i]));
         }
     }
 
-    // ============================================================================================================= //
+    DrawFps(pinfs->pDinf, pinfs->pGinf);
 
-    DrawBegin(pDinf, NULL, FALSE);
-
-    CreateFact(&fact);
-    fact.sclX = 12.8f;
-    fact.sclY = 9.6f;
-    ApplyCamera(pDinf, &pGinf->cameraUI, FALSE);
-    DrawImage(pGinf, pDinf, &fact, &pGinf->fb1.image);
-
-    DrawFps(pDinf, pGinf);
-
-    DrawEnd(pDinf);
+    DrawEnd(pinfs->pDinf);
 }

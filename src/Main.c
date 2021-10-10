@@ -28,12 +28,17 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
     if (!CreateGameInf(&ginf, &dinf, &iinf, 1280U, 960U)) 
         return ErrorExit("Failed to create GameInf.", hInst);
 
+    struct Infs infs;
+    infs.pGinf = &ginf;
+    infs.pDinf = &dinf;
+    infs.pIinf = &iinf;
+
     long startTime = timeGetTime();
     long lastTime = timeGetTime();
     unsigned int cntFps = 0;
 
-    char (*funcsInitScene[MAX_NUM_SCE])(struct GameInf*, struct D3DInf*);
-    void (*funcsUpdateScene[MAX_NUM_SCE])(struct GameInf*, struct D3DInf*, struct InputInf*);
+    char (*funcsInitScene[MAX_NUM_SCE])(struct Infs*);
+    void (*funcsUpdateScene[MAX_NUM_SCE])(struct Infs*);
     for (int i = 0; i < MAX_NUM_SCE; ++i) {
         funcsInitScene[i] = InitMainMenu;
         funcsUpdateScene[i] = UpdateMainMenu;
@@ -69,11 +74,11 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
             if (ginf.sceNex == SCE_Exit)
                 break;
             ginf.sceCur = ginf.sceNex;
-            if (!funcsInitScene[ginf.sceCur](&ginf, &dinf))
+            if (!funcsInitScene[ginf.sceCur](&infs))
                 break;
         }
         
-        funcsUpdateScene[ginf.sceCur](&ginf, &dinf, &iinf);
+        funcsUpdateScene[ginf.sceCur](&infs);
     }
 
     FreeGameInf(&ginf);

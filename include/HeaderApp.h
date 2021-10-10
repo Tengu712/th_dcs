@@ -126,9 +126,7 @@ struct GameInf {
     struct Bullet* bulsP;
     unsigned int* imgidsLog;
     // Game
-    unsigned int cntAll;
-    unsigned int cntSce;
-    unsigned int mode;
+    unsigned int cntSce0, cntSce1, cntSce2, cntSce3;
     unsigned int grz;
     long long score;
     struct Player player;
