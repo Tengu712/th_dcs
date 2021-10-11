@@ -47,11 +47,13 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
     pGinf->bulsE = (struct Bullet*)malloc(sizeof(struct Bullet) * MAX_BUL_E);
     pGinf->bulsP = (struct Bullet*)malloc(sizeof(struct Bullet) * MAX_BUL_P);
     pGinf->imgidsLog = (unsigned int*)malloc(sizeof(struct Logue) * MAX_LOGUE);
+    pGinf->cntSce = (int*)malloc(sizeof(int) * MAX_PARAM);
     memset(pGinf->imgs, 0, sizeof(struct Image) * MAX_IMG);
     memset(pGinf->imgsTmp, 0, sizeof(struct Image) * MAX_IMG_TMP);
     memset(pGinf->bulsE, 0, sizeof(struct Bullet) * MAX_BUL_E);
     memset(pGinf->bulsP, 0, sizeof(struct Bullet) * MAX_BUL_P);
     memset(pGinf->imgidsLog, 0, sizeof(struct Logue) * MAX_LOGUE);
+    memset(pGinf->cntSce, 0, sizeof(int) * MAX_PARAM);
 
     // Load
     if (!LoadAddImage(pGinf, pDinf, hModule, IMG_BG_LOAD))
@@ -270,6 +272,7 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
         pGinf->data.rGrz = 500000;
         pGinf->data.atk = 100;
         pGinf->data.interval = 8;
+        pGinf->data.invtime = 240;
         pGinf->data.numOpt = 0;
         pGinf->data.widthShot = 0;
         pGinf->data.kndShot = 0;
@@ -295,5 +298,7 @@ void FreeGameInf(struct GameInf* pGinf) {
         free(pGinf->bulsP);
     if (pGinf->imgidsLog != NULL)
         free(pGinf->imgidsLog);
+    if (pGinf->cntSce != NULL)
+        free(pGinf->cntSce);
     memset(pGinf, 0, sizeof(struct GameInf));
 }

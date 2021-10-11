@@ -23,6 +23,7 @@
 #define MAX_BUL_E 1024
 #define MAX_BUL_P 20
 #define MAX_LOGUE 20
+#define MAX_PARAM 10
 
 #define KEY_CODE_Up 1
 #define KEY_CODE_Down 2
@@ -99,6 +100,7 @@ struct SaveData {
     int rGrz;
     int atk;
     int interval;
+    int invtime;
     int numOpt;
     int widthShot;
     int kndShot;
@@ -126,7 +128,7 @@ struct GameInf {
     struct Bullet* bulsP;
     unsigned int* imgidsLog;
     // Game
-    unsigned int cntSce0, cntSce1, cntSce2, cntSce3;
+    int* cntSce;
     unsigned int grz;
     long long score;
     struct Player player;

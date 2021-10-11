@@ -9,7 +9,7 @@ void DrawDestOrSub(struct GameInf* pGinf, struct D3DInf* pDinf, char isDest, LPC
     fact.sclY = 0.55f;
     DrawImage(pGinf, pDinf, &fact, GetImage(pGinf, isDest ? IMG_UI_BOX_DEST : IMG_UI_BOX));
     if (hob) {
-        fact.colA = 0.4f * (float)fabs(sin((double)pGinf->cntSce0 / 90.0 * M_PI));
+        fact.colA = 0.4f * (float)fabs(sin((double)pGinf->cntSce[0] / 90.0 * M_PI));
         DrawImage(pGinf, pDinf, &fact, NULL);
     }
     const int kLen = strlen(str);
@@ -30,9 +30,7 @@ void DrawDestOrSub(struct GameInf* pGinf, struct D3DInf* pDinf, char isDest, LPC
 }
 
 char InitMainMenu(struct Infs* pinfs) {
-    pinfs->pGinf->cntSce0 = 0U;
-    pinfs->pGinf->cntSce2 = 0U;
-    pinfs->pGinf->cntSce1 = 0U;
+    memset(pinfs->pGinf->cntSce, 0, sizeof(int) * MAX_PARAM);
     ClearFontTmp(pinfs->pGinf);
     char res = 1;
     res = res && LoadSentence(pinfs->pGinf, pinfs->pDinf, "ASSEMBLESAVEQUIT:imeotalccurnd");
@@ -43,29 +41,29 @@ char InitMainMenu(struct Infs* pinfs) {
 void UpdateMainMenu(struct Infs* pinfs) {
 
     if (GetKey(pinfs->pIinf, KEY_CODE_Right) & KEY_STA_Down) {
-        pinfs->pGinf->cntSce1 = 1U;
-        pinfs->pGinf->cntSce2 = 0;
+        pinfs->pGinf->cntSce[1] = 1U;
+        pinfs->pGinf->cntSce[2] = 0;
     }
 
     if (GetKey(pinfs->pIinf, KEY_CODE_Left) & KEY_STA_Down) {
-        pinfs->pGinf->cntSce1 = 0U;
-        pinfs->pGinf->cntSce2 = 0;
+        pinfs->pGinf->cntSce[1] = 0U;
+        pinfs->pGinf->cntSce[2] = 0;
     }
 
     if (GetKey(pinfs->pIinf, KEY_CODE_Up) & KEY_STA_Down) {
-        pinfs->pGinf->cntSce2--;
+        pinfs->pGinf->cntSce[2]--;
     }
 
     if (GetKey(pinfs->pIinf, KEY_CODE_Down) & KEY_STA_Down) {
-        pinfs->pGinf->cntSce2++;
+        pinfs->pGinf->cntSce[2]++;
     }
 
     if (GetKey(pinfs->pIinf, KEY_CODE_Z) & KEY_STA_Down) {
-        if (pinfs->pGinf->cntSce1 == 1U && pinfs->pGinf->cntSce2 % 3 == 2)
+        if (pinfs->pGinf->cntSce[1] == 1U && pinfs->pGinf->cntSce[2] % 3 == 2)
             pinfs->pGinf->sceNex = SCE_Exit;
     }
     
-    pinfs->pGinf->cntSce0++;
+    pinfs->pGinf->cntSce[0]++;
 
 
 
@@ -84,10 +82,10 @@ void UpdateMainMenu(struct Infs* pinfs) {
     // Back ground pattern
     CreateFact(&fact);
     fact.posY = -1000.0f;
-    fact.colA = 0.08f * (float)fabs(sin((double)pinfs->pGinf->cntSce0 / 360.0 * M_PI));
+    fact.colA = 0.08f * (float)fabs(sin((double)pinfs->pGinf->cntSce[0] / 360.0 * M_PI));
     ApplyImage(pinfs->pDinf, GetImage(pinfs->pGinf, IMG_BG_MAINMENU_OVER));
     for (int i = 0; i < 20; ++i) {
-        fact.posX = -1200.0f - (float)(pinfs->pGinf->cntSce0 % 200);
+        fact.posX = -1200.0f - (float)(pinfs->pGinf->cntSce[0] % 200);
         for (int j = 0; j < 24; ++j) {
             ApplyFact(pinfs->pGinf, &fact);
             DrawModel(pinfs->pDinf, &pinfs->pGinf->idea);
@@ -209,12 +207,12 @@ void UpdateMainMenu(struct Infs* pinfs) {
         DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID((pinfs->pGinf->data.cntWorldRound % 10) + 48U)));
 
     //!
-    DrawDestOrSub(pinfs->pGinf, pinfs->pDinf, 1, "博麗神社", 300.0f, pinfs->pGinf->cntSce1 == 0 && pinfs->pGinf->cntSce2 % 1 == 0);
+    DrawDestOrSub(pinfs->pGinf, pinfs->pDinf, 1, "博麗神社", 300.0f, pinfs->pGinf->cntSce[1] == 0 && pinfs->pGinf->cntSce[2] % 1 == 0);
     
     // Submenu
-    DrawDestOrSub(pinfs->pGinf, pinfs->pDinf, 0, "ASSEMBLE", 300.0f, pinfs->pGinf->cntSce1 == 1 && pinfs->pGinf->cntSce2 % 3 == 0);
-    DrawDestOrSub(pinfs->pGinf, pinfs->pDinf, 0, "SAVE", 230.0f, pinfs->pGinf->cntSce1 == 1 && pinfs->pGinf->cntSce2 % 3 == 1);
-    DrawDestOrSub(pinfs->pGinf, pinfs->pDinf, 0, "QUIT", 160.0f, pinfs->pGinf->cntSce1 == 1 && pinfs->pGinf->cntSce2 % 3 == 2);
+    DrawDestOrSub(pinfs->pGinf, pinfs->pDinf, 0, "ASSEMBLE", 300.0f, pinfs->pGinf->cntSce[1] == 1 && pinfs->pGinf->cntSce[2] % 3 == 0);
+    DrawDestOrSub(pinfs->pGinf, pinfs->pDinf, 0, "SAVE", 230.0f, pinfs->pGinf->cntSce[1] == 1 && pinfs->pGinf->cntSce[2] % 3 == 1);
+    DrawDestOrSub(pinfs->pGinf, pinfs->pDinf, 0, "QUIT", 160.0f, pinfs->pGinf->cntSce[1] == 1 && pinfs->pGinf->cntSce[2] % 3 == 2);
 
     DrawEnd(pinfs->pDinf);
 

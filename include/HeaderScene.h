@@ -15,7 +15,14 @@
 #define SCE_GAME_Win 2
 #define SCE_GAME_Result 3
 #define SCE_GAME_Pause 4
-#define SCE_GAME_GameOver 5
+#define SCE_GAME_GOFade 5
+#define SCE_GAME_GameOver 6
+
+#define CNT_ALL 0
+#define CNT_MODE 1
+#define CNT_STATE 2
+#define CNT_FADE 3
+#define CNT_PREV 4
 
 struct Infs {
     struct GameInf* pGinf;
