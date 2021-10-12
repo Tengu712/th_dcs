@@ -31,7 +31,7 @@ char InitGame(struct Infs* pinfs) {
     pinfs->pGinf->grz = 0;
     pinfs->pGinf->player.y = -2400000;
     pinfs->pGinf->enemy.y = 2400000;
-    return 1;
+    return LoadSentence(pinfs->pGinf, pinfs->pDinf, "RetryGiveUp");
 }
 
 void UpdateGame(struct Infs* pinfs, void (*fLog)(struct Infs*),
@@ -45,7 +45,47 @@ void UpdateGame(struct Infs* pinfs, void (*fLog)(struct Infs*),
     }
 
     else if (pinfs->pGinf->cntSce[CNT_MODE] == SCE_GAME_GameOver) {
+        // Update
+        const int kInp
+            = (GetKey(pinfs->pIinf, KEY_CODE_Right) & KEY_STA_Down ? 1 : 0)
+                - (GetKey(pinfs->pIinf, KEY_CODE_Left) & KEY_STA_Down ? 1 : 0);
+        if (kInp) {
+            pinfs->pGinf->cntSce[CNT_STATE] += kInp;
+        }
+        if (GetKey(pinfs->pIinf, KEY_CODE_Z) & KEY_STA_Down) {
+            if (pinfs->pGinf->cntSce[CNT_STATE] % 2) {
+                pinfs->pGinf->sceNex = SCE_MainMenu;
+                return;
+            } else {
+                pinfs->pGinf->sceNex = pinfs->pGinf->sceCur;
+                return;
+            }
+        }
+        pinfs->pGinf->cntSce[CNT_ALL]++;
+        // Box
         DrawBegin(pinfs->pDinf, NULL, FALSE);
+        ApplyCamera(pinfs->pDinf, &pinfs->pGinf->cameraUI, FALSE);
+        struct Fact fact;
+        CreateFact(&fact);
+        fact.posX = -120.0f;
+        fact.sclX = 2.0f;
+        fact.sclY = 0.5f;
+        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, IMG_UI_BOX));
+        fact.posX = 120.0f;
+        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, IMG_UI_BOX));
+        // Hobber
+        fact.posX = pinfs->pGinf->cntSce[CNT_STATE] % 2 ? 120.0f : -120.0f;
+        fact.colA = 0.4f * (float)fabs(sin((double)pinfs->pGinf->cntSce[CNT_ALL] / 90.0 * M_PI));
+        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, NULL);
+        fact.colA = 1.0f;
+        // Retry
+        fact.posX = -170.0f;
+        fact.sclX = 0.22f;
+        fact.sclY = 0.26f;
+        DrawString(pinfs->pGinf, pinfs->pDinf, &fact, "Retry", 22.0f);
+        // GiveUp
+        fact.posX = 70.0f;
+        DrawString(pinfs->pGinf, pinfs->pDinf, &fact, "GiveUp", 22.0f);
         DrawFps(pinfs->pDinf, pinfs->pGinf);
         DrawEnd(pinfs->pDinf);
         return;
@@ -76,22 +116,28 @@ void UpdateGame(struct Infs* pinfs, void (*fLog)(struct Infs*),
 
     }
     else if (pinfs->pGinf->cntSce[CNT_MODE] == SCE_GAME_GOFade) {
-        pinfs->pGinf->cntSce[CNT_MODE] = SCE_GAME_GameOver;
+        if (pinfs->pGinf->cntSce[CNT_FADE] == 300U) {
+            pinfs->pGinf->cntSce[CNT_MODE] = SCE_GAME_GameOver;
+            pinfs->pGinf->cntSce[CNT_STATE] = 1000U;
+            return;
+        }
+        pinfs->pGinf->cntSce[CNT_FADE]++;
     }
 
     // Update entities
     if (pinfs->pGinf->cntSce[CNT_MODE] != SCE_GAME_Pause) {
         const char kIsGame = pinfs->pGinf->cntSce[CNT_MODE] == SCE_GAME_Game;
-        const char kIsNotInv = pinfs->pGinf->player.cnt >= pinfs->pGinf->data.invtime;
+        char isNotInv = pinfs->pGinf->player.cnt >= pinfs->pGinf->data.invtime;
 
         UpdatePlayer(pinfs->pGinf, pinfs->pIinf, &pinfs->pGinf->player, kIsGame && pinfs->pGinf->score >= 0);
         MoveEntity(&pinfs->pGinf->enemy.x, &pinfs->pGinf->enemy.y, pinfs->pGinf->enemy.deg, pinfs->pGinf->enemy.spd);
         pinfs->pGinf->enemy.cnt++;
         //#Hit player and enemy
-        if (kIsGame && kIsNotInv
+        if (kIsGame && isNotInv
                 && IsHit(pinfs->pGinf->player.x, pinfs->pGinf->player.y, pinfs->pGinf->data.r,
                     pinfs->pGinf->enemy.x, pinfs->pGinf->enemy.y, 600000)) {
             Died(pinfs->pGinf); //#Score
+            isNotInv = 0;
         }
 
         for (int i = 0; i < MAX_BUL_P; ++i) {
@@ -121,11 +167,12 @@ void UpdateGame(struct Infs* pinfs, void (*fLog)(struct Infs*),
                 pinfs->pGinf->grz++;
             }
             //#Hit bullet of enemy and player
-            if (kIsGame && kIsNotInv
+            if (kIsGame && isNotInv
                     && IsHit(pinfs->pGinf->bulsE[i].x, pinfs->pGinf->bulsE[i].y, pinfs->pGinf->bulsE[i].r,
                         pinfs->pGinf->player.x, pinfs->pGinf->player.y, pinfs->pGinf->data.r)) {
                 Died(pinfs->pGinf); //#Score
                 pinfs->pGinf->bulsE[i].flg = 0;
+                isNotInv = 0;
             }
         }
     }
@@ -303,7 +350,8 @@ void UpdateGame(struct Infs* pinfs, void (*fLog)(struct Infs*),
     }
 
     // Timer
-    if (pinfs->pGinf->enemy.cnt > 0 && pinfs->pGinf->enemy.timlim > pinfs->pGinf->enemy.cnt) {
+    if (pinfs->pGinf->cntSce[CNT_MODE] == SCE_GAME_Game
+            && pinfs->pGinf->enemy.timlim > pinfs->pGinf->cntSce[CNT_FADE]) {
         CreateFact(&fact);
         fact.posX = 340.0f;
         fact.posY = 435.0f;
@@ -311,11 +359,11 @@ void UpdateGame(struct Infs* pinfs, void (*fLog)(struct Infs*),
         fact.sclY = 0.25f;
         DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, 
                 GetImage(pinfs->pGinf,
-                    ToFontID((((pinfs->pGinf->enemy.timlim - pinfs->pGinf->enemy.cnt) / 600) % 10) + 48U)));
+                    ToFontID((((pinfs->pGinf->enemy.timlim - pinfs->pGinf->cntSce[CNT_FADE]) / 600) % 10) + 48U)));
         fact.posX += 22.0f;
         DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, 
                 GetImage(pinfs->pGinf,
-                    ToFontID((((pinfs->pGinf->enemy.timlim - pinfs->pGinf->enemy.cnt) / 60) % 10) + 48U)));
+                    ToFontID((((pinfs->pGinf->enemy.timlim - pinfs->pGinf->cntSce[CNT_FADE]) / 60) % 10) + 48U)));
     }
 
     // ============================================================================================================= //
@@ -328,11 +376,9 @@ void UpdateGame(struct Infs* pinfs, void (*fLog)(struct Infs*),
     fact.sclX = 12.8f;
     fact.sclY = 9.6f;
     ApplyCamera(pinfs->pDinf, &pinfs->pGinf->cameraUI, FALSE);
-    ApplyFact(pinfs->pGinf, &fact);
-    ApplyImage(pinfs->pDinf, &pinfs->pGinf->fb1.image);
     if (pinfs->pGinf->cntSce[CNT_MODE] == SCE_GAME_Pause)
         pinfs->pDinf->cbuffer.params.x = 2.0;
-    DrawModel(pinfs->pDinf, &pinfs->pGinf->idea);
+    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, &pinfs->pGinf->fb1.image);
     pinfs->pDinf->cbuffer.params.x = 0.0;
 
     // Frame
@@ -341,8 +387,19 @@ void UpdateGame(struct Infs* pinfs, void (*fLog)(struct Infs*),
     fact.sclY = 9.6f;
     DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, IMG_UI_FRAME));
 
+    // GOFade
+    if (pinfs->pGinf->cntSce[CNT_MODE] == SCE_GAME_GOFade) {
+        fact.colR = 0.0f;
+        fact.colG = 0.0f;
+        fact.colB = 0.0f;
+        fact.colA = (float)pinfs->pGinf->cntSce[CNT_FADE] / 300.0f;
+        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, NULL);
+    }
+
     // Logue
-    if (pinfs->pGinf->log.flg && pinfs->pGinf->cntSce[CNT_MODE] != SCE_GAME_Pause) {
+    if (pinfs->pGinf->log.flg
+            && pinfs->pGinf->cntSce[CNT_MODE] != SCE_GAME_Pause
+            && pinfs->pGinf->cntSce[CNT_MODE] != SCE_GAME_GOFade) {
         // Tachie
         if (pinfs->pGinf->log.imgidL != 0) {
             CreateFact(&fact);
@@ -362,6 +419,25 @@ void UpdateGame(struct Infs* pinfs, void (*fLog)(struct Infs*),
                 fact.sclY = 6.5f;
             }
             DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, pinfs->pGinf->log.imgidL));
+        }
+        if (pinfs->pGinf->log.imgidR != 0) {
+            CreateFact(&fact);
+            if (pinfs->pGinf->log.isRight) {
+                fact.posX = 390.0f;
+                fact.posY = -160.0f;
+                fact.sclX = 6.5f;
+                fact.sclY = 6.5f;
+            }
+            else {
+                fact.posX = 440.0f;
+                fact.posY = -190.0f;
+                fact.sclX = 6.5f;
+                fact.sclY = 6.5f;
+                fact.colR = 0.5f;
+                fact.colG = 0.5f;
+                fact.colB = 0.5f;
+            }
+            DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, pinfs->pGinf->log.imgidR));
         }
         // Box
         CreateFact(&fact);

@@ -70,10 +70,11 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPInst, LPSTR pCmd, int cmdShow) {
         ginf.data.cntPlay++;
         InspectInput(&iinf);
 
-        if (ginf.sceCur != ginf.sceNex) {
+        if (ginf.sceNex != SCE_EscapeNumber) {
             if (ginf.sceNex == SCE_Exit)
                 break;
             ginf.sceCur = ginf.sceNex;
+            ginf.sceNex = SCE_EscapeNumber;
             if (!funcsInitScene[ginf.sceCur](&infs))
                 break;
         }

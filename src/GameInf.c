@@ -124,11 +124,11 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_MARISA_R1);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_MARISA_L0);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_MARISA_L1);
-    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_FAIRY_R0);
-    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_FAIRY_R1);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_TC_MARISA0);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_TC_MARISA1);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_TC_MARISA2);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_TC_REIMU0);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_TC_REIMU1);
     flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("0"));
     flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("1"));
     flg = flg && LoadAddFont(pGinf, pDinf, Lpcstr2uint("2"));

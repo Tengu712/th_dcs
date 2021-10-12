@@ -187,6 +187,20 @@ inline void DrawImage(struct GameInf* pGinf, struct D3DInf* pDinf, struct Fact* 
     ApplyImage(pDinf, pImage);
     DrawModel(pDinf, &pGinf->idea);
 }
+inline void DrawString(struct GameInf* pGinf, struct D3DInf* pDinf, struct Fact* pFact, LPCSTR str, float dx) {
+    const int kLen = strlen(str);
+    for (int i = 0; i < kLen; ++i) {
+        unsigned int res = 0U;
+        if (IsDBCSLeadByte(str[i])) {
+            res = (unsigned char)str[i] << 8 | (unsigned char)str[i + 1];
+            i++;
+        }
+        else
+            res = (unsigned int)str[i];
+        DrawImage(pGinf, pDinf, pFact, GetImage(pGinf, ToFontID(res)));
+        pFact->posX += dx;
+    }
+}
 
 void CreateBullet(struct Bullet* pBul, unsigned int knd);
 void UpdateBullet(struct GameInf* pGinf, struct Bullet* pBul);

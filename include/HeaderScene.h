@@ -8,7 +8,8 @@
 #define SCE_Title 0
 #define SCE_MainMenu 1
 #define SCE_Tutorial 2
-#define SCE_Exit 255
+#define SCE_EscapeNumber 120
+#define SCE_Exit 121
 
 #define SCE_GAME_Logue 0
 #define SCE_GAME_Game 1

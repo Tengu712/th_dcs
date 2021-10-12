@@ -11,22 +11,13 @@ void DrawDestOrSub(struct GameInf* pGinf, struct D3DInf* pDinf, char isDest, LPC
     if (hob) {
         fact.colA = 0.4f * (float)fabs(sin((double)pGinf->cntSce[0] / 90.0 * M_PI));
         DrawImage(pGinf, pDinf, &fact, NULL);
+        fact.colA = 1.0f;
     }
     const int kLen = strlen(str);
     fact.posX = isDest ? -450.0f : 370.0f - (float)kLen * 11.0f;
     fact.sclX = 0.22f;
     fact.sclY = 0.25f;
-    fact.colA = 1.0f;
-    for (int i = 0; i < kLen; ++i) {
-        unsigned int res = 0;
-        if (IsDBCSLeadByte(str[i])) {
-            res = ToFontID((unsigned char)str[i] << 8 | (unsigned char)str[i + 1]);
-            i++;
-        } else
-            res = ToFontID((unsigned int)str[i]);
-        DrawImage(pGinf, pDinf, &fact, GetImage(pGinf, res));
-        fact.posX += 22.0f;
-    }
+    DrawString(pGinf, pDinf, &fact, str, 22.0f);
 }
 
 char InitMainMenu(struct Infs* pinfs) {
@@ -114,15 +105,7 @@ void UpdateMainMenu(struct Infs* pinfs) {
     fact.posY = -110.0f;
     fact.sclX = 0.16f;
     fact.sclY = 0.2f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("T"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("o"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("t"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("a"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("l"))));
+    DrawString(pinfs->pGinf, pinfs->pDinf, &fact, "Total", 16.0f);
     fact.posX = 456.0f;
     fact.posY -= 28.0f;
     unsigned long long shi = 1LL;
@@ -136,15 +119,7 @@ void UpdateMainMenu(struct Infs* pinfs) {
     // Accum
     fact.posX = 260.0f;
     fact.posY -= 35.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("A"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("c"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("c"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("u"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("m"))));
+    DrawString(pinfs->pGinf, pinfs->pDinf, &fact, "Accum", 16.0f);
     fact.posX = 456.0f;
     fact.posY -= 28.0f;
     shi = 1LL;
@@ -158,53 +133,39 @@ void UpdateMainMenu(struct Infs* pinfs) {
     // Time
     fact.posX = 260.0f;
     fact.posY -= 35.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("T"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("i"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("m"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("e"))));
+    DrawString(pinfs->pGinf, pinfs->pDinf, &fact, "Time", 16.0f);
     fact.posX = 280.0f;
     fact.posY -= 28.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(((pinfs->pGinf->data.cntPlay / 2160000) % 6) + 48U)));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(((pinfs->pGinf->data.cntPlay / 216000) % 6) + 48U)));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint(":"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(((pinfs->pGinf->data.cntPlay / 36000) % 6) + 48U)));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(((pinfs->pGinf->data.cntPlay / 3600) % 6) + 48U)));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint(":"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(((pinfs->pGinf->data.cntPlay / 600) % 6) + 48U)));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(((pinfs->pGinf->data.cntPlay / 60) % 6) + 48U)));
+    unsigned int imgidsTime[8] = {
+        ((pinfs->pGinf->data.cntPlay / 2160000) % 6) + 48U,
+        ((pinfs->pGinf->data.cntPlay / 216000) % 10) + 48U,
+        Lpcstr2uint(":"),
+        ((pinfs->pGinf->data.cntPlay / 36000) % 6) + 48U,
+        ((pinfs->pGinf->data.cntPlay / 3600) % 10) + 48U,
+        Lpcstr2uint(":"),
+        ((pinfs->pGinf->data.cntPlay / 600) % 6) + 48U,
+        ((pinfs->pGinf->data.cntPlay / 60) % 10) + 48U
+    };
+    for (int i = 0; i < 8; ++i) {
+        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(imgidsTime[i])));
+        fact.posX += 16.0f;
+    }
     
     // Around
     fact.posX = 260.0f;
     fact.posY -= 35.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("A"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("r"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("o"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("u"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("n"))));
-    fact.posX += 16.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(Lpcstr2uint("d"))));
+    DrawString(pinfs->pGinf, pinfs->pDinf, &fact, "Around", 16.0f);
     fact.posX = 280.0f;
     fact.posY -= 28.0f;
     if (pinfs->pGinf->data.cntWorldRound > 9) {
-        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID(((pinfs->pGinf->data.cntWorldRound / 10) % 10) + 48U)));
+        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact,
+            GetImage(pinfs->pGinf, ToFontID(((pinfs->pGinf->data.cntWorldRound / 10) % 10) + 48U)));
         fact.posX += 16.0f;
-        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID((pinfs->pGinf->data.cntWorldRound % 10) + 48U)));
+        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact,
+            GetImage(pinfs->pGinf, ToFontID((pinfs->pGinf->data.cntWorldRound % 10) + 48U)));
     } else
-        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, ToFontID((pinfs->pGinf->data.cntWorldRound % 10) + 48U)));
+        DrawImage(pinfs->pGinf, pinfs->pDinf, &fact,
+            GetImage(pinfs->pGinf, ToFontID((pinfs->pGinf->data.cntWorldRound % 10) + 48U)));
 
     //!
     DrawDestOrSub(pinfs->pGinf, pinfs->pDinf, 1, "博麗神社", 300.0f, pinfs->pGinf->cntSce[1] == 0 && pinfs->pGinf->cntSce[2] % 1 == 0);

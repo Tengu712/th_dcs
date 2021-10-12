@@ -6,24 +6,24 @@ void FuncTutorialLogue(struct Infs* pinfs) {
     if (pinfs->pGinf->cntSce[CNT_STATE] == 0U)
         ApplyLogue(pinfs->pGinf, 1, 0, IMG_TC_MARISA0, 0, "やっぱ異変と言えばここだよな");
 
-    else if (pinfs->pGinf->cntSce[CNT_STATE] == 1U
-            && pinfs->pGinf->cntSce[CNT_FADE] >= 0 && pinfs->pGinf->cntSce[CNT_FADE] < 30U) {
+    else if (pinfs->pGinf->cntSce[CNT_STATE] == 1U && pinfs->pGinf->cntSce[CNT_FADE] >= 0) {
         ApplyLogue(pinfs->pGinf, 1, 1, IMG_TC_MARISA0, 0, "ちょっと！");
         pinfs->pGinf->enemy.deg = -45;
         pinfs->pGinf->enemy.spd = 1600;
         pinfs->pGinf->cntSce[CNT_FADE]++;
         flg = 0;
+        if (pinfs->pGinf->cntSce[CNT_FADE] == 30U) {
+            pinfs->pGinf->enemy.spd = 0;
+            pinfs->pGinf->cntSce[CNT_STATE]++;
+            pinfs->pGinf->cntSce[CNT_FADE] = 0U;
+        }
     }
 
-    else if (pinfs->pGinf->cntSce[CNT_STATE] == 1U && pinfs->pGinf->cntSce[CNT_FADE] == 30U) {
+    else if (pinfs->pGinf->cntSce[CNT_STATE] == 2U)
         ApplyLogue(pinfs->pGinf, 1, 1, IMG_TC_MARISA0, 0, "ちょっと！");
-        pinfs->pGinf->enemy.spd = 0;
-    }
 
-    else if (pinfs->pGinf->cntSce[CNT_STATE] == 2U) {
-        ApplyLogue(pinfs->pGinf, 1, 1, IMG_TC_MARISA0, 0, "うちが異変起こしているみたいじゃない");
-        pinfs->pGinf->cntSce[CNT_FADE] = 0U;
-    }
+    else if (pinfs->pGinf->cntSce[CNT_STATE] == 3U)
+        ApplyLogue(pinfs->pGinf, 1, 1, IMG_TC_MARISA0, IMG_TC_REIMU1, "うちが異変起こしているみたいじゃない");
 
     else {
         ApplyLogue(pinfs->pGinf, 0, 0, 0, 0, "");
@@ -42,7 +42,7 @@ void FuncTutorialLogue(struct Infs* pinfs) {
 
 void FuncTutorialGame(struct Infs* pinfs) {
     if (pinfs->pGinf->cntSce[CNT_STATE] == 0) {
-        if (pinfs->pGinf->enemy.cnt % 10 == 0) {
+        if (pinfs->pGinf->cntSce[CNT_FADE] % 10 == 0) {
             for (int i = 0; i < 72; ++i) {
                 struct Bullet bul;
                 CreateBullet(&bul, BUL_HUDA);
@@ -57,7 +57,7 @@ void FuncTutorialGame(struct Infs* pinfs) {
             pinfs->pGinf->enemy.hp = 10000;
             pinfs->pGinf->enemy.hpMax = 10000;
             pinfs->pGinf->enemy.timlim = 1800;
-            pinfs->pGinf->enemy.cnt = 0;
+            pinfs->pGinf->cntSce[CNT_FADE] = 0U;
             pinfs->pGinf->cntSce[CNT_STATE]++;
         }
     }
@@ -66,12 +66,12 @@ void FuncTutorialGame(struct Infs* pinfs) {
             pinfs->pGinf->enemy.hp = 0;
             pinfs->pGinf->enemy.hpMax = 10000;
             pinfs->pGinf->enemy.timlim = 1800;
-            pinfs->pGinf->enemy.cnt = 0;
             pinfs->pGinf->cntSce[CNT_MODE] = SCE_GAME_Win;
             pinfs->pGinf->cntSce[CNT_STATE] = 0U;
             pinfs->pGinf->cntSce[CNT_FADE] = 0U;
         }
     }
+    pinfs->pGinf->cntSce[CNT_FADE]++;
     pinfs->pGinf->cntSce[CNT_ALL]++;
 }
 
