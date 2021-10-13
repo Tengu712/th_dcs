@@ -162,7 +162,8 @@ void UpdateGame(struct Infs* pinfs, void (*fLog)(struct Infs*),
                     && pinfs->pGinf->bulsE[i].flg == 1
                     && IsHit(pinfs->pGinf->bulsE[i].x, pinfs->pGinf->bulsE[i].y, pinfs->pGinf->bulsE[i].r,
                         pinfs->pGinf->player.x, pinfs->pGinf->player.y, pinfs->pGinf->data.rGrz)) {
-                pinfs->pGinf->score += min(1000, pinfs->pGinf->grz) * min(1000, pinfs->pGinf->grz) * 0.2; //#Score
+                pinfs->pGinf->score +=
+                    min(1000, pinfs->pGinf->grz) * min(1000, pinfs->pGinf->grz) * (isNotInv ? 0.2 : 0.02); //#Score
                 pinfs->pGinf->bulsE[i].flg = 2;
                 pinfs->pGinf->grz++;
             }
@@ -226,10 +227,12 @@ void UpdateGame(struct Infs* pinfs, void (*fLog)(struct Infs*),
     // Enemy
     CreateFact(&fact);
     fact.posX = (float)pinfs->pGinf->enemy.x;
-    fact.posY = (float)pinfs->pGinf->enemy.y;
+    fact.posY = (float)pinfs->pGinf->enemy.y
+                    + 100000.0f * (float)sin((double)pinfs->pGinf->enemy.cnt / 45.0 * M_PI);;
     fact.sclX = 12000.0f;
     fact.sclY = 12000.0f;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, NULL);
+    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact,
+        GetImage(pinfs->pGinf, IMG_CH_REIMU_F0 + ((pinfs->pGinf->enemy.cnt / 8) % 2)));
 
     // change shader pram
     pinfs->pDinf->cbuffer.params.y = 1.0;
@@ -376,9 +379,11 @@ void UpdateGame(struct Infs* pinfs, void (*fLog)(struct Infs*),
     fact.sclX = 12.8f;
     fact.sclY = 9.6f;
     ApplyCamera(pinfs->pDinf, &pinfs->pGinf->cameraUI, FALSE);
+    ApplyFact(pinfs->pGinf, &fact);
+    ApplyImage(pinfs->pDinf, &pinfs->pGinf->fb1.image);
     if (pinfs->pGinf->cntSce[CNT_MODE] == SCE_GAME_Pause)
         pinfs->pDinf->cbuffer.params.x = 2.0;
-    DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, &pinfs->pGinf->fb1.image);
+    DrawModel(pinfs->pDinf, &pinfs->pGinf->idea);
     pinfs->pDinf->cbuffer.params.x = 0.0;
 
     // Frame
@@ -451,12 +456,16 @@ void UpdateGame(struct Infs* pinfs, void (*fLog)(struct Infs*),
         // Logue
         CreateFact(&fact);
         fact.posX = -260.0f;
-        fact.posY = -320.0f;
+        fact.posY = -335.0f;
         fact.sclX = 0.27f;
         fact.sclY = 0.27f;
         for (int i = 0; i < MAX_LOGUE; ++i) {
             if (pinfs->pGinf->imgidsLog[i] == 0)
                 break;
+            if (i == 18) {
+                fact.posX = -260.0f;
+                fact.posY = -365.0f;
+            }
             fact.posX += 27.0f;
             DrawImage(pinfs->pGinf, pinfs->pDinf, &fact, GetImage(pinfs->pGinf, pinfs->pGinf->imgidsLog[i]));
         }

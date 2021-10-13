@@ -22,7 +22,7 @@
 #define MAX_IMG_TMP 100
 #define MAX_BUL_E 1024
 #define MAX_BUL_P 20
-#define MAX_LOGUE 20
+#define MAX_LOGUE 36
 #define MAX_PARAM 10
 
 #define KEY_CODE_Up 1

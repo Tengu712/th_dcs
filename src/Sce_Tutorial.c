@@ -25,6 +25,18 @@ void FuncTutorialLogue(struct Infs* pinfs) {
     else if (pinfs->pGinf->cntSce[CNT_STATE] == 3U)
         ApplyLogue(pinfs->pGinf, 1, 1, IMG_TC_MARISA0, IMG_TC_REIMU1, "うちが異変起こしているみたいじゃない");
 
+    else if (pinfs->pGinf->cntSce[CNT_STATE] == 4U)
+        ApplyLogue(pinfs->pGinf, 1, 0, IMG_TC_MARISA1, IMG_TC_REIMU1, "言葉の綾だよ");
+
+    else if (pinfs->pGinf->cntSce[CNT_STATE] == 5U)
+        ApplyLogue(pinfs->pGinf, 1, 0, IMG_TC_MARISA0, IMG_TC_REIMU0, "霊夢にもやっぱり見えているのか？　　「あれ」");
+
+    else if (pinfs->pGinf->cntSce[CNT_STATE] == 6U)
+        ApplyLogue(pinfs->pGinf, 1, 1, IMG_TC_MARISA0, IMG_TC_REIMU0, "勿論。そこにあんたが現れた");
+
+    else if (pinfs->pGinf->cntSce[CNT_STATE] == 7U)
+        ApplyLogue(pinfs->pGinf, 1, 1, IMG_TC_MARISA1, IMG_TC_REIMU1, "取り敢えず倒れなさい！");
+
     else {
         ApplyLogue(pinfs->pGinf, 0, 0, 0, 0, "");
         pinfs->pGinf->enemy.hp = 10000;
@@ -101,6 +113,10 @@ char InitTutorial(struct Infs* pinfs) {
     res = res && LoadSentence(pinfs->pGinf, pinfs->pDinf, "やっぱ異変と言えばここだよな");
     res = res && LoadSentence(pinfs->pGinf, pinfs->pDinf, "ちょっと！");
     res = res && LoadSentence(pinfs->pGinf, pinfs->pDinf, "うちが異変起こしているみたいじゃない");
+    res = res && LoadSentence(pinfs->pGinf, pinfs->pDinf, "言葉の綾だよ");
+    res = res && LoadSentence(pinfs->pGinf, pinfs->pDinf, "霊夢にもやっぱり見えているのか？　「あれ」");
+    res = res && LoadSentence(pinfs->pGinf, pinfs->pDinf, "勿論。そこにあんたが現れた");
+    res = res && LoadSentence(pinfs->pGinf, pinfs->pDinf, "取り敢えず倒れなさい！");
     return res;
 }
 

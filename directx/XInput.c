@@ -43,21 +43,21 @@ void InspectInput(struct InputInf* pIinf) {
         else if (pIinf->inf[i].typeGamepadKey == MD_GAMEPAD_KEYTYPE_RTRIGGER)
             flagXI = stateXInp.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD;
         else if (pIinf->inf[i].typeGamepadKey == MD_GAMEPAD_KEYTYPE_THUMBLL)
-            flagXI = stateXInp.Gamepad.sThumbLX < -pIinf->inf[i].codeGamepad;
+            flagXI = stateXInp.Gamepad.sThumbLX < pIinf->inf[i].codeGamepad;
         else if (pIinf->inf[i].typeGamepadKey == MD_GAMEPAD_KEYTYPE_THUMBLR)
             flagXI = stateXInp.Gamepad.sThumbLX > pIinf->inf[i].codeGamepad;
         else if (pIinf->inf[i].typeGamepadKey == MD_GAMEPAD_KEYTYPE_THUMBLU)
-            flagXI = stateXInp.Gamepad.sThumbLY < -pIinf->inf[i].codeGamepad;
-        else if (pIinf->inf[i].typeGamepadKey == MD_GAMEPAD_KEYTYPE_THUMBLD)
             flagXI = stateXInp.Gamepad.sThumbLY > pIinf->inf[i].codeGamepad;
+        else if (pIinf->inf[i].typeGamepadKey == MD_GAMEPAD_KEYTYPE_THUMBLD)
+            flagXI = stateXInp.Gamepad.sThumbLY < pIinf->inf[i].codeGamepad;
         else if (pIinf->inf[i].typeGamepadKey == MD_GAMEPAD_KEYTYPE_THUMBRL)
-            flagXI = stateXInp.Gamepad.sThumbRX < -pIinf->inf[i].codeGamepad;
+            flagXI = stateXInp.Gamepad.sThumbRX < pIinf->inf[i].codeGamepad;
         else if (pIinf->inf[i].typeGamepadKey == MD_GAMEPAD_KEYTYPE_THUMBRR)
             flagXI = stateXInp.Gamepad.sThumbRX > pIinf->inf[i].codeGamepad;
         else if (pIinf->inf[i].typeGamepadKey == MD_GAMEPAD_KEYTYPE_THUMBRU)
-            flagXI = stateXInp.Gamepad.sThumbRY < -pIinf->inf[i].codeGamepad;
-        else if (pIinf->inf[i].typeGamepadKey == MD_GAMEPAD_KEYTYPE_THUMBRD)
             flagXI = stateXInp.Gamepad.sThumbRY > pIinf->inf[i].codeGamepad;
+        else if (pIinf->inf[i].typeGamepadKey == MD_GAMEPAD_KEYTYPE_THUMBRD)
+            flagXI = stateXInp.Gamepad.sThumbRY < pIinf->inf[i].codeGamepad;
         if (dwRes != ERROR_SUCCESS)
             flagXI = FALSE;
         if (flagKB || flagXI)

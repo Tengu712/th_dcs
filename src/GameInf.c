@@ -124,6 +124,8 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_MARISA_R1);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_MARISA_L0);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_MARISA_L1);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_REIMU_F0);
+    flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_CH_REIMU_F1);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_TC_MARISA0);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_TC_MARISA1);
     flg = flg && LoadAddImage(pGinf, pDinf, hModule, IMG_TC_MARISA2);
@@ -169,34 +171,34 @@ char CreateGameInf(struct GameInf* pGinf, struct D3DInf* pDinf, struct InputInf*
                 short c = 0;
                 if (bufs[0] == 'l' && bufs[1] == '2') {
                     t = MD_GAMEPAD_KEYTYPE_LTRIGGER;
-                    c = 128;
+                    c = 12800;
                 } else if (bufs[0] == 'r' && bufs[1] == '2') {
                     t = MD_GAMEPAD_KEYTYPE_RTRIGGER;
-                    c = 128;
+                    c = 12800;
                 } else if (bufs[0] == 'l' && bufs[1] == 'l') {
                     t = MD_GAMEPAD_KEYTYPE_THUMBLL;
-                    c = 128;
+                    c = -12800;
                 } else if (bufs[0] == 'l' && bufs[1] == 'r') {
                     t = MD_GAMEPAD_KEYTYPE_THUMBLR;
-                    c = 128;
+                    c = 12800;
                 } else if (bufs[0] == 'l' && bufs[1] == 'u') {
                     t = MD_GAMEPAD_KEYTYPE_THUMBLU;
-                    c = 128;
+                    c = 12800;
                 } else if (bufs[0] == 'l' && bufs[1] == 'd') {
                     t = MD_GAMEPAD_KEYTYPE_THUMBLD;
-                    c = 128;
+                    c = -12800;
                 } else if (bufs[0] == 'r' && bufs[1] == 'l') {
                     t = MD_GAMEPAD_KEYTYPE_THUMBRL;
-                    c = 128;
+                    c = -12800;
                 } else if (bufs[0] == 'r' && bufs[1] == 'r') {
                     t = MD_GAMEPAD_KEYTYPE_THUMBRR;
-                    c = 128;
+                    c = 12800;
                 } else if (bufs[0] == 'r' && bufs[1] == 'u') {
                     t = MD_GAMEPAD_KEYTYPE_THUMBRU;
-                    c = 128;
+                    c = 12800;
                 } else if (bufs[0] == 'r' && bufs[1] == 'd') {
                     t = MD_GAMEPAD_KEYTYPE_THUMBRD;
-                    c = 128;
+                    c = -12800;
                 } else if (bufs[0] == 's' && bufs[1] == 't') {
                     t = MD_GAMEPAD_KEYTYPE_BUTTONS;
                     c = XINPUT_GAMEPAD_START;
